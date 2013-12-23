@@ -9,7 +9,7 @@ useful for "advanced benchmarking".
 * simplesynth is a utility that generates a file containing randomly generated arrays.
 * compress is a utility that takes a file containing uncompressed (regular) arrays and generates compressed arrays. 
 * uncompress is a utility that takes a file containing compressed arrays and generates uncompressed arrays.
-* budgetedtest intersect is a program to benchmark decompression speed together with fast intersections
+* budgetedtest is a program to benchmark decompression speed together with fast intersections
 * entropy can be used to compute the entropy of the deltas given a set of (uncompressed) posting lists
 
 Sample usage
@@ -36,7 +36,7 @@ You can quickly generate a test file from a synthetic model:
 ./simplesynth  -N 100000 -m 100 test.bin
 
 You can construct such a data file from the clueweb09 dataset made available by Leonid
-Boystov (http://boytsov.info/datasets/clueweb09gap/). For Nathan and Leo, this 
+Boytsov (http://boytsov.info/datasets/clueweb09gap/). For Nathan and Leo, this 
 is available on the test machine at /home/data/clueweb/Uncompressed/flat.bin (October 2013).
 
 You also need a query log file. It needs to be a text file where each row contains
