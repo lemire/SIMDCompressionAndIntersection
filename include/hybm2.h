@@ -439,7 +439,8 @@ private:
 
 
 /**
- * This is a version of HybM2 without compression (other than the bitmaps).
+ * This is a version of HybM2 with a skipping data structure akin to what is described
+ * by Culpepper and Moffat. We seem to get no gain from this approach.
  */
 class SkippingHybM2 {
 public:
@@ -515,8 +516,6 @@ public:
         }
         vector<pair<uint32_t, shared_ptr<Skipping>> > shortlists;
         vector<pair<uint32_t,shared_ptr<BoolArray>>> bitmaps;
-        //vector<uint32_t> bitmapscard;
-
         for(uint32_t id : ids) {
             if(shortlistmap.find(id)!=shortlistmap.end())
             shortlists.push_back(make_pair(mapuncompsizes[id],shortlistmap[id]));
