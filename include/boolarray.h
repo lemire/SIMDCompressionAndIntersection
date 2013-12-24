@@ -100,12 +100,12 @@ public:
     void toArray(vector<uint32_t> & ans) {
         uint32_t pos = 0;
         for (uint32_t k = 0; k < buffer.size(); ++k) {
-            const uint64_t myword = buffer[k];
-            for(int offset = 0; offset<64;++offset) {
-                    if((myword >> offset) == 0) break;
-                    offset+=numberOfTrailingZeros((myword >> offset));
-                    ans[pos++]=64 * k + offset;
-                }
+            uint64_t myword = buffer[k];
+            while (myword != 0) {
+              int ntz =  __builtin_ctzl (myword);
+              ans[pos++] = k * 64 + ntz;
+              myword ^= (1l << ntz);
+            }
         }
         ans.resize(pos);
     }
