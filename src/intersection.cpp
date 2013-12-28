@@ -337,62 +337,62 @@ size_t danfarfar_medium(const uint32_t *rare, const size_t lenRare,
         if(freq[veclen * 15 + vecmax] >= matchRare  ) {
         if(freq[veclen * 7 + vecmax] < matchRare  ) {
             Q0 = _mm_or_si128(
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 8), Match),
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 9), Match));
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 8), Match),
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 9), Match));
             Q1 = _mm_or_si128(
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 10), Match),
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 11), Match));
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 10), Match),
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 11), Match));
 
             Q2 = _mm_or_si128(
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 12), Match),
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 13), Match));
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 12), Match),
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 13), Match));
             Q3 = _mm_or_si128(
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 14), Match),
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 15), Match));
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 14), Match),
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 15), Match));
         } else {
             Q0 = _mm_or_si128(
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 4), Match),
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 5), Match));
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 4), Match),
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 5), Match));
             Q1 = _mm_or_si128(
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 6), Match),
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 7), Match));
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 6), Match),
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 7), Match));
             Q2 = _mm_or_si128(
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 0), Match),
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 1), Match));
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 0), Match),
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 1), Match));
             Q3 = _mm_or_si128(
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 2), Match),
-                    _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 3), Match));
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 2), Match),
+                    _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 3), Match));
         }
         }
         else
         {
             if(freq[veclen * 23 + vecmax] < matchRare  ) {
                 Q0 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 8 + 16), Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 9 + 16), Match));
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 8 + 16), Match),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 9 + 16), Match));
                 Q1 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 10+ 16), Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 11+ 16), Match));
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 10+ 16), Match),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 11+ 16), Match));
 
                 Q2 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 12+ 16), Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 13+ 16), Match));
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 12+ 16), Match),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 13+ 16), Match));
                 Q3 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 14+ 16), Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 15+ 16), Match));
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 14+ 16), Match),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 15+ 16), Match));
             } else {
                 Q0 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 4+ 16), Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 5+ 16), Match));
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 4+ 16), Match),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 5+ 16), Match));
                 Q1 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 6+ 16), Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 7+ 16), Match));
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 6+ 16), Match),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 7+ 16), Match));
                 Q2 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 0+ 16), Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 1+ 16), Match));
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 0+ 16), Match),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 1+ 16), Match));
                 Q3 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 2+ 16), Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 3+ 16), Match));
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 2+ 16), Match),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 3+ 16), Match));
             }
 
         }
@@ -471,94 +471,94 @@ size_t SIMDgalloping(const uint32_t *rare, const size_t lenRare,
                 Q0
                         = _mm_or_si128(
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 8), Match),
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 8), Match),
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 9), Match));
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 9), Match));
                 Q1 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 10),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 10),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 11),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 11),
                                 Match));
 
                 Q2 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 12),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 12),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 13),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 13),
                                 Match));
                 Q3 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 14),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 14),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 15),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 15),
                                 Match));
             } else {
                 Q0
                         = _mm_or_si128(
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 4), Match),
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 4), Match),
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 5), Match));
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 5), Match));
                 Q1
                         = _mm_or_si128(
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 6), Match),
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 6), Match),
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 7), Match));
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 7), Match));
                 Q2
                         = _mm_or_si128(
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 0), Match),
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 0), Match),
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 1), Match));
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 1), Match));
                 Q3
                         = _mm_or_si128(
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 2), Match),
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 2), Match),
                                 _mm_cmpeq_epi32(
-                                        _mm_loadu_si128((vec *) freq + 3), Match));
+                                        _mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 3), Match));
             }
         } else {
             if (freq[veclen * 23 + vecmax] < matchRare) {
                 Q0 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 8 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 8 + 16),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 9 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 9 + 16),
                                 Match));
                 Q1 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 10 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 10 + 16),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 11 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 11 + 16),
                                 Match));
 
                 Q2 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 12 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 12 + 16),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 13 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 13 + 16),
                                 Match));
                 Q3 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 14 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 14 + 16),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 15 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 15 + 16),
                                 Match));
             } else {
                 Q0 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 4 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 4 + 16),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 5 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 5 + 16),
                                 Match));
                 Q1 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 6 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 6 + 16),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 7 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 7 + 16),
                                 Match));
                 Q2 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 0 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 0 + 16),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 1 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 1 + 16),
                                 Match));
                 Q3 = _mm_or_si128(
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 2 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 2 + 16),
                                 Match),
-                        _mm_cmpeq_epi32(_mm_loadu_si128((vec *) freq + 3 + 16),
+                        _mm_cmpeq_epi32(_mm_loadu_si128(reinterpret_cast<const vec *>(freq) + 3 + 16),
                                 Match));
             }
 
