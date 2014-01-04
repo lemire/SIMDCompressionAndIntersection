@@ -73,8 +73,6 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
             }
         }
 
-        //Helper::GenRandom(initdata, bit);
-
         const vector<uint32_t> refdata = initdata;
         vector<uint32_t>().swap(initdata);
 
@@ -117,7 +115,7 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
                 Helper::pack(data.data(), data.size(), icompressed.data(), bit);
                 z.reset();
                 Helper::unpack(icompressed.data(), refdata.size(), recovered.data(), bit);
-                if (t > 0)
+                if (t > 0)// we don't count the first run
                     unpacktime += static_cast<double>(z.split());
                 if (!equalOnFirstBits(refdata, recovered, bit)) {
                     cout << " Bug 1a " << bit << endl;
@@ -128,7 +126,7 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
 
                 z.reset();
                 Helper::iunpack(icompressed.data(), refdata.size(), recovered.data(), bit);
-                if (t > 0)
+                if (t > 0)// we don't count the first run
                     iunpacktime += static_cast<double>(z.split());
                 if (!equalOnFirstBits(refdata, recovered, bit)) {
                     cout << " Bug 2 " << bit << endl;
@@ -137,9 +135,9 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
             }
 
             cout << std::setprecision(4) << bit << "\t\t";
-            cout  << "\t\t" << N * T / (unpacktime) << "\t\t";
+            cout  << "\t\t" << N * (T-1) / (unpacktime) << "\t\t";
 
-            cout  << "\t\t"<< N * T / (iunpacktime);
+            cout  << "\t\t"<< N * (T-1) / (iunpacktime);
 
             cout << endl;
         }
