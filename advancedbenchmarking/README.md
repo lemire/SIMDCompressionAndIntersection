@@ -54,9 +54,9 @@ If you want, you can just make one up by creating a text file and entering, on e
 You can run a test as follows: 
 
 ./budgetedtest /home/data/clueweb/Uncompressed/flat.bin /home/data/AOL/user-ct-test-collection-01.id 
- -i simd -b 24  -s varint 
+ -i simd -b 4  -s varint 
 -s specify the compression scheme (if none: default  on uncompressed)
--b is is the memory budget in gigabytes. 
+-b is is the memory budget in gigabytes (e.g., half of your RAM). 
 -i allows you to specify an intersection routine  (default on a fast SIMD-based intersection routine).
 -o is to include one-word queries (they don't participate in intersections, only in decoding)
 -q allows you to specify that you just want the final report (warning:  the program can take a long time to complete)
