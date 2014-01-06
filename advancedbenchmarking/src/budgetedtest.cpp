@@ -759,7 +759,7 @@ int main(int argc, char **argv) {
     int SkipLog = 0;
     int th  = -1;
 
-    string  scheme = "simdfastpforr";
+    string  scheme = "copy";
     int partitions = 1;
     bool dumpcompletestats = false;
 
