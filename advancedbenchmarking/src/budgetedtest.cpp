@@ -35,6 +35,7 @@ void printusage(char *prog) {
     cout << "       -k   to test Skipping (must provide a gap size param between 1 and 31)"<<endl;
     cout << "       -B   to activate bitmap mode (recommended values are in the range 8 to  32), when set to 0 in conjunction with compression, it means 'automatic' "<<endl;
     cout << "       -d   to dump complete statistics "<<endl;
+    cout << "       -b   memory budget in GB (recommended: less than half of your available memory) "<<endl;
 }
 
 
