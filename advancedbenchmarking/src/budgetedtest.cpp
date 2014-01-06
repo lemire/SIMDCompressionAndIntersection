@@ -857,6 +857,8 @@ int main(int argc, char **argv) {
         cout << "# Does it modify inputs during compression? : " << (modifiesinput ? "yes":"no") << endl;
         cout << "# Intersection proc: " << InterName<< endl;
         if(th>=0) {
+            if(partitions>1)
+                cout<<"# you are trying to use bitmaps and partitions, it is unsupported right now, disabling partitions."<<endl;
             if(th == 0)
                 cout<<"# bitmap threshold: automatic (0)"<<endl;
             else
