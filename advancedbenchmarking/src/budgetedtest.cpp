@@ -355,6 +355,8 @@ public:
                       scheme.encodeArray(dirtyCopy.data(), thissize,
                             compressedBuffer.data(), nvalue);
                       compressedBuffer.resize(nvalue);
+                      packVolume += thissize;
+                      CompressedSizeDuringPacking += nvalue;
                     }
                     subposts[part] = compressedBuffer;
                     i = j;
