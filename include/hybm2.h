@@ -21,7 +21,7 @@
 class HybM2 {
 public:
 
-    // th = 0 means that we select bitmap as needed
+    // th = 0 means that we select bitmaps as needed
     HybM2(IntegerCODEC & c, intersectionfunction inter, uint32_t MaxId,
             vector<uint32_t>& recovbuffer,
             uint32_t th = 32) :

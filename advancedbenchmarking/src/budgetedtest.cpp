@@ -524,9 +524,7 @@ public:
     }
 
     /*
-     * Let's try no to break any existing code.
-     * 1) All previous calls to bitmaptest now need to explicitly include NumberOfPartitions.
-     * 2) If NumberOfPartitions == 0, we call the previously well-tested function
+     * If NumberOfPartitions == 0, we call a well-tested function with no partitions
      */
     void bitmaptest(int NumberOfPartitions,
                     uint32_t th, BudgetedPostingCollector& uncompPosts,
@@ -1103,13 +1101,11 @@ int main(int argc, char **argv) {
         cout << "# Does it modify inputs during compression? : " << (modifiesinput ? "yes":"no") << endl;
         cout << "# Intersection proc: " << InterName<< endl;
         if(th>=0) {
-            //if(partitions>1)
-            //    cout<<"# you are trying to use bitmaps and partitions, it is unsupported right now, disabling partitions."<<endl;
             if(th == 0)
                 cout<<"# bitmap threshold: automatic (0)"<<endl;
             else
               cout<<"# bitmap threshold: "<<th<<endl;
-        }  // else
+        }
         if(partitions>1) {
            cout<<"# number of partitions: "<<partitions<<endl;
         }
