@@ -6,6 +6,8 @@
 #
 #include <unistd.h>
 #include <unordered_map>
+#include <memory>
+#include <sstream>
 
 
 #include "common.h"
@@ -18,6 +20,11 @@
 #include "hybm2.h"
 #include "statisticsrecorder.h"
 
+size_t FakeCRC(const uint32_t* p, size_t qty) {
+  size_t s = 0;
+  for (size_t i = 0; i < qty; ++i) s += p[i];
+  return s;
+}
 
 void printusage(char *prog) {
     cout << "Usage: " << prog << " <uncompressed postings in the flat format> <converted log file> -b <memory budget> -s <codec>  -l <max # of log lines to process> -i <intersection function> -o " << endl;
@@ -285,6 +292,11 @@ public:
             SR.endQuery(intersectioncardinality,  uncompPosts,qids) ;
         }
         CoarseUnpackInterTime += static_cast<double>(coarsez.split());
+
+        // Prevent from optimizing out
+        cout << "### Ignore: " 
+             << (FakeCRC(recoveryBuffer.data(), recoveryBuffer.size()) + 
+                FakeCRC(intersection_result.data(), intersection_result.size())) << endl;
     }
 
 
@@ -294,6 +306,7 @@ public:
      * This is a version of "tests" where compressed posting lists are divided it up in NumberOfPartitions partitions.
      * If NumberOfPartitions is large enough, uncompressed posting lists will reside in cache, not in RAM.
      */
+
     void splittedtest(int NumberOfPartitions,
             BudgetedPostingCollector& uncompPosts,
             const vector<vector<uint32_t>>& allPostIds) {
@@ -439,6 +452,15 @@ public:
             SR.endQuery(totalintercardinality, uncompPosts,qids);
         }
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
+
+        size_t s = 0;
+        for (int i = 0; i < NumberOfPartitions; ++i) {
+          s += FakeCRC(intersection_result[i].data(), intersection_result[i].size());
+        }
+
+        // Prevent from optimizing out
+        cout << "### Ignore: " 
+             << (FakeCRC(recoveryBuffer.data(), recoveryBuffer.size()) + s) << endl;
     }
 
     void skippingtest(int SkipLog, BudgetedPostingCollector& uncompPosts,
@@ -496,13 +518,218 @@ public:
             SR.endQuery(intersize, uncompPosts,qids);
         }
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
+
+        // Prevent from optimizing out
+        cout << "### Ignore: " 
+             << (FakeCRC(recoveryBuffer.data(), recoveryBuffer.size()) + 
+                FakeCRC(intersection_result.data(), intersection_result.size())) << endl;
     }
 
-    void bitmaptest(uint32_t th, BudgetedPostingCollector& uncompPosts,
+    /*
+     * Let's try no to break any existing code.
+     * 1) All previous calls to bitmaptest now need to explicitly include NumberOfPartitions.
+     * 2) If NumberOfPartitions == 0, we call the previously well-tested function
+     */
+    void bitmaptest(int NumberOfPartitions, 
+                    uint32_t th, BudgetedPostingCollector& uncompPosts,
             const vector<vector<uint32_t>>& allPostIds) {
+        if (NumberOfPartitions > 1) {
+          bitmaptestsplit(NumberOfPartitions, th, uncompPosts, allPostIds);
+        } else {
+          bitmaptestnosplit(th, uncompPosts, allPostIds);
+        }
+    }
+
+    void bitmaptestsplit(int NumberOfPartitions, 
+                            uint32_t th, BudgetedPostingCollector& uncompPosts,
+            const vector<vector<uint32_t>>& allPostIds) {
+        pair<uint32_t, uint32_t>    range = uncompPosts.findDocumentIDRange(allPostIds);
+        vector<uint32_t>            recovbufferHybrid;
+        vector<unique_ptr<HybM2>>   hybridPart(NumberOfPartitions);
+        vector<size_t>              MaxRecoveryBufferPart(NumberOfPartitions + 1);
+
+        vector<uint32_t>            bounds(NumberOfPartitions + 1);
+
+        for (int part = 0; part < NumberOfPartitions; ++part) {
+            bounds[part] = range.first + part * (range.second - range.first)
+                    / NumberOfPartitions;// slightly uneven
+        }
+        bounds[NumberOfPartitions] = range.second + 1;
+
+        for (int i = 0; i < NumberOfPartitions; ++i) {
+          hybridPart[i] = unique_ptr<HybM2>(new HybM2(scheme, Inter, 
+                                                       bounds[i+1] - bounds[i], 
+                                                       recovbufferHybrid, th
+                                                        ));
+        }
+
+        WallClockTimer z;// this is use only to time what we care
+        WallClockTimer coarsez;// for "coarse" timings, it includes many things we don't care about
+
+        size_t TotalMaxPostingSize = 0;
+        size_t MaxPostingSizePart = 0;
+
+        // 1. Benchmark only compression
+        for (const vector<uint32_t> & qids: allPostIds) {
+            for (uint32_t id: qids) {
+                vector<uint32_t>& onePost = uncompPosts.getOnePost(id);
+
+                if (TotalMaxPostingSize < onePost.size()) {
+                    TotalMaxPostingSize = onePost.size();
+                }
+
+                vector<uint32_t>::iterator i = onePost.begin();
+                uint32_t sanitycheck = 0;
+                for(int part = 0;  (part < NumberOfPartitions); ++part) {
+                    if (i == onePost.end()) {
+                        /* 
+                         * We need to load the empty posting or the intersection
+                         * will fail
+                         */
+                        if(!hybridPart[part]->hasBeenLoaded(id)) {// wasn't compressed earlier
+                            static vector<uint32_t> emptyPost; // thread-safe in C++ 11
+
+                            z.reset(); // actually this should be very quick
+                            CompressedSizeDuringPacking += hybridPart[part]->
+                                              load(id, emptyPost.data(), emptyPost.size());
+                            packTime += static_cast<double> (z.split());
+
+                            packVolume += 0;
+                        }
+                        continue;
+                    }
+                    vector<uint32_t>::iterator j = lower_bound(i,onePost.end(),bounds[part+1]);
+                    uint32_t thissize = static_cast<uint32_t>(j - i);
+                    if (MaxPostingSizePart < thissize) {
+                      MaxPostingSizePart = thissize;
+                    }
+                    if(j!= onePost.end())  assert(*j>=bounds[part+1]);
+                    assert(*i >=bounds[part]);
+                    sanitycheck += thissize;
+
+                    if(!hybridPart[part]->hasBeenLoaded(id)) {// wasn't compressed earlier
+                        //////////////
+                        // BEGIN performance-sensitive section for *compression*
+                        // (we don't care that much about it).
+                        /////////////
+
+                        z.reset();
+                        /* 
+                         * We make a copy because 
+                         * (1) we need to subtract bounds[part]
+                         * (2) some schemes modify input 
+                         * (3) we need 128-bit alignment
+                         */
+                        vector<uint32_t> dirtyCopy(i,j); 
+
+                        /* 
+                         * This might be a bit suboptimal.
+                         * However Leo expects that GCC 4.7
+                         * would vectorize this operation. 
+                         * Anyways, we don't care much 
+                         * about compression speeds.
+                         */
+
+                        size_t minId = bounds[part];
+                        size_t qty = dirtyCopy.size();
+
+                        for (size_t id = 0; id < qty; ++id) {
+                          dirtyCopy[id] -= minId;
+                        }
+                       
+                        CompressedSizeDuringPacking += hybridPart[part]->
+                                              load(id, dirtyCopy.data(), dirtyCopy.size());
+                        packTime += static_cast<double> (z.split());
+
+                        packVolume += thissize;
+                        //////////////
+                        // END performance-sensitive section for *compression*
+                        //////////////
+                    }
+                    i = j;
+
+                    if (MaxRecoveryBufferPart[part] < hybridPart[part]->sizeOfRecoveryBufferInWords())
+                        MaxRecoveryBufferPart[part] = hybridPart[part]->sizeOfRecoveryBufferInWords();
+                }
+                assert(i == onePost.end());
+                assert(sanitycheck == onePost.size());
+                packTime += static_cast<double> (z.split());
+            }
+        }
+        CoarsePackTime += static_cast<double> (coarsez.split());
+
+        MaxRecoveryBuffer = *max_element(MaxRecoveryBufferPart.begin(), 
+                                         MaxRecoveryBufferPart.end());
+
+        vector < uint32_t > intersection_result(MaxPostingSizePart + 1024);
+        vector < uint32_t > total_intersection_result(TotalMaxPostingSize + 1024);
+
+#if 1
+        // testing round, does the algorithm have errors?
+        for(vector<uint32_t> qids : allPostIds) {
+            size_t total_sizeout = 0;
+
+            for(int part = 0; part < NumberOfPartitions; ++part) {
+                size_t sizeout = intersection_result.size();
+                hybridPart[part]->intersect(qids, intersection_result.data(), sizeout);
+
+                for (size_t k = total_sizeout; k < total_sizeout + sizeout; ++k) 
+                  total_intersection_result[k] = intersection_result[k - total_sizeout] + bounds[part];
+                total_sizeout += sizeout;
+            }
+        
+            vector<uint32_t> trueintersection = uncompPosts.computeIntersection(qids,onesidedgallopingintersection);
+            if(trueintersection.size() != total_sizeout) {
+                stringstream err;
+                err << "Different cardinality, expected: " 
+                    << trueintersection.size()
+                    << " got: "<< total_sizeout;
+                throw runtime_error(err.str());
+            }
+            for(uint32_t k = 0; k < trueintersection.size();++k) {
+                if(trueintersection[k] != total_intersection_result[k])  {
+                    throw runtime_error("intersection bug");
+                }
+            }
+        }
+#endif
+
+        coarsez.reset();
+
+        // 2. Finally benchmarking
+        for(vector<uint32_t> qids : allPostIds) {
+            size_t total_sizeout = 0;
+            
+            SR.prepareQuery();
+            for(int part = 0; part < NumberOfPartitions; ++part) {
+                size_t sizeout = 0;
+
+                // Intersect will fail if there is an empty list
+                sizeout = intersection_result.size();
+                unpackVolume += hybridPart[part]->intersect(qids, 
+                                 intersection_result.data(), sizeout);
+                for (size_t k = total_sizeout; k < total_sizeout + sizeout; ++k) 
+                  total_intersection_result[k] = intersection_result[k - total_sizeout] + bounds[part];
+                total_sizeout += sizeout;
+            }
+            SR.endQuery(total_sizeout, uncompPosts,qids);
+        }
+
+        CoarseUnpackInterTime += static_cast<double> (coarsez.split());
+
+        // Prevent from optimizing out
+        cout << "### Ignore: " 
+             << FakeCRC(total_intersection_result.data(), 
+                total_intersection_result.size()) << endl;
+
+    }
+
+    void bitmaptestnosplit(uint32_t th, BudgetedPostingCollector& uncompPosts,
+                           const vector<vector<uint32_t>>& allPostIds) {
         uint32_t MaxId = uncompPosts.findDocumentIDRange(allPostIds).second;
         size_t MaxPostingSize(0);
-        HybM2 hybrid(scheme, Inter, MaxId, th);
+        vector<uint32_t>            recovbufferHybrid;
+        HybM2 hybrid(scheme, Inter, MaxId, recovbufferHybrid, th);
         WallClockTimer z;// this is use only to time what we care
         WallClockTimer coarsez;// for "coarse" timings, it includes many things we don't care about
         // 1. Benchmark only compression
@@ -542,6 +769,11 @@ public:
             SR.endQuery(sizeout, uncompPosts,qids);
         }
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
+
+        // Prevent from optimizing out
+        cout << "### Ignore: " 
+             << FakeCRC(intersection_result.data(), 
+                intersection_result.size()) << endl;
     }
 
 
@@ -588,6 +820,11 @@ public:
             SR.endQuery(sizeout, uncompPosts,qids);
         }
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
+
+        // Prevent from optimizing out
+        cout << "### Ignore: " 
+             << FakeCRC(intersection_result.data(), 
+                intersection_result.size()) << endl;
     }
 
 
@@ -634,6 +871,11 @@ public:
             SR.endQuery(sizeout, uncompPosts,qids);
         }
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
+
+        // Prevent from optimizing out
+        cout << "### Ignore: " 
+             << FakeCRC(intersection_result.data(), 
+                intersection_result.size()) << endl;
     }
 
 
@@ -667,6 +909,9 @@ public:
             SR.endQuery(intersize, uncompPosts,qids);
         }
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
+        // Prevent from optimizing out
+        cout << "### Ignore: " 
+             << FakeCRC(inter.data(), inter.size()) << endl;
     }
 
 
@@ -860,14 +1105,16 @@ int main(int argc, char **argv) {
         cout << "# Does it modify inputs during compression? : " << (modifiesinput ? "yes":"no") << endl;
         cout << "# Intersection proc: " << InterName<< endl;
         if(th>=0) {
-            if(partitions>1)
-                cout<<"# you are trying to use bitmaps and partitions, it is unsupported right now, disabling partitions."<<endl;
+            //if(partitions>1)
+            //    cout<<"# you are trying to use bitmaps and partitions, it is unsupported right now, disabling partitions."<<endl;
             if(th == 0)
                 cout<<"# bitmap threshold: automatic (0)"<<endl;
             else
               cout<<"# bitmap threshold: "<<th<<endl;
-        } else if(partitions>1)
+        }  // else
+        if(partitions>1) {
            cout<<"# number of partitions: "<<partitions<<endl;
+        }
     } else {
         cout <<"# Compression is deactivated (use -s followed by scheme to enable)"<<endl;
         cout << "# Intersection proc: " << InterName<< endl;
@@ -937,7 +1184,7 @@ int main(int argc, char **argv) {
                    }
                 } else if(useCompression) {
                     if(th>=0)
-                        testBed.bitmaptest(th,uncompPosts, allPostIds);
+                        testBed.bitmaptest(partitions, th,uncompPosts, allPostIds);
                     else if(partitions > 1)
                         testBed.splittedtest(partitions,uncompPosts, allPostIds);
                     else
@@ -975,7 +1222,7 @@ int main(int argc, char **argv) {
            }
         } else if(useCompression) {
             if(th>=0)
-                testBed.bitmaptest(th,uncompPosts, allPostIds);
+                testBed.bitmaptest(partitions, th,uncompPosts, allPostIds);
             else if(partitions > 1)
                 testBed.splittedtest(partitions,uncompPosts, allPostIds);
             else

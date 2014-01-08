@@ -23,9 +23,10 @@ public:
 
     // th = 0 means that we select bitmap as needed
     HybM2(IntegerCODEC & c, intersectionfunction inter, uint32_t MaxId,
+            vector<uint32_t>& recovbuffer,
             uint32_t th = 32) :
         bitmapmap(), shortlistmap(), mapuncompsizes(), mMaxId(MaxId),
-                threshold(th), recovbuffer(), codec(c),
+                threshold(th), recovbuffer(recovbuffer), codec(c),
                 Inter(inter) {
     }
 
@@ -232,7 +233,7 @@ private:
     const size_t mMaxId; //max value that can be stored in a list
     const size_t threshold;//// 32 seems to be the recommended setting, no need to change it?
 
-    vector<uint32_t> recovbuffer;
+    vector<uint32_t>& recovbuffer;
 
     IntegerCODEC & codec;// how we compress the short lists
     intersectionfunction Inter;
