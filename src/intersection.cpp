@@ -231,7 +231,7 @@ size_t match_v4_f2_p0
 
     VEC_T F0, F1;
 
-    if (COMPILER_RARELY(rare >= stopRare) or lenRare < 4) goto FINISH_SCALAR;
+    if (COMPILER_RARELY( (rare >= stopRare) || (freq >= stopFreq) )) goto FINISH_SCALAR;
     
     uint64_t valRare;
     valRare = rare[0];
