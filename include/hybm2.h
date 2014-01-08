@@ -124,6 +124,7 @@ public:
             sort(shortlists.begin(),shortlists.end());
             sort(bitmaps.begin(),bitmaps.end());
             codec.decodeArray(shortlists[0].second->data(),shortlists[0].second->size(),out,sizeout);
+            assert(shortlists[0].first == sizeout);
             unpackVolume+=sizeout;
             assert(sizeout == shortlists[0].first);
             for(uint32_t i = 1; (sizeout>0) && (i < shortlists.size()); ++i) {
@@ -131,6 +132,7 @@ public:
                 codec.decodeArray(shortlists[i].second->data(),shortlists[i].second->size(),
                         recovbuffer.data(),thissize);
                 unpackVolume+=thissize;
+                assert(shortlists[i].first == thissize);
                 sizeout = Inter(out,sizeout,recovbuffer.data(),thissize,out);
 
             }
