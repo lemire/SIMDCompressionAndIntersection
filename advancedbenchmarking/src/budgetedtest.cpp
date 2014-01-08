@@ -20,10 +20,8 @@
 #include "hybm2.h"
 #include "statisticsrecorder.h"
 
-size_t FakeCRC(const uint32_t* p, size_t qty) {
-  size_t s = 0;
-  for (size_t i = 0; i < qty; ++i) s += p[i];
-  return s;
+uint32_t FakeCheckSum(const uint32_t* p, size_t qty) {
+  return std::accumulate( p, p+qty, 0 );
 }
 
 void printusage(char *prog) {
@@ -294,9 +292,9 @@ public:
         CoarseUnpackInterTime += static_cast<double>(coarsez.split());
 
         // Prevent from optimizing out
-        cout << "### Ignore: " 
-             << (FakeCRC(recoveryBuffer.data(), recoveryBuffer.size()) + 
-                FakeCRC(intersection_result.data(), intersection_result.size())) << endl;
+        cout << "### Ignore: "
+             << (FakeCheckSum(recoveryBuffer.data(), recoveryBuffer.size()) +
+                FakeCheckSum(intersection_result.data(), intersection_result.size())) << endl;
     }
 
 
@@ -455,12 +453,12 @@ public:
 
         size_t s = 0;
         for (int i = 0; i < NumberOfPartitions; ++i) {
-          s += FakeCRC(intersection_result[i].data(), intersection_result[i].size());
+          s += FakeCheckSum(intersection_result[i].data(), intersection_result[i].size());
         }
 
         // Prevent from optimizing out
-        cout << "### Ignore: " 
-             << (FakeCRC(recoveryBuffer.data(), recoveryBuffer.size()) + s) << endl;
+        cout << "### Ignore: "
+             << (FakeCheckSum(recoveryBuffer.data(), recoveryBuffer.size()) + s) << endl;
     }
 
     void skippingtest(int SkipLog, BudgetedPostingCollector& uncompPosts,
@@ -520,9 +518,9 @@ public:
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
 
         // Prevent from optimizing out
-        cout << "### Ignore: " 
-             << (FakeCRC(recoveryBuffer.data(), recoveryBuffer.size()) + 
-                FakeCRC(intersection_result.data(), intersection_result.size())) << endl;
+        cout << "### Ignore: "
+             << (FakeCheckSum(recoveryBuffer.data(), recoveryBuffer.size()) +
+                FakeCheckSum(intersection_result.data(), intersection_result.size())) << endl;
     }
 
     /*
@@ -530,7 +528,7 @@ public:
      * 1) All previous calls to bitmaptest now need to explicitly include NumberOfPartitions.
      * 2) If NumberOfPartitions == 0, we call the previously well-tested function
      */
-    void bitmaptest(int NumberOfPartitions, 
+    void bitmaptest(int NumberOfPartitions,
                     uint32_t th, BudgetedPostingCollector& uncompPosts,
             const vector<vector<uint32_t>>& allPostIds) {
         if (NumberOfPartitions > 1) {
@@ -540,7 +538,7 @@ public:
         }
     }
 
-    void bitmaptestsplit(int NumberOfPartitions, 
+    void bitmaptestsplit(int NumberOfPartitions,
                             uint32_t th, BudgetedPostingCollector& uncompPosts,
             const vector<vector<uint32_t>>& allPostIds) {
         pair<uint32_t, uint32_t>    range = uncompPosts.findDocumentIDRange(allPostIds);
@@ -557,8 +555,8 @@ public:
         bounds[NumberOfPartitions] = range.second + 1;
 
         for (int i = 0; i < NumberOfPartitions; ++i) {
-          hybridPart[i] = unique_ptr<HybM2>(new HybM2(scheme, Inter, 
-                                                       bounds[i+1] - bounds[i], 
+          hybridPart[i] = unique_ptr<HybM2>(new HybM2(scheme, Inter,
+                                                       bounds[i+1] - bounds[i],
                                                        recovbufferHybrid, th
                                                         ));
         }
@@ -582,7 +580,7 @@ public:
                 uint32_t sanitycheck = 0;
                 for(int part = 0;  (part < NumberOfPartitions); ++part) {
                     if (i == onePost.end()) {
-                        /* 
+                        /*
                          * We need to load the empty posting or the intersection
                          * will fail
                          */
@@ -614,19 +612,19 @@ public:
                         /////////////
 
                         z.reset();
-                        /* 
-                         * We make a copy because 
+                        /*
+                         * We make a copy because
                          * (1) we need to subtract bounds[part]
-                         * (2) some schemes modify input 
+                         * (2) some schemes modify input
                          * (3) we need 128-bit alignment
                          */
-                        vector<uint32_t> dirtyCopy(i,j); 
+                        vector<uint32_t> dirtyCopy(i,j);
 
-                        /* 
+                        /*
                          * This might be a bit suboptimal.
                          * However Leo expects that GCC 4.7
-                         * would vectorize this operation. 
-                         * Anyways, we don't care much 
+                         * would vectorize this operation.
+                         * Anyways, we don't care much
                          * about compression speeds.
                          */
 
@@ -636,7 +634,7 @@ public:
                         for (size_t id = 0; id < qty; ++id) {
                           dirtyCopy[id] -= minId;
                         }
-                       
+
                         CompressedSizeDuringPacking += hybridPart[part]->
                                               load(id, dirtyCopy.data(), dirtyCopy.size());
                         packTime += static_cast<double> (z.split());
@@ -658,7 +656,7 @@ public:
         }
         CoarsePackTime += static_cast<double> (coarsez.split());
 
-        MaxRecoveryBuffer = *max_element(MaxRecoveryBufferPart.begin(), 
+        MaxRecoveryBuffer = *max_element(MaxRecoveryBufferPart.begin(),
                                          MaxRecoveryBufferPart.end());
 
         vector < uint32_t > intersection_result(MaxPostingSizePart + 1024);
@@ -673,15 +671,15 @@ public:
                 size_t sizeout = intersection_result.size();
                 hybridPart[part]->intersect(qids, intersection_result.data(), sizeout);
 
-                for (size_t k = total_sizeout; k < total_sizeout + sizeout; ++k) 
+                for (size_t k = total_sizeout; k < total_sizeout + sizeout; ++k)
                   total_intersection_result[k] = intersection_result[k - total_sizeout] + bounds[part];
                 total_sizeout += sizeout;
             }
-        
+
             vector<uint32_t> trueintersection = uncompPosts.computeIntersection(qids,onesidedgallopingintersection);
             if(trueintersection.size() != total_sizeout) {
                 stringstream err;
-                err << "Different cardinality, expected: " 
+                err << "Different cardinality, expected: "
                     << trueintersection.size()
                     << " got: "<< total_sizeout;
                 throw runtime_error(err.str());
@@ -699,16 +697,16 @@ public:
         // 2. Finally benchmarking
         for(vector<uint32_t> qids : allPostIds) {
             size_t total_sizeout = 0;
-            
+
             SR.prepareQuery();
             for(int part = 0; part < NumberOfPartitions; ++part) {
                 size_t sizeout = 0;
 
                 // Intersect will fail if there is an empty list
                 sizeout = intersection_result.size();
-                unpackVolume += hybridPart[part]->intersect(qids, 
+                unpackVolume += hybridPart[part]->intersect(qids,
                                  intersection_result.data(), sizeout);
-                for (size_t k = total_sizeout; k < total_sizeout + sizeout; ++k) 
+                for (size_t k = total_sizeout; k < total_sizeout + sizeout; ++k)
                   total_intersection_result[k] = intersection_result[k - total_sizeout] + bounds[part];
                 total_sizeout += sizeout;
             }
@@ -718,8 +716,8 @@ public:
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
 
         // Prevent from optimizing out
-        cout << "### Ignore: " 
-             << FakeCRC(total_intersection_result.data(), 
+        cout << "### Ignore: "
+             << FakeCheckSum(total_intersection_result.data(),
                 total_intersection_result.size()) << endl;
 
     }
@@ -771,8 +769,8 @@ public:
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
 
         // Prevent from optimizing out
-        cout << "### Ignore: " 
-             << FakeCRC(intersection_result.data(), 
+        cout << "### Ignore: "
+             << FakeCheckSum(intersection_result.data(),
                 intersection_result.size()) << endl;
     }
 
@@ -822,8 +820,8 @@ public:
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
 
         // Prevent from optimizing out
-        cout << "### Ignore: " 
-             << FakeCRC(intersection_result.data(), 
+        cout << "### Ignore: "
+             << FakeCheckSum(intersection_result.data(),
                 intersection_result.size()) << endl;
     }
 
@@ -873,8 +871,8 @@ public:
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
 
         // Prevent from optimizing out
-        cout << "### Ignore: " 
-             << FakeCRC(intersection_result.data(), 
+        cout << "### Ignore: "
+             << FakeCheckSum(intersection_result.data(),
                 intersection_result.size()) << endl;
     }
 
@@ -910,8 +908,8 @@ public:
         }
         CoarseUnpackInterTime += static_cast<double> (coarsez.split());
         // Prevent from optimizing out
-        cout << "### Ignore: " 
-             << FakeCRC(inter.data(), inter.size()) << endl;
+        cout << "### Ignore: "
+             << FakeCheckSum(inter.data(), inter.size()) << endl;
     }
 
 
