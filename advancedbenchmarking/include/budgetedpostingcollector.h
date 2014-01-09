@@ -12,6 +12,8 @@
 #include "maropuparser.h"
 #include "intersection.h"
 
+
+
 /*
  * This class reads postings until their total size is below a threshold (memory budget).
  * It encapsulates an out-of-order posting retrieval. It is not straightforward, because
@@ -41,6 +43,8 @@ public:
     }
 
 
+
+
     /*
      * Returns false, when the memory budget is exhausted.
      * Throws an exception in case of an error. It is assumed
@@ -53,8 +57,13 @@ public:
         gapReader.setPos(seenOffsets[postId]);
         if (!gapReader.loadIntegers(readPostings[postId])) {
                 stringstream err;
-                err << "Cannot read posting list, id = id" << postId;
+                err << "Cannot read posting list, id = " << postId;
                 throw runtime_error(err.str());
+        }
+        if(!is_sorted(readPostings[postId])) {
+            stringstream err;
+            err << "Posting list is not in sorted order, id = " << postId;
+            throw runtime_error("not in sorted order");
         }
         size_t qty = readPostings[postId].size();
         readPostings[postId].shrink_to_fit();// may or may not be useful

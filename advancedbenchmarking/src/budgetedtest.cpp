@@ -20,6 +20,7 @@
 #include "hybm2.h"
 #include "statisticsrecorder.h"
 
+
 uint32_t FakeCheckSum(const uint32_t* p, size_t qty) {
   return std::accumulate( p, p+qty, 0 );
 }
@@ -569,6 +570,7 @@ public:
         for (const vector<uint32_t> & qids: allPostIds) {
             for (uint32_t id: qids) {
                 vector<uint32_t>& onePost = uncompPosts.getOnePost(id);
+
 
                 if (TotalMaxPostingSize < onePost.size()) {
                     TotalMaxPostingSize = onePost.size();

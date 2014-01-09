@@ -126,4 +126,18 @@ inline uint32_t asmbits(const uint32_t v) {
     __asm__("bsr %1, %0;" :"=r"(answer) :"r"(v));
     return answer + 1;
 }
+
+
+template <class iterator>
+bool is_sorted(iterator begin, iterator end) {
+    ForwardIterator next=first;
+    ++next;
+    while (next != last) {
+      if (*first >= *next)
+        return false;
+      ++first;
+      ++next;
+    }
+    return true;
+}
 #endif /* UTIL_H_ */
