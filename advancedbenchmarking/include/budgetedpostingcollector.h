@@ -60,7 +60,7 @@ public:
                 err << "Cannot read posting list, id = " << postId;
                 throw runtime_error(err.str());
         }
-        if(!is_sorted(readPostings[postId])) {
+        if(!is_strictlysorted(readPostings[postId].begin(), readPostings[postId].end())) {
             stringstream err;
             err << "Posting list is not in sorted order, id = " << postId;
             throw runtime_error("not in sorted order");
@@ -113,7 +113,10 @@ public:
                 if(onePost.back() > answer.second) answer.second = onePost.back();
             }
         }
-        assert(answer.first<=answer.second);
+        if(answer.first>answer.second) {
+          cout<<"[WARNING] invalid range because no data."<<endl;
+          answer.second = answer.first;
+        }
         return answer;
     }
 
