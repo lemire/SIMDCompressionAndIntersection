@@ -129,10 +129,10 @@ inline uint32_t asmbits(const uint32_t v) {
 
 
 template <class iterator>
-bool is_sorted(iterator begin, iterator end) {
-    ForwardIterator next=first;
+bool is_strictlysorted(iterator first, iterator last)  {
+    iterator next=first;
     ++next;
-    while (next != last) {
+    while (next < last) {
       if (*first >= *next)
         return false;
       ++first;
