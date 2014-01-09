@@ -232,7 +232,7 @@ size_t match_v4_f2_p0
     VEC_T F0, F1;
 
     if (COMPILER_RARELY( (rare >= stopRare) || (freq >= stopFreq) )) goto FINISH_SCALAR;
-    
+
     uint64_t valRare;
     valRare = rare[0];
     VEC_SET_ALL_TO_INT(Rare, valRare);
@@ -584,20 +584,20 @@ size_t SIMDintersection(const uint32_t * set1,
 
 
     if ((1000 * length1 <= length2) or (1000 * length2 <= length1)) {
-            if (length1 < length2)
+            if (length1 <= length2)
                 return SIMDgalloping(set1, length1, set2, length2,out);
             else
                 return SIMDgalloping(set2, length2, set1, length1,out);
     }
 
     if ((50 * length1 <= length2) or (50 * length2 <= length1)) {
-            if (length1 < length2)
+            if (length1 <= length2)
                 return danfarfar_medium(set1, length1, set2, length2,out);
             else
                 return danfarfar_medium(set2, length2, set1, length1,out);
     }
 
-    if (length1 < length2)
+    if (length1 <= length2)
         return match_v4_f2_p0(set1, length1, set2, length2, out);
     else
         return match_v4_f2_p0(set2, length2, set1, length1, out);
