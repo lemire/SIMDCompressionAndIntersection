@@ -321,9 +321,11 @@ public:
                     / NumberOfPartitions;// slightly uneven
         bounds[NumberOfPartitions] = range.second + 1;
         vector < uint32_t > maxSize(NumberOfPartitions);// will contain the max size of a partition of a posting list
+        size_t TotalMaxPostingSize = 0;
         for (const vector<uint32_t> & qids: allPostIds) {
             for (uint32_t id: qids) {
                 vector<uint32_t>& onePost = uncompPosts.getOnePost(id);
+                TotalMaxPostingSize = max(TotalMaxPostingSize, onePost.size());
                 vector<uint32_t>::iterator i = onePost.begin();
                 for(int part = 0; part < NumberOfPartitions; ++part) {
                     vector<uint32_t>::iterator j = lower_bound(i,onePost.end(),bounds[part+1]);
@@ -384,82 +386,108 @@ public:
         CoarsePackTime += static_cast<double> (coarsez.split());
         vector<uint32_t>  recoveryBuffer(AbsoluteMaxSize);
         if(MaxRecoveryBuffer < AbsoluteMaxSize) MaxRecoveryBuffer = AbsoluteMaxSize;
+        vector < uint32_t > total_intersection_result(TotalMaxPostingSize + 1024);
         vector < vector<uint32_t> > intersection_result;
         for(uint32_t size : maxSize) {
             vector<uint32_t> intersectionbuffer(size+128);
             intersection_result.emplace_back(intersectionbuffer);
         }
-        coarsez.reset();
-        // 2. Test full cycle (decompression + intersection)
-        for (const vector<uint32_t> & qids: allPostIds) {
-            SR.prepareQuery();
-            size_t totalintercardinality = 0;
-            for(int part = 0; part < NumberOfPartitions; ++part) {
-                vector<pair<size_t, const vector<uint32_t> * > > queryCompPost;
-                for (uint32_t id: qids) {
-                    uint32_t myuncompsize = uncompsizes[id][part];
-                    const vector<uint32_t> * compressedposting = & compPostings[id][part];
-                    queryCompPost.emplace_back(make_pair(myuncompsize, compressedposting));
-                }
-                sort(queryCompPost.begin(), queryCompPost.end());
-                const uint32_t * input = queryCompPost.front().second->data();
-                size_t inputsize = queryCompPost.front().second->size();
-                uint32_t * const intersectionbuffer = intersection_result[part].data();
-                z.reset();
-                size_t intersectioncardinality = intersection_result[part].size();
-                if(inputsize == 0)
-                  intersectioncardinality = 0;
-                else
-                   scheme.decodeArray(input,inputsize ,
-                        intersectionbuffer, intersectioncardinality);
-                unpackTime += static_cast<double>(z.split());
-                assert(intersectioncardinality<=intersection_result[part].size());
-                unpackVolume += intersectioncardinality;
-                uint32_t * const recoverybuffer = recoveryBuffer.data();
-                for (size_t i = 1; (intersectioncardinality>0) && (i < queryCompPost.size()); ++i) {
-                    // again we use explicit pointers to make it easier for non-STL people
-                    size_t recoveredsize = recoveryBuffer.size();
-                    input = queryCompPost[i].second->data();
-                    inputsize = queryCompPost[i].second->size();
-                    /////////////////////////
-                    // BEGIN performance-sensitive section
-                    // Note that input might not be in cache, and that
-                    // output might be to RAM
-                    ////////////////////////
-                    z.reset();
-                    scheme.decodeArray(input,inputsize,recoverybuffer , recoveredsize);
-                    unpackTime += static_cast<double>(z.split());
-                    assert(recoveredsize<=recoveryBuffer.size());
-                    /////////////////////////
-                    // END performance-sensitive section
-                    /////////////////////////
-                    unpackVolume += recoveredsize;
-                    /////////////////////////
-                    // BEGIN performance-sensitive section for intersections.
-                    // Both inputs could be in RAM, not in cache.
-                    ////////////////////////
-                    z.reset();
-                    intersectioncardinality = Inter(intersectionbuffer,intersectioncardinality,
-                            recoverybuffer, recoveredsize,intersectionbuffer);
-                    interTime += static_cast<double>(z.split());
-                    ////////////////////////////////
-                    // END performance-sensitive section for intersections.
-                    ///////////////////////////////
-                }
-                totalintercardinality += intersectioncardinality;
-            }
-            SR.endQuery(totalintercardinality, uncompPosts,qids);
-        }
-        CoarseUnpackInterTime += static_cast<double> (coarsez.split());
 
-        size_t s = 0;
-        for (int i = 0; i < NumberOfPartitions; ++i) {
-          s += FakeCheckSum(intersection_result[i].data(), intersection_result[i].size());
+
+        // 2. Test full cycle (decompression + intersection)
+        // if 0 == phase, we test the correctness of the algorithm.
+        // if 1 == phase, we test performance 
+        for (int phase = 0; phase < 2; ++ phase) {
+            if (1==phase) coarsez.reset();
+
+            for (const vector<uint32_t> & qids: allPostIds) {
+                if (1 == phase) SR.prepareQuery();
+                size_t totalintercardinality = 0;
+                for(int part = 0; part < NumberOfPartitions; ++part) {
+                    vector<pair<size_t, const vector<uint32_t> * > > queryCompPost;
+                    for (uint32_t id: qids) {
+                        uint32_t myuncompsize = uncompsizes[id][part];
+                        const vector<uint32_t> * compressedposting = & compPostings[id][part];
+                        queryCompPost.emplace_back(make_pair(myuncompsize, compressedposting));
+                    }
+                    sort(queryCompPost.begin(), queryCompPost.end());
+                    const uint32_t * input = queryCompPost.front().second->data();
+                    size_t inputsize = queryCompPost.front().second->size();
+                    uint32_t * const intersectionbuffer = intersection_result[part].data();
+                    if (1 == phase) z.reset();
+                    size_t intersectioncardinality = intersection_result[part].size();
+                    if(inputsize == 0)
+                      intersectioncardinality = 0;
+                    else
+                       scheme.decodeArray(input,inputsize ,
+                            intersectionbuffer, intersectioncardinality);
+                    if (1 == phase) {
+                        unpackTime += static_cast<double>(z.split());
+                        unpackVolume += intersectioncardinality;
+                    }
+                    assert(intersectioncardinality<=intersection_result[part].size());
+                    uint32_t * const recoverybuffer = recoveryBuffer.data();
+                    for (size_t i = 1; (intersectioncardinality>0) && (i < queryCompPost.size()); ++i) {
+                        // again we use explicit pointers to make it easier for non-STL people
+                        size_t recoveredsize = recoveryBuffer.size();
+                        input = queryCompPost[i].second->data();
+                        inputsize = queryCompPost[i].second->size();
+                        /////////////////////////
+                        // BEGIN performance-sensitive section
+                        // Note that input might not be in cache, and that
+                        // output might be to RAM
+                        ////////////////////////
+                        if (1 == phase) z.reset();
+                        scheme.decodeArray(input,inputsize,recoverybuffer , recoveredsize);
+                        if (1 == phase) {
+                            unpackTime += static_cast<double>(z.split());
+                            unpackVolume += recoveredsize;
+                        }
+                        assert(recoveredsize<=recoveryBuffer.size());
+                        /////////////////////////
+                        // END performance-sensitive section
+                        /////////////////////////
+                        /////////////////////////
+                        // BEGIN performance-sensitive section for intersections.
+                        // Both inputs could be in RAM, not in cache.
+                        ////////////////////////
+                        if (1 == phase) z.reset();
+                        intersectioncardinality = Inter(intersectionbuffer,intersectioncardinality,
+                                recoverybuffer, recoveredsize,intersectionbuffer);
+                        if (1 == phase) interTime += static_cast<double>(z.split());
+                        ////////////////////////////////
+                        // END performance-sensitive section for intersections.
+                        ///////////////////////////////
+                    }
+                    // Saving the result
+                    copy(intersectionbuffer,
+                         intersectionbuffer + intersectioncardinality,
+                         total_intersection_result.begin() + totalintercardinality);
+                    totalintercardinality += intersectioncardinality;
+                }
+                if (1 == phase) SR.endQuery(totalintercardinality, uncompPosts,qids);
+                if (0 == phase) {
+                    vector<uint32_t> trueintersection = uncompPosts.computeIntersection(qids,onesidedgallopingintersection);
+                    if(trueintersection.size() != totalintercardinality) {
+                        stringstream err;
+                        err << "Different cardinality, expected: "
+                            << trueintersection.size()
+                            << " got: "<< totalintercardinality;
+                            throw runtime_error(err.str());
+                    }
+                    for(uint32_t k = 0; k < trueintersection.size();++k) {
+                        if(trueintersection[k] != total_intersection_result[k])  {
+                            throw runtime_error("intersection bug");
+                        }
+                    }
+                }
+            }
+            if (1 == phase) CoarseUnpackInterTime += static_cast<double> (coarsez.split());
         }
 
         // Prevent from optimizing out
         cout << "### Ignore: "
-             << (FakeCheckSum(recoveryBuffer.data(), recoveryBuffer.size()) + s) << endl;
+             << FakeCheckSum(total_intersection_result.data(), total_intersection_result.size()) << endl;
     }
 
     void skippingtest(int SkipLog, BudgetedPostingCollector& uncompPosts,
