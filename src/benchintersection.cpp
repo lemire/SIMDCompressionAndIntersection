@@ -46,6 +46,7 @@ pair<vector<uint32_t>,vector<uint32_t> > getNaivePair(generator gen, uint32_t mi
 
 void printusage() {
     cout << " Try ./benchintersection " << endl;
+    cout<<" -u switches to uniform distribution"<<endl;
 }
 
 int main(int argc, char **argv) {
@@ -99,7 +100,7 @@ int main(int argc, char **argv) {
     }
     cout<<"# howmany : "<<howmany<<endl;
     cout<<"# loop : "<<loop<<endl;
-    cout<<"# uniform : "<<uniform<<endl;
+    cout<<"# distribution : "<<(uniform?"uniform":"clustered")<<endl;
     cout<<"# Big : "<<Big<<endl;
     cout<<"# intersectionratio : "<<intersectionratio<<endl;
     cout<<"# MaxBit : "<<MaxBit<<endl;
@@ -108,10 +109,11 @@ int main(int argc, char **argv) {
     WallClockTimer z;
     size_t bogus = 0;
     vector < uint32_t > buffer(2 * (1U << Big));
+    cout<<"# size-ratio\t";
     for(string intername : IntersectionFactory::allNames()) {
         cout<<intername<<"\t";
     }
-    cout << endl;
+    cout<<"relative-intersection-size "<<endl;
     for (float ir = 1.001; ir <= 10000; ir = ir * sqrt(1.9)) {
         vector < pair<vector<uint32_t> , vector<uint32_t> > > data(howmany);
         uint32_t smallsize = static_cast<uint32_t>(round(static_cast<float> (1 << Big) / ir));
