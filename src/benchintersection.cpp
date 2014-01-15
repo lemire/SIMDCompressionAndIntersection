@@ -51,11 +51,12 @@ void printusage() {
 int main(int argc, char **argv) {
     size_t howmany = 0;
     size_t loop = 3;
+    bool uniform = false;
     uint32_t Big = 22;
     float intersectionratio = 0.3f;
     uint32_t MaxBit = 26;
     int c;
-    while ((c = getopt(argc, argv, "ns:m:R:M:S:l:h")) != -1)
+    while ((c = getopt(argc, argv, "uns:m:R:M:S:l:h")) != -1)
         switch (c) {
         case 'h':
             printusage();
@@ -87,6 +88,9 @@ int main(int argc, char **argv) {
                 return -1;
             }
             break;
+        case 'u':
+            uniform = true;
+            break;
         default:
             abort();
         }
@@ -95,9 +99,11 @@ int main(int argc, char **argv) {
     }
     cout<<"# howmany : "<<howmany<<endl;
     cout<<"# loop : "<<loop<<endl;
+    cout<<"# uniform : "<<uniform<<endl;
     cout<<"# Big : "<<Big<<endl;
     cout<<"# intersectionratio : "<<intersectionratio<<endl;
     cout<<"# MaxBit : "<<MaxBit<<endl;
+    UniformDataGenerator udg;
     ClusteredDataGenerator cdg;
     WallClockTimer z;
     size_t bogus = 0;
@@ -112,7 +118,8 @@ int main(int argc, char **argv) {
         cout<<"#generating data...";
         cout.flush();
         for (size_t k = 0; k < howmany; ++k) {
-            data[k] = getNaivePair(cdg, smallsize,1U<<MaxBit, ir,intersectionratio);
+            data[k] = uniform ? getNaivePair( udg , smallsize,1U<<MaxBit, ir,intersectionratio)
+                    : getNaivePair( cdg , smallsize,1U<<MaxBit, ir,intersectionratio);
         }
         cout<<"ok."<<endl;
         cout << ir << "\t";
