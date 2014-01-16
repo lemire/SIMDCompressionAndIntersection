@@ -100,7 +100,7 @@ size_t onesidedgallopingintersection(const uint32_t * smallset,
 /**
  * Fast scalar scheme designed by N. Kurz.
  */
-size_t nate_scalar(const uint32_t *A, const size_t lenA,
+size_t scalar(const uint32_t *A, const size_t lenA,
         const uint32_t *B, const size_t lenB, uint32_t * out) {
     const uint32_t * const initout(out);
     if (lenA == 0 || lenB == 0)
@@ -213,7 +213,7 @@ size_t match_scalar(const uint32_t *A, const size_t lenA,
  * differences.
  *
  */
-size_t match_v4_f2_p0
+size_t v1
 (const uint32_t *rare, size_t lenRare,
  const uint32_t *freq, size_t lenFreq,
  uint32_t *matchOut) {
@@ -304,7 +304,7 @@ FINISH_SCALAR:
     return count + tail;
 }
 
-size_t danfarfar_medium(const uint32_t *rare, const size_t lenRare,
+size_t v3(const uint32_t *rare, const size_t lenRare,
         const uint32_t *freq, const size_t lenFreq, uint32_t * out) {
     if (lenFreq == 0 || lenRare == 0)
         return 0;
@@ -319,7 +319,7 @@ size_t danfarfar_medium(const uint32_t *rare, const size_t lenRare,
     const uint32_t *stopFreq = freq + lenFreq - freqspace;
     const uint32_t *stopRare = rare + lenRare - rarespace;
     if (freq > stopFreq) {
-        return nate_scalar(freq, lenFreq, rare, lenRare, out);
+        return scalar(freq, lenFreq, rare, lenRare, out);
     }
     while (freq[veclen * 31 + vecmax] < *rare) {
         freq += veclen * 32;
@@ -404,7 +404,7 @@ size_t danfarfar_medium(const uint32_t *rare, const size_t lenRare,
         }
     }
 
-    FINISH_SCALAR: return (out - initout) + nate_scalar(freq,
+    FINISH_SCALAR: return (out - initout) + scalar(freq,
             stopFreq + freqspace - freq, rare, stopRare + rarespace - rare, out);
 }
 
@@ -424,7 +424,7 @@ size_t SIMDgalloping(const uint32_t *rare, const size_t lenRare,
     const uint32_t *stopFreq = freq + lenFreq - freqspace;
     const uint32_t *stopRare = rare + lenRare - rarespace;
     if (freq > stopFreq) {
-        return nate_scalar(freq, lenFreq, rare, lenRare, out);
+        return scalar(freq, lenFreq, rare, lenRare, out);
     }
     for (; rare < stopRare; ++rare) {
         const uint32_t matchRare = *rare;//nextRare;
@@ -571,7 +571,7 @@ size_t SIMDgalloping(const uint32_t *rare, const size_t lenRare,
         }
     }
 
-    FINISH_SCALAR: return (out - initout) + nate_scalar(freq,
+    FINISH_SCALAR: return (out - initout) + scalar(freq,
             stopFreq + freqspace - freq, rare, stopRare + rarespace - rare, out);
 }
 
@@ -592,24 +592,24 @@ size_t SIMDintersection(const uint32_t * set1,
 
     if ((50 * length1 <= length2) or (50 * length2 <= length1)) {
             if (length1 <= length2)
-                return danfarfar_medium(set1, length1, set2, length2,out);
+                return v3(set1, length1, set2, length2,out);
             else
-                return danfarfar_medium(set2, length2, set1, length1,out);
+                return v3(set2, length2, set1, length1,out);
     }
 
     if (length1 <= length2)
-        return match_v4_f2_p0(set1, length1, set2, length2, out);
+        return v1(set1, length1, set2, length2, out);
     else
-        return match_v4_f2_p0(set2, length2, set1, length1, out);
+        return v1(set2, length2, set1, length1, out);
 }
 
 inline std::map<std::string,intersectionfunction> initializeintersectionfactory() {
     std::map<std::string,intersectionfunction> schemes;
     schemes[ "simd" ] = SIMDintersection;
     schemes[ "galloping" ] = onesidedgallopingintersection;
-    schemes[ "scalar" ] = nate_scalar;
-    schemes[ "v1" ] = match_v4_f2_p0;
-    schemes["v3"] = danfarfar_medium;
+    schemes[ "scalar" ] = scalar;
+    schemes[ "v1" ] = v1;
+    schemes["v3"] = v3;
     schemes["simdgalloping"] =SIMDgalloping;
 
     return schemes;
