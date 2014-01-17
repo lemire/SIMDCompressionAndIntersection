@@ -21,10 +21,9 @@
  */
 class BudgetedPostingCollector {
 public:
-    BudgetedPostingCollector(const string& postFileName, size_t memBudget) :
-                             seenOffsets(0), readPostings(),
-                             gapReader(postFileName), memBudget(memBudget), memUsed(0)
-                             {
+    BudgetedPostingCollector(const string &postFileName, size_t memBudget) :
+        seenOffsets(0), readPostings(),
+        gapReader(postFileName), memBudget(memBudget), memUsed(0) {
         if (!gapReader.open()) {
             throw runtime_error(" could not open " + postFileName + " for reading...");
         }
@@ -51,27 +50,27 @@ public:
      * that postId is a valid identifier (call valid() to check).
      */
     bool loadOnePost(uint32_t postId) {
-        if(readPostings.find(postId) != readPostings.end())
+        if (readPostings.find(postId) != readPostings.end())
             return true;// already loaded, nothing to do
         assert(valid(postId));
         gapReader.setPos(seenOffsets[postId]);
         if (!gapReader.loadIntegers(readPostings[postId])) {
-                stringstream err;
-                err << "Cannot read posting list, id = " << postId;
-                throw runtime_error(err.str());
+            stringstream err;
+            err << "Cannot read posting list, id = " << postId;
+            throw runtime_error(err.str());
         }
-        if(!is_strictlysorted(readPostings[postId].begin(), readPostings[postId].end())) {
+        if (!is_strictlysorted(readPostings[postId].begin(), readPostings[postId].end())) {
             stringstream err;
             err << "Posting list is not in sorted order, id = " << postId;
             throw runtime_error("not in sorted order");
         }
         size_t qty = readPostings[postId].size();
         readPostings[postId].shrink_to_fit();// may or may not be useful
-        if(qty == 0) cout << "[WARNING] Empty posting  list found." <<endl;
+        if (qty == 0) cout << "[WARNING] Empty posting  list found." << endl;
         size_t addMem = qty * sizeof(uint32_t);
         if (memUsed + addMem > memBudget) {
-                readPostings.erase(postId);
-                return false;
+            readPostings.erase(postId);
+            return false;
         }
         memUsed += addMem;
         return true;
@@ -83,8 +82,8 @@ public:
      *
      * this is basically a convenience wrapper around loadOnePost.
      */
-    bool loadPostings(const vector<uint32_t>& postIds) {
-        for (const auto  id: postIds) {
+    bool loadPostings(const vector<uint32_t> &postIds) {
+        for (const auto  id : postIds) {
             if (!loadOnePost(id)) return false;
         }
         return true;
@@ -101,21 +100,21 @@ public:
     /**
      * This finds the largest and smallest document ID from a set of queries.
      */
-    pair<uint32_t,uint32_t> findDocumentIDRange(const vector<vector<uint32_t>>& allPostIds) {
+    pair<uint32_t, uint32_t> findDocumentIDRange(const vector<vector<uint32_t>> &allPostIds) {
         uint32_t largestpossible = numeric_limits<uint32_t>::max();
         uint32_t smallestpossible = 0;
-        pair<uint32_t,uint32_t> answer = make_pair(largestpossible,smallestpossible);
-        for (const vector<uint32_t> & qids: allPostIds) {
-            for (uint32_t id: qids) {
-                vector<uint32_t>& onePost = getOnePost(id);
-                if(onePost.empty()) continue;
-                if(onePost.front() < answer.first) answer.first = onePost.front();
-                if(onePost.back() > answer.second) answer.second = onePost.back();
+        pair<uint32_t, uint32_t> answer = make_pair(largestpossible, smallestpossible);
+        for (const vector<uint32_t> &qids : allPostIds) {
+            for (uint32_t id : qids) {
+                vector<uint32_t> &onePost = getOnePost(id);
+                if (onePost.empty()) continue;
+                if (onePost.front() < answer.first) answer.first = onePost.front();
+                if (onePost.back() > answer.second) answer.second = onePost.back();
             }
         }
-        if(answer.first>answer.second) {
-          cout<<"[WARNING] invalid range because no data."<<endl;
-          answer.second = answer.first;
+        if (answer.first > answer.second) {
+            cout << "[WARNING] invalid range because no data." << endl;
+            answer.second = answer.first;
         }
         return answer;
     }
@@ -127,12 +126,12 @@ public:
      * pre-loaded using the function loadOnePost or loadPostings;
      * an exception is thrown otherwise.
      */
-    size_t findMaxPostingSize(const vector<vector<uint32_t>>& allPostIds) {
+    size_t findMaxPostingSize(const vector<vector<uint32_t>> &allPostIds) {
         size_t MaxPostingSize(0);
-        for (const vector<uint32_t> & qids: allPostIds) {
-            for (uint32_t id: qids) {
-                vector<uint32_t>& onePost = getOnePost(id);
-                if(MaxPostingSize < onePost.size()) MaxPostingSize = onePost.size();
+        for (const vector<uint32_t> &qids : allPostIds) {
+            for (uint32_t id : qids) {
+                vector<uint32_t> &onePost = getOnePost(id);
+                if (MaxPostingSize < onePost.size()) MaxPostingSize = onePost.size();
             }
         }
         return MaxPostingSize;
@@ -142,7 +141,7 @@ public:
      * pre-loaded using the function loadOnePost or loadPostings;
      * an exception is thrown otherwise.
      */
-    vector<uint32_t>& getOnePost(uint32_t postId) {
+    vector<uint32_t> &getOnePost(uint32_t postId) {
         if (readPostings.find(postId) == readPostings.end()) {
             throw runtime_error("Should call loadIntegers before can access postings!");
         }
@@ -169,22 +168,22 @@ public:
      *  The data should be pre-loaded using the function loadOnePost or loadPostings;
      * an exception is thrown otherwise.
      */
-    vector<uint32_t> computeIntersection(const vector<uint32_t> & qids,  intersectionfunction  Inter) {
-    	vector<uint32_t> inter;
-    	if(qids.empty()) return inter;
-    	vector<pair<uint32_t,uint32_t> > sizeids;
-    	for(uint32_t i : qids) {
-    		sizeids.emplace_back(make_pair(getOnePost(i).size(),i));
-    	}
-    	sort(sizeids.begin(), sizeids.end());
-    	inter = getOnePost(sizeids.front().second);
-    	size_t intersize = inter.size();
-    	for(size_t k = 1; k <qids.size() ; ++k) {
-    		intersize = Inter(inter.data(), intersize,
-    				getOnePost(sizeids[k].second).data(), getOnePost(sizeids[k].second).size(), inter.data());
-    	}
-    	inter.resize(intersize);
-    	return inter;
+    vector<uint32_t> computeIntersection(const vector<uint32_t> &qids,  intersectionfunction  Inter) {
+        vector<uint32_t> inter;
+        if (qids.empty()) return inter;
+        vector<pair<uint32_t, uint32_t>> sizeids;
+        for (uint32_t i : qids) {
+            sizeids.emplace_back(make_pair(getOnePost(i).size(), i));
+        }
+        sort(sizeids.begin(), sizeids.end());
+        inter = getOnePost(sizeids.front().second);
+        size_t intersize = inter.size();
+        for (size_t k = 1; k < qids.size() ; ++k) {
+            intersize = Inter(inter.data(), intersize,
+                              getOnePost(sizeids[k].second).data(), getOnePost(sizeids[k].second).size(), inter.data());
+        }
+        inter.resize(intersize);
+        return inter;
     }
 
     size_t getMemUsed() const { return memUsed; }
@@ -200,9 +199,9 @@ public:
         seenOffsets.clear();
         off_t       pos;
         uint32_t    qty;
-        while(true) {
+        while (true) {
             if (!gapReader.readNextPosAndQty(pos, qty)) {
-               return;
+                return;
             }
             seenOffsets.emplace_back(pos);
         }
@@ -213,7 +212,7 @@ private:
     // we make the copy constructor private to prevent the compiler from autogenerating one
     BudgetedPostingCollector(const BudgetedPostingCollector &);
     // we don't want people to use the assignment operator.
-    BudgetedPostingCollector & operator=(const BudgetedPostingCollector &);
+    BudgetedPostingCollector &operator=(const BudgetedPostingCollector &);
 
     /*
      * The class "knows" all offsets for posting ids from 0 to seenOffsets.size() - 1
@@ -221,7 +220,7 @@ private:
      * with an empty posting list collector and get a request to read posting with 10.
      */
     vector<off_t>                   seenOffsets; // location of the postings
-    unordered_map<off_t,vector<uint32_t> >        readPostings; // accumulated postings
+    unordered_map<off_t, vector<uint32_t>>        readPostings; // accumulated postings
 
     MaropuGapReader                 gapReader; // reader to recover the postings
     size_t                          memBudget;

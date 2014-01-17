@@ -21,7 +21,7 @@ public:
         N = 624, M = 397
     };
     unsigned int MT[N + 1];
-    unsigned int* map[N];
+    unsigned int *map[N];
     int nValues;
 
     ZRandom(unsigned int iSeed = 20070102);
@@ -79,7 +79,7 @@ unsigned int ZRandom::getValue() {
         MT[N] = MT[0];
         for (int i = 0; i < N; ++i) {
             register unsigned y = (0x80000000 & MT[i]) | (0x7FFFFFFF
-                    & MT[i + 1]);
+                                  & MT[i + 1]);
             register unsigned v = *(map[i]) ^ (y >> 1);
             if (1 & y)
                 v ^= 2567483615;
