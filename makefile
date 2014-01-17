@@ -40,6 +40,9 @@ intersection.o: include/intersection.h src/intersection.cpp
 benchintersection: intersection.o src/benchintersection.cpp include/synthetic.h include/timer.h
 	$(CXX) $(CXXFLAGS) -o benchintersection src/benchintersection.cpp intersection.o -Iinclude
 
+likwidintersection: intersection.o src/benchintersection.cpp include/synthetic.h include/timer.h
+	$(CXX) $(CXXFLAGS) -DLIKWID_MARKERS -pthread -o likwidintersection src/benchintersection.cpp intersection.o -Iinclude -llikwid 
+
 integratedbitpacking.o: include/integratedbitpacking.h src/integratedbitpacking.cpp 
 	$(CXX) $(CXXFLAGS) -c src/integratedbitpacking.cpp -Iinclude
 

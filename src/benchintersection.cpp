@@ -10,6 +10,10 @@
 #include "timer.h"
 #include "intersection.h"
 
+// https://code.google.com/p/likwid/wiki/LikwidPerfCtr#Using_the_marker_API
+#ifdef LIKWID_MARKERS  // see 'make likwidintersection' for compiler flags
+#include <likwid.h>
+#endif
 
 /**
  * Goal: have the largest array count about 4M terms (this
@@ -45,7 +49,11 @@ pair<vector<uint32_t>,vector<uint32_t> > getNaivePair(generator gen, uint32_t mi
 
 
 void printusage() {
+#ifdef LIKWID_MARKERS
+    cout << "example: likwid -m -C 1 -g BRANCH ./likwidintersection -u > uniform.out" << endl;
+#else
     cout << " Try ./benchintersection " << endl;
+#endif
 }
 
 int main(int argc, char **argv) {
@@ -108,10 +116,18 @@ int main(int argc, char **argv) {
     WallClockTimer z;
     size_t bogus = 0;
     vector < uint32_t > buffer(2 * (1U << Big));
+#ifdef LIKWID_MARKERS
+    char currentMarker[64];
+#endif
+
     for(string intername : IntersectionFactory::allNames()) {
         cout<<intername<<"\t";
     }
     cout << endl;
+
+#ifdef LIKWID_MARKERS
+    likwid_markerInit();
+#endif
     for (float ir = 1.001; ir <= 10000; ir = ir * sqrt(1.9)) {
         vector < pair<vector<uint32_t> , vector<uint32_t> > > data(howmany);
         uint32_t smallsize = static_cast<uint32_t>(round(static_cast<float> (1 << Big) / ir));
@@ -127,6 +143,10 @@ int main(int argc, char **argv) {
         for(string intername : IntersectionFactory::allNames()) {
             intersectionfunction interfnc = IntersectionFactory::getFromName(intername);
             size_t volume = 0;
+#ifdef LIKWID_MARKERS
+            snprintf(currentMarker, sizeof(currentMarker), "%s %.2f", intername.c_str(), ir);
+            likwid_markerStartRegion(currentMarker);
+#endif
             z.reset();
             for(size_t k = 0; k < data.size(); ++k) {
                 volume += (data[k].first.size() + data[k].second.size())*loop;
@@ -138,11 +158,17 @@ int main(int argc, char **argv) {
                 }
             }
             cout<< setw(10) << setprecision(5)<<(volume / (static_cast<double>(z.split()) ))<<"\t";
+#ifdef LIKWID_MARKERS
+            likwid_markerStopRegion(currentMarker);
+#endif
         }
         cout<<"\t\t"<<aratio/smallsize;
         cout << endl;
 
     }
+#ifdef LIKWID_MARKERS
+    likwid_markerClose();
+#endif
 
     cout << "# bogus = " << bogus << endl;
 }
