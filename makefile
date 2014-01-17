@@ -110,6 +110,6 @@ uncompress: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/uncompress.cpp $
 	$(CXX) $(CXXFLAGS) -o uncompress advancedbenchmarking/src/uncompress.cpp $(OBJECTS) -Iinclude -Iadvancedbenchmarking/include 
 
 astyle:
-	astyle --options=astyle.conf include/*.h src/*.cpp
+	astyle --options=astyle.conf --recursive "*.cpp" "*.h"
 
 .PHONY: all clean astyle
