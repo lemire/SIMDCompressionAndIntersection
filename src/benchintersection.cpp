@@ -52,7 +52,7 @@ void printusage() {
 #ifdef LIKWID_MARKERS
     cout << "example: likwid -m -C 1 -g BRANCH ./likwidintersection -u > uniform.out" << endl;
 #else
-    cout << " Try ./benchintersection " << endl;
+    cout<<" -u switches to uniform distribution"<<endl;
 #endif
 }
 
@@ -107,7 +107,7 @@ int main(int argc, char **argv) {
     }
     cout<<"# howmany : "<<howmany<<endl;
     cout<<"# loop : "<<loop<<endl;
-    cout<<"# uniform : "<<uniform<<endl;
+    cout<<"# distribution : "<<(uniform?"uniform":"clustered")<<endl;
     cout<<"# Big : "<<Big<<endl;
     cout<<"# intersectionratio : "<<intersectionratio<<endl;
     cout<<"# MaxBit : "<<MaxBit<<endl;
@@ -118,16 +118,15 @@ int main(int argc, char **argv) {
     vector < uint32_t > buffer(2 * (1U << Big));
 #ifdef LIKWID_MARKERS
     char currentMarker[64];
+    likwid_markerInit();
 #endif
 
+    cout<<"# size-ratio\t";
     for(string intername : IntersectionFactory::allNames()) {
         cout<<intername<<"\t";
     }
-    cout << endl;
+    cout<<"relative-intersection-size "<<endl;
 
-#ifdef LIKWID_MARKERS
-    likwid_markerInit();
-#endif
     for (float ir = 1.001; ir <= 10000; ir = ir * sqrt(1.9)) {
         vector < pair<vector<uint32_t> , vector<uint32_t> > > data(howmany);
         uint32_t smallsize = static_cast<uint32_t>(round(static_cast<float> (1 << Big) / ir));
