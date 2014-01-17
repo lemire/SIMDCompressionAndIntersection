@@ -34,11 +34,6 @@ static size_t __frogadvanceUntil(const uint32_t * array, const size_t pos,
         spansize *= 2;
     size_t upper = (lower + spansize < length) ? lower + spansize : length - 1;
 
-    // maybe we are lucky (could be common case when the seek ahead expected to be small and sequential will otherwise make us look bad)
-    //if (array[upper] == min) {
-    //    return upper;
-    //}
-
     if (array[upper] < min) {// means array has no item >= min
         return length;
     }
