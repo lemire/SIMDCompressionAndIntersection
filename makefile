@@ -107,5 +107,9 @@ entropy: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/entropy.cpp $(OBJEC
 
 
 uncompress: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/uncompress.cpp $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o uncompress advancedbenchmarking/src/uncompress.cpp $(OBJECTS) -Iinclude -Iadvancedbenchmarking/include
- 
+	$(CXX) $(CXXFLAGS) -o uncompress advancedbenchmarking/src/uncompress.cpp $(OBJECTS) -Iinclude -Iadvancedbenchmarking/include 
+
+astyle:
+	astyle --options=astyle.conf include/*.h src/*.cpp
+
+.PHONY: all clean astyle
