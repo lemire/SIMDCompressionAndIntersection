@@ -53,7 +53,7 @@ As far as the authors know, this work is patent-free.
 Requirements
 ------------------------
 
-A desktop CPU (AMD or Intel) with support for SSE 4.1* (Nehalem [2008] processors or better). 
+A desktop CPU (AMD or Intel) with support for SSE 4.1* (Penryn  [2007] processors or better). 
 
 
 A recent GCC (4.7 or better), Clang or Intel compiler.
