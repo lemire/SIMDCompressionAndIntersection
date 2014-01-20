@@ -659,8 +659,8 @@ public:
                         size_t minId = bounds[part];
                         size_t qty = dirtyCopy.size();
 
-                        for (size_t id = 0; id < qty; ++id) {
-                          dirtyCopy[id] -= minId;
+                        for (size_t idx = 0; idx < qty; ++idx) {
+                          dirtyCopy[idx] -= minId;
                         }
 
                         CompressedSizeDuringPacking += hybridPart[part]->

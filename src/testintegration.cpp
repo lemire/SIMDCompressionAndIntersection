@@ -98,7 +98,6 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
             throw logic_error("Array is not aligned on 128 bit boundary!");
         }
 
-        //Helper::CheckMaxDiff(refdata, bit);
 
         for (uint32_t repeat = 0; repeat < 1; ++repeat) {
 
@@ -111,7 +110,7 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
                 assert(data.size() == refdata.size());
                 fill(icompressed.begin(), icompressed.end(), 0);
                 fill(recovered.begin(), recovered.end(), 0);
-                memcpy(data.data(), refdata.data(),  data.size() * sizeof(decltype(data)::value_type));//memcpy can be slow
+                memcpy(data.data(), refdata.data(),  data.size() * sizeof(uint32_t));//memcpy can be slow
                 Helper::pack(data.data(), data.size(), icompressed.data(), bit);
                 z.reset();
                 Helper::unpack(icompressed.data(), refdata.size(), recovered.data(), bit);
@@ -121,7 +120,7 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
                     cout << " Bug 1a " << bit << endl;
                     return;
                 }
-                memcpy(data.data(), refdata.data(),  data.size() * sizeof(decltype(data)::value_type));//memcpy can be slow
+                memcpy(data.data(), refdata.data(),  data.size() * sizeof(uint32_t));//memcpy can be slow
                 Helper::pack(data.data(), data.size(), icompressed.data(), bit);
 
                 z.reset();
