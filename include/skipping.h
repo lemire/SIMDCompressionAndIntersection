@@ -208,13 +208,8 @@ private:
     }
 };
 
-<<<<<<< HEAD
-void Skipping::load(const  uint32_t * data, uint32_t len) {
-    assert(numeric_limits<uint32_t>::max() <= (numeric_limits<size_t>::max() / 5));// check for overflow
-=======
 void Skipping::load(const  uint32_t *data, uint32_t len) {
-    assert(len < (numeric_limits<size_t>::max() / 5));// check for overflow
->>>>>>> c9e1538871a288ee701a56d12390742d51d1f2f6
+    assert(numeric_limits<uint32_t>::max() < (numeric_limits<size_t>::max() / 5));// check for overflow
     Length = len;
     if (Length == 0) return; // nothing to do
     uint32_t BlockNumber = (Length + (1 << BlockSizeLog) - 1) / (1 << BlockSizeLog); // count full blocks
