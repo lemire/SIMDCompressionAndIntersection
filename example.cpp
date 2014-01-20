@@ -14,7 +14,7 @@
 
 int main() {
     // We pick a CODEC
-    IntegerCODEC &codec =  * CODECFactory::getFromName("s-bp128-m");
+    IntegerCODEC &codec =  * CODECFactory::getFromName("s4-bp128-m");
     // could use others, e.g., "varint", "s-fastpfor-1"
     ////////////
     //
