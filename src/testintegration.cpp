@@ -16,8 +16,8 @@ using namespace std;
 
 
 
-vector<uint32_t> maskedcopy(const vector<uint32_t> & in, const uint32_t bit) {
-    vector<uint32_t> out (in);
+vector<uint32_t> maskedcopy(const vector<uint32_t> &in, const uint32_t bit) {
+    vector<uint32_t> out(in);
     if (bit == 32)
         return out;
     for (auto i = out.begin(); i != out.end(); ++i) {
@@ -27,15 +27,15 @@ vector<uint32_t> maskedcopy(const vector<uint32_t> & in, const uint32_t bit) {
 }
 
 template<class container32bit>
-bool equalOnFirstBits(const container32bit & data,
-        const container32bit & recovered, uint32_t bit) {
+bool equalOnFirstBits(const container32bit &data,
+                      const container32bit &recovered, uint32_t bit) {
     if (bit == 32) {
         return data == recovered;
     }
     for (uint32_t k = 0; k < data.size(); ++k) {
         if (data[k] % (1U << bit) != recovered[k] % (1U << bit)) {
             cout << " They differ at k = " << k << " data[k]= " << data[k]
-                    << " recovered[k]=" << recovered[k] << endl;
+                 << " recovered[k]=" << recovered[k] << endl;
             return false;
         }
     }
@@ -43,8 +43,8 @@ bool equalOnFirstBits(const container32bit & data,
 }
 
 uint32_t mask(uint32_t bit) {
-    if(bit == 32) return 0xFFFFFFFFU;
-    return (1U<<bit)-1;
+    if (bit == 32) return 0xFFFFFFFFU;
+    return (1U << bit) - 1;
 }
 
 template <class Helper>
@@ -65,11 +65,11 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
 
     for (uint32_t bitindex = 0; bitindex < 32; ++bitindex) {
         uint32_t bit =  bitindex  + 1;
-        vector < uint32_t > initdata(N);
-        for(size_t i = 0 ; 4*i < data.size() ; i+=4) {
-            initdata[i] = random(bit) + (i>=4? initdata[i-4]:0);
-            for(size_t j = 1; j < 4; ++j) {
-                initdata[i+j] = initdata[i];
+        vector <uint32_t> initdata(N);
+        for (size_t i = 0 ; 4 * i < data.size() ; i += 4) {
+            initdata[i] = random(bit) + (i >= 4 ? initdata[i - 4] : 0);
+            for (size_t j = 1; j < 4; ++j) {
+                initdata[i + j] = initdata[i];
             }
         }
 
@@ -134,15 +134,15 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
             }
 
             cout << std::setprecision(4) << bit << "\t\t";
-            cout  << "\t\t" << N * (T-1) / (unpacktime) << "\t\t";
+            cout  << "\t\t" << N * (T - 1) / (unpacktime) << "\t\t";
 
-            cout  << "\t\t"<< N * (T-1) / (iunpacktime);
+            cout  << "\t\t" << N * (T - 1) / (iunpacktime);
 
             cout << endl;
         }
 
     }
-    cout<<"# ignore this "<<  bogus <<endl;
+    cout << "# ignore this " <<  bogus << endl;
 
 }
 
@@ -150,25 +150,25 @@ void simplebenchmark(uint32_t N = 1U << 16, uint32_t T = 1U << 9) {
 
 int main() {
 
-    cout<<"# SIMD bit-packing (regular) cache-to-cache 2^12"<<endl;
-    simplebenchmark<SIMDBitPackingHelpers<RegularDeltaSIMD> >(1U << 12, 1U << 14);
-    cout<<endl;
-    cout<<"# SIMD bit-packing (coarse delta 2) cache-to-cache 2^12"<<endl;
-    simplebenchmark<SIMDBitPackingHelpers<CoarseDelta2SIMD> >(1U << 12, 1U << 14);
-    cout<<endl;
+    cout << "# SIMD bit-packing (regular) cache-to-cache 2^12" << endl;
+    simplebenchmark<SIMDBitPackingHelpers<RegularDeltaSIMD>>(1U << 12, 1U << 14);
+    cout << endl;
+    cout << "# SIMD bit-packing (coarse delta 2) cache-to-cache 2^12" << endl;
+    simplebenchmark<SIMDBitPackingHelpers<CoarseDelta2SIMD>>(1U << 12, 1U << 14);
+    cout << endl;
 
-    cout<<"# SIMD bit-packing (coarse max 4) cache-to-cache 2^12"<<endl;
-    simplebenchmark<SIMDBitPackingHelpers<Max4DeltaSIMD> >(1U << 12, 1U << 14);
-    cout<<endl;
+    cout << "# SIMD bit-packing (coarse max 4) cache-to-cache 2^12" << endl;
+    simplebenchmark<SIMDBitPackingHelpers<Max4DeltaSIMD>>(1U << 12, 1U << 14);
+    cout << endl;
 
 
-    cout<<"# SIMD bit-packing (coarse delta 4) cache-to-cache 2^12"<<endl;
-    simplebenchmark<SIMDBitPackingHelpers<CoarseDelta4SIMD> >(1U << 12, 1U << 14);
-    cout<<endl;
+    cout << "# SIMD bit-packing (coarse delta 4) cache-to-cache 2^12" << endl;
+    simplebenchmark<SIMDBitPackingHelpers<CoarseDelta4SIMD>>(1U << 12, 1U << 14);
+    cout << endl;
 
-    cout<<"# Scalar cache-to-cache 2^12"<<endl;
+    cout << "# Scalar cache-to-cache 2^12" << endl;
     simplebenchmark<BitPackingHelpers>(1U << 12, 1U << 14);
-    cout<<endl;
+    cout << endl;
 
     return 0;
 }

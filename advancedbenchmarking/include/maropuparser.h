@@ -29,7 +29,7 @@ using namespace std;
  */
 class MaropuGapReader {
 public:
-    MaropuGapReader(const string & filename) :
+    MaropuGapReader(const string &filename) :
         mFilename(filename), fd(NULL) {
     }
 
@@ -38,7 +38,7 @@ public:
      * The copy constructor will assign the same file name,
      * but the newly constructed object won't be opened.
      */
-    MaropuGapReader(const MaropuGapReader & mgr) :
+    MaropuGapReader(const MaropuGapReader &mgr) :
         mFilename(mgr.mFilename), fd(NULL) {
     }
 
@@ -46,7 +46,7 @@ public:
      * Assignment will close the current reader, and change
      * the file name. You need to reopen the reader after the assignment.
      */
-    MaropuGapReader& operator=(const MaropuGapReader & mgr) {
+    MaropuGapReader &operator=(const MaropuGapReader &mgr) {
         close();
         mFilename = mgr.mFilename;
         return *this;
@@ -85,7 +85,7 @@ public:
      * Throw an exception in the case of IO error.
      */
     template <class container>
-    bool loadIntegers(container & buffer) {
+    bool loadIntegers(container &buffer) {
         uint32_t qty = 0;
         if (!ReadQty(qty)) return false; // EOF
         buffer.resize(qty);
@@ -107,23 +107,23 @@ public:
      * Return false if no more data can be loaded.
      * Throw an exception in the case of IO error.
      */
-    bool readNextPosAndQty(off_t& pos, uint32_t& qty) {
+    bool readNextPosAndQty(off_t &pos, uint32_t &qty) {
         pos = getPos();
         if (!ReadQty(qty)) return false; // EOF
         setPos(getPos() + qty * sizeof(uint32_t));
         return true;
     }
 
-   /**
-   * We must call open before we can use this class  meaningfully.
-   */
+    /**
+    * We must call open before we can use this class  meaningfully.
+    */
     bool open() {
         close();
         fd = ::fopen(mFilename.c_str(), "rb");
         if (fd == NULL) {
             return false;
         }
-        setvbuf (fd , NULL , _IOFBF , 1024*4 ); // large buffer
+        setvbuf(fd , NULL , _IOFBF , 1024 * 4); // large buffer
         return true;
     }
 
@@ -138,10 +138,10 @@ private:
      * Returns false on EOF.
      * Throws an exception in the case of IO error.
      */
-    bool ReadQty(uint32_t& qty) {
+    bool ReadQty(uint32_t &qty) {
         qty = 0;
-        if(fd == NULL) {
-          throw runtime_error("You forgot to open the file.");
+        if (fd == NULL) {
+            throw runtime_error("You forgot to open the file.");
         }
         errno = 0;
         size_t result = fread(&qty, sizeof(qty), 1, fd);
@@ -153,14 +153,15 @@ private:
         if (result != 1) {
             return false;
         }
-        if(qty > 1<<29) {
-        	cout << "warning: reading a very large array ("<< qty << " integers) : is your input file in the right format?"<<endl;
+        if (qty > 1 << 29) {
+            cout << "warning: reading a very large array (" << qty << " integers) : is your input file in the right format?" <<
+                 endl;
         }
         return true;
     }
 
     string mFilename;
-    FILE * fd;
+    FILE *fd;
 
 };
 

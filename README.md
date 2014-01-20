@@ -53,17 +53,27 @@ As far as the authors know, this work is patent-free.
 Requirements
 ------------------------
 
+A desktop CPU (AMD or Intel) with support for SSE 4.1* (Penryn  [2007] processors or better). 
+
+
 A recent GCC (4.7 or better), Clang or Intel compiler.
 
 A processor support AVX (Intel or AMD).
 
 Tested on Linux and MacOS. It should be portable to Windows and other platforms.
 
-
-
+*- The default makefile might assume AVX support, but AVX is not required. For GCC
+compilers you might need the -msse4.1 flag, and you will not need the -mavx flag.
 
 For advanced benchmarking, please see
 
 advancedbenchmarking/README.md
 
 where there is additional information.
+
+
+Acknowledgement
+------------------------
+
+Thanks to Kelly Sommers for useful feedback.
+

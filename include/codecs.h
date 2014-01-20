@@ -38,7 +38,7 @@ public:
      * for *in and nvalue for *out).
      */
     virtual void encodeArray(uint32_t *in, const size_t length,
-            uint32_t *out, size_t &nvalue) = 0;
+                             uint32_t *out, size_t &nvalue) = 0;
 
     /**
      * Usage is similar to encodeArray except that it returns a pointer
@@ -54,8 +54,8 @@ public:
      * (if nvalue exceeds the original value, there might be a buffer
      * overrun).
      */
-    virtual const uint32_t * decodeArray(const uint32_t *in,
-            const size_t length, uint32_t *out, size_t &nvalue)= 0;
+    virtual const uint32_t *decodeArray(const uint32_t *in,
+                                        const size_t length, uint32_t *out, size_t &nvalue) = 0;
     virtual ~IntegerCODEC() {
     }
 
@@ -65,8 +65,8 @@ public:
      *
      * This is offered for convenience. It might be slow.
      */
-    virtual vector<uint32_t> compress(vector<uint32_t> & data) {
-        vector < uint32_t > compresseddata(data.size() * 2 + 1024);// allocate plenty of memory
+    virtual vector<uint32_t> compress(vector<uint32_t> &data) {
+        vector <uint32_t> compresseddata(data.size() * 2 + 1024);// allocate plenty of memory
         size_t memavailable = compresseddata.size();
         encodeArray(data.data(), data.size(), compresseddata.data(), memavailable);
         compresseddata.resize(memavailable);
@@ -85,17 +85,17 @@ public:
      * For convenience. Might be slow.
      */
     virtual vector<uint32_t> uncompress(
-            vector<uint32_t> & compresseddata,
-            size_t expected_uncompressed_size = 0) {
-        vector < uint32_t > data(expected_uncompressed_size);// allocate plenty of memory
+        vector<uint32_t> &compresseddata,
+        size_t expected_uncompressed_size = 0) {
+        vector <uint32_t> data(expected_uncompressed_size);// allocate plenty of memory
         size_t memavailable = data.size();
         try {
             decodeArray(compresseddata.data(), compresseddata.size(), data.data(),
-                    memavailable);
-        } catch (NotEnoughStorage & nes) {
+                        memavailable);
+        } catch (NotEnoughStorage &nes) {
             data.resize(nes.required + 1024);
             decodeArray(compresseddata.data(), compresseddata.size(), data.data(),
-                    memavailable);
+                        memavailable);
 
         }
         data.resize(memavailable);
@@ -110,19 +110,19 @@ public:
  */
 class JustCopy: public IntegerCODEC {
 public:
-    void encodeArray(uint32_t * in, const size_t length, uint32_t * out,
-            size_t &nvalue) {
+    void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
+                     size_t &nvalue) {
         memcpy(out, in, sizeof(uint32_t) * length);
         nvalue = length;
     }
     // like encodeArray, but we don't actually copy
     void fakeencodeArray(const uint32_t * /*in*/, const size_t length,
-            size_t &nvalue) {
+                         size_t &nvalue) {
         nvalue = length;
     }
 
-    const uint32_t * decodeArray(const uint32_t *in, const size_t length,
-            uint32_t *out, size_t & nvalue) {
+    const uint32_t *decodeArray(const uint32_t *in, const size_t length,
+                                uint32_t *out, size_t &nvalue) {
         memcpy(out, in, sizeof(uint32_t) * length);
         nvalue = length;
         return in + length;

@@ -38,7 +38,7 @@
 #include <string>
 #include <stdexcept>
 #include <sstream>
-#include <tr1/memory>
+#include <memory>
 #include <unordered_set>
 #include <vector>
 

@@ -25,10 +25,10 @@ class Skipping {
 public:
 
 
-    Skipping(uint32_t BS, const uint32_t * data, uint32_t length) :
+    Skipping(uint32_t BS, const uint32_t *data, uint32_t length) :
         BlockSizeLog(BS),
         mainbuffer(), highbuffer(), Length(0) {
-        if((BlockSizeLog == 0) && (BlockSizeLog >= 32)) throw runtime_error("please use a reasonable BlockSizeLog");
+        if ((BlockSizeLog == 0) && (BlockSizeLog >= 32)) throw runtime_error("please use a reasonable BlockSizeLog");
         load(data, length);// cheap constructor
     }
 
@@ -37,34 +37,34 @@ public:
 
     size_t storageInBytes() const {
         return mainbuffer.size() * sizeof(uint8_t)
-                + highbuffer.size() * sizeof(higharraypair)
-                + sizeof(Length); // rough estimates (good enough)
+               + highbuffer.size() * sizeof(higharraypair)
+               + sizeof(Length); // rough estimates (good enough)
     }
 
-    uint32_t decompress(uint32_t * out) const {
-        const uint8_t * bout = mainbuffer.data();
+    uint32_t decompress(uint32_t *out) const {
+        const uint8_t *bout = mainbuffer.data();
         uint32_t pos = 0;
 
         uint32_t val = 0;
-        for(uint32_t k = 0; k < Length;++k) {
-          bout = decode(bout,val);
-          out[pos++] = val;
+        for (uint32_t k = 0; k < Length; ++k) {
+            bout = decode(bout, val);
+            out[pos++] = val;
         }
         return pos;
     }
 
 
-     /**
-      * Intersects the current Skipping structure with a (small) uncompressed array and
-      * writes the answer to out.
-      */
-    uint32_t intersect(const uint32_t * smallarray, uint32_t length, uint32_t * out) const {
+    /**
+     * Intersects the current Skipping structure with a (small) uncompressed array and
+     * writes the answer to out.
+     */
+    uint32_t intersect(const uint32_t *smallarray, uint32_t length, uint32_t *out) const {
         uint32_t intersectsize = 0;
-        const uint8_t * largemainpointer = mainbuffer.data();
+        const uint8_t *largemainpointer = mainbuffer.data();
         uint32_t largemainval = 0;
         largemainpointer = decode(largemainpointer, largemainval);
         uint32_t x = 0;
-        for(uint32_t k = 0; k < length; ++k) {
+        for (uint32_t k = 0; k < length; ++k) {
             uint32_t val = smallarray[k];
             // if the last value of the current block is too small, skip the block entirely
             if (highbuffer[x >> BlockSizeLog].first < val) {
@@ -75,8 +75,8 @@ public:
                     }
                 } while (highbuffer[x >> BlockSizeLog].first < val);
                 largemainpointer = mainbuffer.data()
-                        + highbuffer[x >> BlockSizeLog].second;
-                largemainval = highbuffer[(x >> BlockSizeLog)-1].first;
+                                   + highbuffer[x >> BlockSizeLog].second;
+                largemainval = highbuffer[(x >> BlockSizeLog) - 1].first;
                 largemainpointer = decode(largemainpointer, largemainval);
             }
             // at this point, we have that the last value of the current block is >= val
@@ -87,7 +87,7 @@ public:
                     return intersectsize;
                 }
                 largemainpointer = decode(largemainpointer, largemainval);
-             }
+            }
             if (largemainval == val) {
                 out[intersectsize++] = val;
             }
@@ -95,20 +95,20 @@ public:
         return intersectsize;
 
     }
-    uint32_t intersect(const Skipping & otherlarger, uint32_t * out) const {
+    uint32_t intersect(const Skipping &otherlarger, uint32_t *out) const {
         // we assume that "this" is the smallest of the two
         if (otherlarger.Length < Length)
             return otherlarger.intersect(*this, out);
         if (Length == 0)
             return 0;// special silly case
-        assert(otherlarger.Length>=Length);
-        assert(otherlarger.Length>0);
+        assert(otherlarger.Length >= Length);
+        assert(otherlarger.Length > 0);
         uint32_t intersectsize = 0;
 
-        const uint8_t * inbyte = mainbuffer.data();
-        const uint8_t * const endbyte = mainbuffer.data()
-                        + mainbuffer.size();
-        const uint8_t * largemainpointer = otherlarger.mainbuffer.data();
+        const uint8_t *inbyte = mainbuffer.data();
+        const uint8_t *const endbyte = mainbuffer.data()
+                                       + mainbuffer.size();
+        const uint8_t *largemainpointer = otherlarger.mainbuffer.data();
         uint32_t largemainval = 0;
         largemainpointer = decode(largemainpointer, largemainval);
         uint32_t val = 0;// where I put decoded values
@@ -124,8 +124,8 @@ public:
                     }
                 } while (otherlarger.highbuffer[x >> otherlarger.BlockSizeLog].first < val);
                 largemainpointer = otherlarger.mainbuffer.data()
-                        + otherlarger.highbuffer[x >> otherlarger.BlockSizeLog].second;
-                largemainval = otherlarger.highbuffer[(x >> otherlarger.BlockSizeLog)-1].first;
+                                   + otherlarger.highbuffer[x >> otherlarger.BlockSizeLog].second;
+                largemainval = otherlarger.highbuffer[(x >> otherlarger.BlockSizeLog) - 1].first;
                 largemainpointer = decode(largemainpointer, largemainval);
             }
             // at this point, we have that the last value of the current block is >= val
@@ -136,7 +136,7 @@ public:
                     return intersectsize;
                 }
                 largemainpointer = decode(largemainpointer, largemainval);
-             }
+            }
             if (largemainval == val) {
                 out[intersectsize++] = val;
             }
@@ -155,26 +155,26 @@ public:
     // please don't use the default constructor...
 
     Skipping() :  BlockSizeLog(0),
-                mainbuffer(), highbuffer(), Length(0){}
+        mainbuffer(), highbuffer(), Length(0) {}
 private:
 
     Skipping(const Skipping &);
 
     // making it private on purpose
-    Skipping & operator=(const Skipping &);
+    Skipping &operator=(const Skipping &);
 
-    void load(const uint32_t * data, uint32_t length);
+    void load(const uint32_t *data, uint32_t length);
 
     template<uint32_t i>
     uint8_t extract7bits(const uint32_t val) {
-        return static_cast<uint8_t> ((val >> (7 * i)) & ((1U << 7) - 1));
+        return static_cast<uint8_t>((val >>(7 * i)) & ((1U << 7) - 1));
     }
 
     template<uint32_t i>
     uint8_t extract7bitsmaskless(const uint32_t val) {
-        return static_cast<uint8_t> ((val >> (7 * i)));
+        return static_cast<uint8_t>((val >>(7 * i)));
     }
-    static inline const uint8_t * decode(const uint8_t * buffer, uint32_t& prev) {
+    static inline const uint8_t *decode(const uint8_t *buffer, uint32_t &prev) {
         // manually unrolled for performance
         uint32_t v = 0;
         uint8_t c = *buffer++;
@@ -208,29 +208,34 @@ private:
     }
 };
 
+<<<<<<< HEAD
 void Skipping::load(const  uint32_t * data, uint32_t len) {
     assert(numeric_limits<uint32_t>::max() <= (numeric_limits<size_t>::max() / 5));// check for overflow
+=======
+void Skipping::load(const  uint32_t *data, uint32_t len) {
+    assert(len < (numeric_limits<size_t>::max() / 5));// check for overflow
+>>>>>>> c9e1538871a288ee701a56d12390742d51d1f2f6
     Length = len;
-    if(Length == 0) return; // nothing to do
-    uint32_t BlockNumber = (Length + (1<<BlockSizeLog) - 1) / (1<<BlockSizeLog);// count full blocks
+    if (Length == 0) return; // nothing to do
+    uint32_t BlockNumber = (Length + (1 << BlockSizeLog) - 1) / (1 << BlockSizeLog); // count full blocks
     assert(BlockNumber << BlockSizeLog >= Length);
     highbuffer.resize(BlockNumber);
     mainbuffer.resize(5 * Length);
-    uint8_t * bout = mainbuffer.data();
-    uint8_t * const boutinit = bout;
+    uint8_t *bout = mainbuffer.data();
+    uint8_t *const boutinit = bout;
     uint32_t prev = 0;
     for (uint32_t k = 0; k < BlockNumber; ++k) {
-       const uint32_t howmany = (((k + 1)  << BlockSizeLog) > Length) ?
-                Length - (k << BlockSizeLog)
-                : 1 << BlockSizeLog;
+        const uint32_t howmany = (((k + 1)  << BlockSizeLog) > Length) ?
+                                 Length - (k << BlockSizeLog)
+                                 : 1 << BlockSizeLog;
         highbuffer[k] = make_pair(data[(k << BlockSizeLog) + howmany - 1],
-                static_cast<uint32_t> (bout - boutinit));
+                                  static_cast<uint32_t>(bout - boutinit));
         for (uint32_t x = 0; x < howmany; ++x) {
             const uint32_t v = data[x + (k << BlockSizeLog)];
             const uint32_t val = v - prev;
             prev = v;
             if (val < (1U << 7)) {
-                *bout = static_cast<uint8_t> (val | (1U << 7));
+                *bout = static_cast<uint8_t>(val | (1U << 7));
                 ++bout;
             } else if (val < (1U << 14)) {
                 *bout = extract7bits<0> (val);
@@ -267,7 +272,7 @@ void Skipping::load(const  uint32_t * data, uint32_t len) {
             }
         }
     }
-    mainbuffer.resize(static_cast<uint32_t> (bout - boutinit));
+    mainbuffer.resize(static_cast<uint32_t>(bout - boutinit));
     mainbuffer.shrink_to_fit();
 }
 
