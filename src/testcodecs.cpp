@@ -131,10 +131,15 @@ void sillybenchmark(vector<dataarray> datas,
 
 void benchmark(const uint32_t S, vector<shared_ptr<IntegerCODEC>> &allcodecs) {
     const uint32_t N = 1U << S;
+    cout << "##########################################################################"<<endl;
+    cout << "# Warning: this microbench is sensitive to background processes."<<endl;
+    cout << "#          You may need to repeat the test over several minutes or hours"<<endl;
+    cout << "#          if you cannot get exclusive access to the CPU and its cache."<<endl;
+    cout << "##########################################################################"<<endl;
     cout << "# using arrays of size " << N << endl;
-    ClusteredDataGenerator cdg;
+    ClusteredDataGenerator cdg(0); // used fixed seed to lower variance
     vector<dataarray> datas;
-    cout << "#generating data...";
+    cout << "# generating data...";
     cout << endl;
     int Times = static_cast<int>(
                     round(
@@ -152,7 +157,7 @@ void benchmark(const uint32_t S, vector<shared_ptr<IntegerCODEC>> &allcodecs) {
             delta(0U, copy.data(), copy.size());
             er.eat(copy.data(), copy.size());
         }
-        cout << "#entropy of " << gap << " is " << er.computeShannon() << endl;
+        cout << "# entropy of " << gap << " is " << er.computeShannon() << endl;
         ostringstream convert;
         convert << gap;
         X.name = convert.str();
