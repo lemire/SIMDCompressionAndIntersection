@@ -69,8 +69,7 @@ public:
 
 void sillybenchmark(vector<dataarray> datas,
                     vector<uint32_t> &compressedbuffer, vector<uint32_t> &recoverybuffer,
-                    IntegerCODEC &codec,
-                    size_t repQty) {
+                    IntegerCODEC &codec) {
     cout << "#benchmarking " << CODECFactory::getName(codec) << endl;//codec.name()
     WallClockTimer z;
     double packtime, unpacktime;
@@ -96,37 +95,27 @@ void sillybenchmark(vector<dataarray> datas,
             if (recoveredvalues != dirtycopy.size()) throw runtime_error("bug");
         }
         // actual run
-        vector<vector < uint32_t >> packedData;
-        vector<uint32_t> nvals;
-        for(const vector<uint32_t> & D : data) {
-            vector < uint32_t > dirtycopy(D);
+        for (const vector<uint32_t> &D : data) {
+            vector <uint32_t> dirtycopy(D);
             intcounter += static_cast<double>(dirtycopy.size());
             size_t nvalue = compressedbuffer.size();
             z.reset();
             codec.encodeArray(dirtycopy.data(), dirtycopy.size(),
-                compressedbuffer.data(), nvalue);
-            packtime += static_cast<double> (z.split());
-            compsize += static_cast<double> (nvalue);
-
-            packedData.push_back(compressedbuffer);
-            nvals.push_back(nvalue);
-        }
-
-        for(size_t idt = 0; idt < packedData.size(); ++idt) {
-            const  vector<uint32_t>& compressedbuffer = packedData[idt];
-            size_t nvalue = nvals[idt];
+                              compressedbuffer.data(), nvalue);
+            packtime += static_cast<double>(z.split());
+            compsize += static_cast<double>(nvalue);
             size_t recoveredvalues = recoverybuffer.size();
             double bestunpacktime = std::numeric_limits<double>::infinity();
-            for(size_t t = 0; t < repQty; ++t) {
-              z.reset();
-              codec.decodeArray(compressedbuffer.data(), nvalue,
-                recoverybuffer.data(), recoveredvalues);
-              double tup = static_cast<double> (z.split());
-              if(tup<bestunpacktime) bestunpacktime = tup;
-             }
-             unpacktime += bestunpacktime;
+            for (int t = 0; t < 5; ++t) {
+                z.reset();
+                codec.decodeArray(compressedbuffer.data(), nvalue,
+                                  recoverybuffer.data(), recoveredvalues);
+                double tup = static_cast<double>(z.split());
+                if (tup < bestunpacktime) bestunpacktime = tup;
+            }
+            unpacktime += bestunpacktime;
+            //if(recoveredvalues != dirtycopy.size()) throw runtime_error("bug");
         }
-
         cout << std::setprecision(4) << it->name << "\t"
              << (static_cast<double>(compsize) * 32.0 / intcounter
                 ) << "\t"
@@ -140,8 +129,7 @@ void sillybenchmark(vector<dataarray> datas,
 
 
 
-void benchmark(const uint32_t S, vector<shared_ptr<IntegerCODEC>> &allcodecs,
-               bool bCacheToCache) {
+void benchmark(const uint32_t S, vector<shared_ptr<IntegerCODEC>> &allcodecs) {
     const uint32_t N = 1U << S;
     cout << "# using arrays of size " << N << endl;
     ClusteredDataGenerator cdg;
@@ -149,12 +137,11 @@ void benchmark(const uint32_t S, vector<shared_ptr<IntegerCODEC>> &allcodecs,
     cout << "#generating data...";
     cout << endl;
     int Times = static_cast<int>(
-                    round( 
-              (bCacheToCache ? 32.0 : 256.0)* static_cast<double>(1U << 16) / static_cast<double>(N)
+                    round(
+                        40.0 * static_cast<double>(1U << 16) / static_cast<double>(N)
                     )
                 );
     if (Times == 0) Times = 1;
-    cout<<"=== TEST MODE : " << (bCacheToCache ? "CACHE-TO-CACHE":"MEM-TO-CACHE") << " ===== " << endl;
     cout << "# Generating " << Times << " array for each gap, volume is " << Times *N << " ints" << endl;
     for (uint32_t gap = 1; gap + S <= 31; gap += 1) {
         dataarray X;
@@ -176,7 +163,7 @@ void benchmark(const uint32_t S, vector<shared_ptr<IntegerCODEC>> &allcodecs,
     vector <uint32_t> recoverybuffer;
     recoverybuffer.resize(N);
     for (auto i : allcodecs)
-        sillybenchmark(datas,compressedbuffer,recoverybuffer,*i, bCacheToCache ? 5:1);
+        sillybenchmark(datas, compressedbuffer, recoverybuffer, *i);
 }
 
 void displayUsage() {
@@ -199,8 +186,7 @@ int main(int argc, char **argv) {
             return -2;
         allcodecs.push_back(p);
     }
-    benchmark(16, allcodecs, false); // mem-to-cache
-    benchmark(16, allcodecs, true); // cache-to-cache
+    benchmark(16, allcodecs);
     return 0;
 
 }
