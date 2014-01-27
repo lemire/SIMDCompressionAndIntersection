@@ -11,6 +11,12 @@ SIMD Galloping.
 Authors: Leonid Boystov, Nathan Kurz and Daniel Lemire
 With some contributions from Owen Kaser and others.
 
+Documentation
+-----------------------
+
+Daniel Lemire, Leonid Boytsov, Nathan Kurz, SIMD Compression and the Intersection of Sorted Integers, arXiv: 1401.6399, 2014
+http://arxiv.org/abs/1401.6399
+
 Simple demo
 ------------------------
 
