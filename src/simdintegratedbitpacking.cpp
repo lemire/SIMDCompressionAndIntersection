@@ -248,7 +248,7 @@ void ipack1(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(1U); ;
+    const __m128i mask =  _mm_set1_epi32(1U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -659,7 +659,7 @@ void ipack2(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(3U); ;
+    const __m128i mask =  _mm_set1_epi32(3U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -1078,7 +1078,7 @@ void ipack3(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(7U); ;
+    const __m128i mask =  _mm_set1_epi32(7U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -1503,7 +1503,7 @@ void ipack4(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(15U); ;
+    const __m128i mask =  _mm_set1_epi32(15U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -1936,7 +1936,7 @@ void ipack5(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(31U); ;
+    const __m128i mask =  _mm_set1_epi32(31U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -2379,7 +2379,7 @@ void ipack6(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(63U); ;
+    const __m128i mask =  _mm_set1_epi32(63U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -2830,7 +2830,7 @@ void ipack7(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(127U); ;
+    const __m128i mask =  _mm_set1_epi32(127U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -3283,7 +3283,7 @@ void ipack8(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(255U); ;
+    const __m128i mask =  _mm_set1_epi32(255U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -3744,7 +3744,7 @@ void ipack9(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(511U); ;
+    const __m128i mask =  _mm_set1_epi32(511U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -4219,7 +4219,7 @@ void ipack10(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(1023U); ;
+    const __m128i mask =  _mm_set1_epi32(1023U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -4702,7 +4702,7 @@ void ipack11(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(2047U); ;
+    const __m128i mask =  _mm_set1_epi32(2047U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -5191,7 +5191,7 @@ void ipack12(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(4095U); ;
+    const __m128i mask =  _mm_set1_epi32(4095U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -5688,7 +5688,7 @@ void ipack13(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(8191U); ;
+    const __m128i mask =  _mm_set1_epi32(8191U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -6195,7 +6195,7 @@ void ipack14(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(16383U); ;
+    const __m128i mask =  _mm_set1_epi32(16383U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -6710,7 +6710,7 @@ void ipack15(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(32767U); ;
+    const __m128i mask =  _mm_set1_epi32(32767U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -7219,7 +7219,7 @@ void ipack16(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(65535U); ;
+    const __m128i mask =  _mm_set1_epi32(65535U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -7736,7 +7736,7 @@ void ipack17(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(131071U); ;
+    const __m128i mask =  _mm_set1_epi32(131071U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -8275,7 +8275,7 @@ void ipack18(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(262143U); ;
+    const __m128i mask =  _mm_set1_epi32(262143U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -8822,7 +8822,7 @@ void ipack19(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(524287U); ;
+    const __m128i mask =  _mm_set1_epi32(524287U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -9375,7 +9375,7 @@ void ipack20(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(1048575U); ;
+    const __m128i mask =  _mm_set1_epi32(1048575U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -9936,7 +9936,7 @@ void ipack21(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(2097151U); ;
+    const __m128i mask =  _mm_set1_epi32(2097151U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -10507,7 +10507,7 @@ void ipack22(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(4194303U); ;
+    const __m128i mask =  _mm_set1_epi32(4194303U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -11086,7 +11086,7 @@ void ipack23(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(8388607U); ;
+    const __m128i mask =  _mm_set1_epi32(8388607U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -11667,7 +11667,7 @@ void ipack24(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(16777215U); ;
+    const __m128i mask =  _mm_set1_epi32(16777215U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -12256,7 +12256,7 @@ void ipack25(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(33554431U); ;
+    const __m128i mask =  _mm_set1_epi32(33554431U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -12859,7 +12859,7 @@ void ipack26(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(67108863U); ;
+    const __m128i mask =  _mm_set1_epi32(67108863U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -13470,7 +13470,7 @@ void ipack27(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(134217727U); ;
+    const __m128i mask =  _mm_set1_epi32(134217727U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -14087,7 +14087,7 @@ void ipack28(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(268435455U); ;
+    const __m128i mask =  _mm_set1_epi32(268435455U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -14712,7 +14712,7 @@ void ipack29(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(536870911U); ;
+    const __m128i mask =  _mm_set1_epi32(536870911U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -15347,7 +15347,7 @@ void ipack30(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(1073741823U); ;
+    const __m128i mask =  _mm_set1_epi32(1073741823U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
@@ -15990,7 +15990,7 @@ void ipack31(__m128i  initOffset, const uint32_t    *_in, __m128i     *out) {
     __m128i     OutReg;
 
 
-    const static __m128i mask =  _mm_set1_epi32(2147483647U); ;
+    const __m128i mask =  _mm_set1_epi32(2147483647U); ;
 
     __m128i CurrIn = _mm_load_si128(in);
     __m128i InReg = _mm_and_si128(DeltaHelper::Delta(CurrIn, initOffset), mask);
