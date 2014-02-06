@@ -40,6 +40,14 @@ To run tests, you can do
 (follow the instructions)
 
 
+For a simple C library
+----------------------
+
+This library is a C++ research library. For something simpler,
+written in C, see:
+
+https://github.com/lemire/simdcomp
+
 
 Comparison with the FastPFOR C++ library
 -----------------------------------------
