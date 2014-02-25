@@ -605,6 +605,9 @@ FINISH_SCALAR: return (out - initout) + scalar(freq,
 
 /**
  * Our main heuristic.
+ *
+ * The out pointer can be set1 if length1<=length2,
+ * or else it can be set2 if length2>length1.
  */
 size_t SIMDintersection(const uint32_t *set1,
                         const size_t length1, const uint32_t *set2, const size_t length2, uint32_t *out) {
