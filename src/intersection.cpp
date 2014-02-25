@@ -162,9 +162,10 @@ FINISH:
 }
 #define VEC_T __m128i
 
-#define VEC_COPY_LOW(reg_dest, xmm_src)                                 \
-    __asm volatile("movd %1, %0" : "=r" (reg_dest) : "x" (xmm_src))
-
+/**
+ * The following macros (VEC_OR, VEC_ADD_PTEST,VEC_CMP_EQUAL,VEC_SET_ALL_TO_INT,VEC_LOAD_OFFSET,
+ * ASM_LEA_ADD_BYTES are only used in the v1 procedure below.
+ */
 #define VEC_OR(dest, other)                                             \
     __asm volatile("por %1, %0" : "+x" (dest) : "x" (other) )
 
@@ -178,8 +179,6 @@ FINISH:
                            : /* clobbers */ "cc");                      \
     }
 
-#define VEC_CMP_GREATER(dest, other)                                    \
-    __asm volatile("pcmpgtd %1, %0" : "+x" (dest) : "x" (other))
 
 #define VEC_CMP_EQUAL(dest, other)                                      \
     __asm volatile("pcmpeqd %1, %0" : "+x" (dest) : "x" (other))
@@ -205,10 +204,15 @@ FINISH:
  * well when intersecting an array with another where the density
  * differential is small (between 2 to 10).
  *
+ * It assumes that lenRare <= lenFreq.
+ *
  * Note that this is not symmetric: flipping the rare and freq pointers
  * as well as lenRare and lenFreq could lead to significant performance
  * differences.
  *
+ * The matchOut pointer can safely be equal to the rare pointer.
+ *
+ * This function  use inline assembly.
  */
 size_t v1
 (const uint32_t *rare, size_t lenRare,
@@ -301,6 +305,21 @@ FINISH_SCALAR:
     return count + tail;
 }
 
+
+/**
+ * This intersection function is similar to v1, but is faster when
+ * the difference between lenRare and lenFreq is large, but not too large.
+
+ * It assumes that lenRare <= lenFreq.
+ *
+ * Note that this is not symmetric: flipping the rare and freq pointers
+ * as well as lenRare and lenFreq could lead to significant performance
+ * differences.
+ *
+ * The matchOut pointer can safely be equal to the rare pointer.
+ *
+ * This function DOES NOT use inline assembly instructions. Just intrinsics.
+ */
 size_t v3(const uint32_t *rare, const size_t lenRare,
           const uint32_t *freq, const size_t lenFreq, uint32_t *out) {
     if (lenFreq == 0 || lenRare == 0)
@@ -404,6 +423,20 @@ FINISH_SCALAR: return (out - initout) + scalar(freq,
 }
 
 
+/**
+ * This is the SIMD galloping function. This intersection function works well
+ * when lenRare and lenFreq have vastly different values.
+ *
+ * It assumes that lenRare <= lenFreq.
+ *
+ * Note that this is not symmetric: flipping the rare and freq pointers
+ * as well as lenRare and lenFreq could lead to significant performance
+ * differences.
+ *
+ * The matchOut pointer can safely be equal to the rare pointer.
+ *
+ * This function DOES NOT use assembly. It only relies on intrinsics.
+ */
 size_t SIMDgalloping(const uint32_t *rare, const size_t lenRare,
                      const uint32_t *freq, const size_t lenFreq, uint32_t *out) {
     if (lenFreq == 0 || lenRare == 0)
