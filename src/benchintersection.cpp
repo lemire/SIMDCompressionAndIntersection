@@ -77,7 +77,7 @@ int main(int argc, char **argv) {
             intersectionratio = atof(optarg);
             break;
         case 'M':
-            intersectionratio = atoi(optarg);
+            MaxBit = atoi(optarg);
             if (MaxBit < 1) {
                 printusage();
                 return -1;
