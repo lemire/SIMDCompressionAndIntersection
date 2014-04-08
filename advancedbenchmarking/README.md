@@ -26,7 +26,10 @@ Working with intersections
 --------------------------
 
 First, you must get the clueweb09 dataset (or a similar data set). You can get
-the clueweb09 data we use from http://boytsov.info/datasets/clueweb09gap/
+a copy of the datasets we used at 
+
+http://lemire.me/data/integercompression2014.html
+
 
 You need a posting list file in a flat format: a sequence of arrays stored as a 32-bit unsigned integer
 indicating length followed by a corresponding sequence of 32-bit unsigned integers.

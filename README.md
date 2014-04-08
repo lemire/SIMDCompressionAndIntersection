@@ -57,6 +57,8 @@ implements some of the same compression schemes except that
 it is not optimized for the compression of sorted lists of integers.
 
 
+
+
 Licensing
 ------------------------
 
@@ -83,7 +85,7 @@ For advanced benchmarking, please see
 
 advancedbenchmarking/README.md
 
-where there is additional information.
+where there is additional information as well as links to real data sets.
 
 
 Acknowledgement
