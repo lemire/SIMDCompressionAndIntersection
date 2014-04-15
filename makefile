@@ -1,17 +1,17 @@
 .SUFFIXES:
 #
 .SUFFIXES: .cpp .o .c .h
-# replace the YOURCXX variable with a path to a C++11 compatible compiler.
+# replace the CXX variable with a path to a C++11 compatible compiler.
 ifeq ($(INTEL), 1)
 # if you wish to use the Intel compiler, please do "make INTEL=1".
-    YOURCXX ?= /opt/intel/bin/icpc
+    CXX ?= /opt/intel/bin/icpc
 ifeq ($(DEBUG),1)
     CXXFLAGS = -std=c++11 -O3 -Wall -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
 else
     CXXFLAGS = -std=c++11 -O3 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
 endif # debug
 else #intel
-    YOURCXX ?= g++-4.7
+    CXX ?= g++-4.7
 ifeq ($(DEBUG),1)
     CXXFLAGS = -mavx -std=c++11  -Weffc++ -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra  -Wcast-align  
 else
@@ -19,7 +19,6 @@ else
 endif #debug
 endif #intel
 
-CXX := $(YOURCXX)
 
 
 
