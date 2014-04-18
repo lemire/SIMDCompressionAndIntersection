@@ -9,7 +9,7 @@ coding. It introduces new SIMD intersections schemes such as
 SIMD Galloping.
 
 Authors: Leonid Boystov, Nathan Kurz and Daniel Lemire
-With some contributions from Owen Kaser and others.
+with some contributions from Owen Kaser and others.
 
 Documentation
 -----------------------
