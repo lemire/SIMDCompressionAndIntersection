@@ -262,8 +262,11 @@ ADVANCE_RARE:
         VEC_SET_ALL_TO_INT(Rare, valRare);
 
         VEC_OR(F0, F1);
-
+#ifdef __SSE4_1__
         VEC_ADD_PTEST(matchOut, 1, F0);
+#else
+        matchOut += static_cast<uint32_t>(_mm_movemask_epi8(F0) == 0);
+#endif
 
         VEC_LOAD_OFFSET(F0, freq, 0 * sizeof(VEC_T)) ;
         VEC_LOAD_OFFSET(F1, freq, 1 * sizeof(VEC_T));
@@ -412,7 +415,11 @@ size_t v3(const uint32_t *rare, const size_t lenRare,
 
         }
         const vec F0 = _mm_or_si128(_mm_or_si128(Q0, Q1), _mm_or_si128(Q2, Q3));
+#ifdef __SSE4_1__
         if (_mm_testz_si128(F0, F0)) {
+#else 
+        if (!_mm_movemask_epi8(F0)) {
+#endif 
         } else {
             *out++ = matchRare;
         }
@@ -593,7 +600,11 @@ size_t SIMDgalloping(const uint32_t *rare, const size_t lenRare,
 
         }
         const vec F0 = _mm_or_si128(_mm_or_si128(Q0, Q1), _mm_or_si128(Q2, Q3));
+#ifdef __SSE4_1__
         if (_mm_testz_si128(F0, F0)) {
+#else 
+        if (!_mm_movemask_epi8(F0)) {
+#endif 
         } else {
             *out++ = matchRare;
         }
