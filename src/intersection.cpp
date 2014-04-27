@@ -265,7 +265,7 @@ ADVANCE_RARE:
 #ifdef __SSE4_1__
         VEC_ADD_PTEST(matchOut, 1, F0);
 #else
-        matchOut += static_cast<uint32_t>(_mm_movemask_epi8(F0) == 0);
+        matchOut += static_cast<uint32_t>(_mm_movemask_epi8(F0) != 0);
 #endif
 
         VEC_LOAD_OFFSET(F0, freq, 0 * sizeof(VEC_T)) ;
