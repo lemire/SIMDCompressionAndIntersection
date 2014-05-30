@@ -8,6 +8,10 @@ and very fast schemes, with particular attention to differential
 coding. It introduces new SIMD intersections schemes such as
 SIMD Galloping.
 
+This library can decode at least 4 billions of compressed integers per second on most
+desktop or laptop processors. That is, it can decompress data at a rate of 15 GB/s.
+This is significantly faster than generic codecs like gzip, LZO, Snappy or LZ4.
+
 Authors: Leonid Boystov, Nathan Kurz and Daniel Lemire
 with some contributions from Owen Kaser and others.
 
