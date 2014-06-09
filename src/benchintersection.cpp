@@ -47,6 +47,203 @@ float intersectionratio) {
 
 }
 
+/**
+ * Silly function.
+ */
+uint16_t _high16(uint32_t x) {
+    return static_cast<uint16_t>(x >> 16);
+}
+/**
+ * Another function.
+ */
+uint16_t _low16(uint32_t x) {
+    return static_cast<uint16_t>(x);
+}
+
+/**
+ * From Schlegel et al., Fast Sorted-Set Intersection using SIMD Instructions
+ */
+// A - sorted array
+// s_a - size of A
+// R - partitioned sorted array
+size_t partition(const uint32_t *A, const size_t s_a, uint16_t *R, const size_t /*Rlength*/) {
+    uint16_t high = 0;
+    int partition_length = 0;
+    size_t partition_size_position = 1;
+    size_t counter = 0;
+    size_t p = 0;
+    if (p < s_a) {
+        uint16_t chigh = _high16(A[p]); // upper dword
+        uint16_t clow = _low16(A[p]); // lower dword
+        if (chigh == 0) {
+            R[counter++] = chigh; // partition prefix
+            R[counter++] = 0; // reserve place for partition size
+            R[counter++] = clow; // write the first element
+            partition_length = 1; // reset counters
+            high = chigh;
+            ++p;
+        }
+
+    }
+    for (; p < s_a; p++) {
+        uint16_t chigh = _high16(A[p]); // upper dword
+        uint16_t clow = _low16(A[p]); // lower dword
+        if (chigh == high && p != 0) { // add element to the current partition
+            R[counter++] = clow;
+            partition_length++;
+        } else { // start new partition
+            R[counter++] = chigh; // partition prefix
+            R[counter++] = 0; // reserve place for partition size
+            R[counter++] = clow; // write the first element
+            R[partition_size_position] = static_cast<uint16_t>(partition_length - 1); // store "-1"
+            partition_length = 1; // reset counters
+            partition_size_position = counter - 2;
+            high = chigh;
+        }
+    }
+    R[partition_size_position] = static_cast<uint16_t>(partition_length - 1);
+
+    return counter;
+}
+
+const static __m128i shuffle_mask16[16] = {
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,7,6,5,4),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,11,10,9,8),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,11,10,9,8,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,11,10,9,8,7,6,5,4),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,15,14,13,12),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,15,14,13,12,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,15,14,13,12,7,6,5,4),
+        _mm_set_epi8(15,14,13,12,15,14,13,12,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,15,14,13,12,11,10,9,8),
+        _mm_set_epi8(15,14,13,12,15,14,13,12,11,10,9,8,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,15,14,13,12,11,10,9,8,7,6,5,4),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        };
+/**
+ * From Schlegel et al., Fast Sorted-Set Intersection using SIMD Instructions
+ *
+ * Optimized by D. Lemire on May 3rd 2013
+ */
+static size_t _intersect_vector16(const uint16_t *A,
+        const uint16_t *B, const size_t s_a, const size_t s_b, uint16_t *C) {
+    size_t count = 0;
+    size_t i_a = 0, i_b = 0;
+
+    const size_t st_a = (s_a / 8) * 8;
+    const size_t st_b = (s_b / 8) * 8;
+    __m128i v_a, v_b;
+    if ((i_a < st_a) and (i_b < st_b)) {
+        v_a = _mm_loadu_si128((const __m128i *) &A[i_a]);
+        v_b = _mm_loadu_si128((const __m128i *) &B[i_b]);
+        while ((A[i_a] == 0) or (B[i_b] == 0)) {
+            const __m128i res_v = _mm_cmpestrm(v_b, 8, v_a, 8,
+                    _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_BIT_MASK);
+            const int r = _mm_extract_epi32(res_v, 0);
+            __m128i p = _mm_shuffle_epi8(v_a, shuffle_mask16[r]);
+            _mm_storeu_si128((__m128i *) &C[count], p);
+            count += _mm_popcnt_u32(r);
+            const uint16_t a_max = A[i_a + 7];
+            const uint16_t b_max = B[i_b + 7];
+            if (a_max <= b_max) {
+                i_a += 8;
+                if (i_a == st_a)
+                    break;
+                v_a = _mm_loadu_si128((const __m128i *) &A[i_a]);
+
+            }
+            if (b_max <= a_max) {
+                i_b += 8;
+                if (i_b == st_b)
+                    break;
+                v_b = _mm_loadu_si128((const __m128i *) &B[i_b]);
+
+            }
+
+        }
+        if ((i_a < st_a) and (i_b < st_b))
+            while (true) {
+                const __m128i res_v = _mm_cmpistrm(v_b, v_a,
+                        _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_BIT_MASK);
+                const int r = _mm_extract_epi32(res_v, 0);
+                __m128i p = _mm_shuffle_epi8(v_a, shuffle_mask16[r]);
+                _mm_storeu_si128((__m128i *) &C[count], p);
+                count += _mm_popcnt_u32(r);
+                const uint16_t a_max = A[i_a + 7];
+                const uint16_t b_max = B[i_b + 7];
+                if (a_max <= b_max) {
+                    i_a += 8;
+                    if (i_a == st_a)
+                        break;
+                    v_a = _mm_loadu_si128((const __m128i *) &A[i_a]);
+
+                }
+                if (b_max <= a_max) {
+                    i_b += 8;
+                    if (i_b == st_b)
+                        break;
+                    v_b = _mm_loadu_si128((const __m128i *) &B[i_b]);
+
+                }
+            }
+    }
+    // intersect the tail using scalar intersection
+    while (i_a < s_a && i_b < s_b) {
+        if (A[i_a] < B[i_b]) {
+            i_a++;
+        } else if (B[i_b] < A[i_a]) {
+            i_b++;
+        } else {
+            count++;
+            i_a++;
+            i_b++;
+        }
+    }
+
+    return count;
+}
+
+
+
+/**
+ * Version optimized by D. Lemire of
+ * From Schlegel et al., Fast Sorted-Set Intersection using SIMD Instructions
+ */
+size_t intersect_partitioned(const uint16_t *A, const size_t s_a,
+        const uint16_t *B, const size_t s_b, uint16_t * C) {
+    size_t i_a = 0, i_b = 0;
+    size_t counter = 0;
+    while (i_a < s_a && i_b < s_b) {
+        if (A[i_a] < B[i_b]) {
+            do {
+                i_a += static_cast<size_t> (A[i_a + 1]) + 2 + 1;
+                if (i_a >= s_a)
+                    goto end;
+            } while (A[i_a] < B[i_b]);
+        }
+        if (B[i_b] < A[i_a]) {
+            do {
+                i_b += static_cast<size_t> (B[i_b + 1]) + 2 + 1;
+                if (i_b >= s_b)
+                    goto end;
+            } while (B[i_b] < A[i_a]);
+        } else {
+            size_t partition_size = _intersect_vector16(
+                    &A[i_a + 2], &B[i_b + 2],
+                    static_cast<size_t> (A[i_a + 1]) + 1,
+                    static_cast<size_t> (B[i_b + 1]) + 1, &C[counter + 1]);
+            C[counter++] = partition_size; // write partition size
+            counter += partition_size;
+            i_a += static_cast<size_t> (A[i_a + 1]) + 2 + 1;
+            i_b += static_cast<size_t> (B[i_b + 1]) + 2 + 1;
+        }
+    }
+    end: return counter;
+}
 
 
 void printusage() {
@@ -126,6 +323,7 @@ int main(int argc, char **argv) {
     for (string intername : IntersectionFactory::allNames()) {
         cout << intername << "\t";
     }
+    cout <<" partioned (Schlegel et al.) ";
     cout << "relative-intersection-size " << endl;
 
     for (float ir = 1.001; ir <= 10000; ir = ir * sqrt(1.9)) {
@@ -138,6 +336,21 @@ int main(int argc, char **argv) {
                       : getNaivePair(cdg , smallsize, 1U << MaxBit, ir, intersectionratio);
         }
         cout << "ok." << endl;
+        cout << "#partitions...";
+        vector <pair<vector<uint16_t> , vector<uint16_t>>> datapart(howmany);
+        for (size_t k = 0; k < howmany; ++k) {
+        	vector<uint16_t> part1 (data[k].first.size() * 4);
+        	size_t p1length = partition(data[k].first.data(), data[k].first.size(), part1.data(), part1.size());
+        	part1.resize(p1length);
+        	part1.shrink_to_fit();
+        	vector<uint16_t> part2 (data[k].second.size() * 4);
+        	size_t p2length = partition(data[k].second.data(), data[k].second.size(), part2.data(), part2.size());
+        	part2.resize(p2length);
+        	part2.shrink_to_fit();
+        	datapart[k] = make_pair(part1,part2);
+        }
+        cout << "ok." << endl;
+
         cout << ir << "\t";
         float aratio = 0.0f;
         for (string intername : IntersectionFactory::allNames()) {
@@ -158,6 +371,19 @@ int main(int argc, char **argv) {
                 }
             }
             cout << setw(10) << setprecision(5) << (volume / (static_cast<double>(z.split()))) << "\t";
+            z.reset();
+			for (size_t k = 0; k < data.size(); ++k) {
+				volume += (data[k].first.size() + data[k].second.size()) * loop;
+				for (size_t L = 0; L < loop; ++L) {
+					aratio = intersect_partitioned(datapart[k].first.data(),
+							(datapart[k].first).size(),
+							datapart[k].second.data(),
+							(datapart[k].second).size(),
+							(uint16_t *) buffer.data());
+					bogus += aratio;
+				}
+			}
+             cout << setw(10) << setprecision(5) << (volume / (static_cast<double>(z.split()))) << "\t";
 #ifdef LIKWID_MARKERS
             likwid_markerStopRegion(currentMarker);
 #endif

@@ -644,6 +644,99 @@ size_t SIMDintersection(const uint32_t *set1,
     else
         return v1(set2, length2, set1, length1, out);
 }
+/**
+ * More or less from
+ * http://highlyscalable.wordpress.com/2012/06/05/fast-intersection-sorted-lists-sse/
+ */
+const static __m128i shuffle_mask[16] = {
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,7,6,5,4),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,11,10,9,8),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,11,10,9,8,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,11,10,9,8,7,6,5,4),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,15,14,13,12),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,15,14,13,12,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,15,14,13,12,7,6,5,4),
+        _mm_set_epi8(15,14,13,12,15,14,13,12,7,6,5,4,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,15,14,13,12,11,10,9,8),
+        _mm_set_epi8(15,14,13,12,15,14,13,12,11,10,9,8,3,2,1,0),
+        _mm_set_epi8(15,14,13,12,15,14,13,12,11,10,9,8,7,6,5,4),
+        _mm_set_epi8(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0),
+        };
+// precomputed dictionary
+
+
+/**
+ * Taken almost verbatim from http://highlyscalable.wordpress.com/2012/06/05/fast-intersection-sorted-lists-sse/
+ *
+ * It is not safe for out to be either A or B.
+ */
+size_t highlyscalable_intersect_SIMD(const uint32_t *A, const size_t s_a,
+        const uint32_t *B, const size_t s_b, uint32_t * out) {
+    assert(out != A);
+    assert(out != B);
+    const uint32_t * const initout (out);
+    size_t i_a = 0, i_b = 0;
+
+    // trim lengths to be a multiple of 4
+    size_t st_a = (s_a / 4) * 4;
+    size_t st_b = (s_b / 4) * 4;
+
+    while (i_a < st_a && i_b < st_b) {
+        //[ load segments of four 32-bit elements
+        __m128i v_a = _mm_loadu_si128((__m128i *) &A[i_a]);
+        __m128i v_b = _mm_loadu_si128((__m128i *) &B[i_b]);
+        //]
+
+        //[ move pointers
+        const uint32_t a_max = A[i_a + 3];
+        const uint32_t b_max = B[i_b + 3];
+        i_a += (a_max <= b_max) * 4;
+        i_b += (a_max >= b_max) * 4;
+        //]
+
+        //[ compute mask of common elements
+        const uint32_t cyclic_shift = _MM_SHUFFLE(0, 3, 2, 1);
+        __m128i cmp_mask1 = _mm_cmpeq_epi32(v_a, v_b); // pairwise comparison
+        v_b = _mm_shuffle_epi32(v_b, cyclic_shift); // shuffling
+        __m128i cmp_mask2 = _mm_cmpeq_epi32(v_a, v_b); // again...
+        v_b = _mm_shuffle_epi32(v_b, cyclic_shift);
+        __m128i cmp_mask3 = _mm_cmpeq_epi32(v_a, v_b); // and again...
+        v_b = _mm_shuffle_epi32(v_b, cyclic_shift);
+        __m128i cmp_mask4 = _mm_cmpeq_epi32(v_a, v_b); // and again.
+        __m128i cmp_mask = _mm_or_si128(_mm_or_si128(cmp_mask1, cmp_mask2),
+                _mm_or_si128(cmp_mask3, cmp_mask4)); // OR-ing of comparison masks
+        // convert the 128-bit mask to the 4-bit mask
+        const int mask = _mm_movemask_ps((__m128 ) cmp_mask);
+        //]
+
+        //[ copy out common elements
+        const __m128i p = _mm_shuffle_epi8(v_a, shuffle_mask[mask]);
+        _mm_storeu_si128((__m128i*)out, p);
+        out += _mm_popcnt_u32(mask); // a number of elements is a weight of the mask
+        //]
+    }
+
+    // intersect the tail using scalar intersection
+    while (i_a < s_a && i_b < s_b) {
+        if (A[i_a] < B[i_b]) {
+            i_a++;
+        } else if (B[i_b] < A[i_a]) {
+            i_b++;
+        } else {
+            *out++ = B[i_b]; ;
+            i_a++;
+            i_b++;
+        }
+    }
+
+    return out - initout;
+}
+
+
 
 inline std::map<std::string, intersectionfunction> initializeintersectionfactory() {
     std::map<std::string, intersectionfunction> schemes;
@@ -653,7 +746,7 @@ inline std::map<std::string, intersectionfunction> initializeintersectionfactory
     schemes[ "v1" ] = v1;
     schemes["v3"] = v3;
     schemes["simdgalloping"] = SIMDgalloping;
-
+    schemes["highlyscalable_intersect_SIMD"] = highlyscalable_intersect_SIMD;
     return schemes;
 }
 
