@@ -363,6 +363,66 @@ const static __m128i shuffle_mask16[256] = {
 		_mm_setr_epi8(0,1,4,5,6,7,8,9,10,11,12,13,14,15,-1,-1),
 		_mm_setr_epi8(2,3,4,5,6,7,8,9,10,11,12,13,14,15,-1,-1),
 		_mm_setr_epi8(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)      };
+
+/**
+ * From Schlegel et al., Fast Sorted-Set Intersection using SIMD Instructions
+ *
+ * Close to the original
+ */
+static size_t _original_intersect_vector16(const uint16_t *A,
+        const uint16_t *B, const size_t s_a, const size_t s_b, uint16_t *C) {
+    size_t count = 0;
+    size_t i_a = 0, i_b = 0;
+
+    const size_t st_a = (s_a / 8) * 8;
+    const size_t st_b = (s_b / 8) * 8;
+    __m128i v_a, v_b;
+    if ((i_a < st_a) and (i_b < st_b)) {
+        v_a = _mm_loadu_si128((const __m128i *) &A[i_a]);
+        v_b = _mm_loadu_si128((const __m128i *) &B[i_b]);
+        if ((i_a < st_a) and (i_b < st_b))
+            while (true) {
+                const __m128i res_v = _mm_cmpestrm(v_b, 16, v_a, 16,
+                        _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_BIT_MASK);
+                const int r = _mm_extract_epi32(res_v, 0);
+                __m128i p = _mm_shuffle_epi8(v_a, shuffle_mask16[r]);
+                _mm_storeu_si128((__m128i *) &C[count], p);
+                count += _mm_popcnt_u32(r);
+                const uint16_t a_max = A[i_a + 7];
+                const uint16_t b_max = B[i_b + 7];
+                if (a_max <= b_max) {
+                    i_a += 8;
+                    if (i_a == st_a)
+                        break;
+                    v_a = _mm_loadu_si128((const __m128i *) &A[i_a]);
+
+                }
+                if (b_max <= a_max) {
+                    i_b += 8;
+                    if (i_b == st_b)
+                        break;
+                    v_b = _mm_loadu_si128((const __m128i *) &B[i_b]);
+
+                }
+            }
+    }
+    // intersect the tail using scalar intersection
+    while (i_a < s_a && i_b < s_b) {
+        if (A[i_a] < B[i_b]) {
+            i_a++;
+        } else if (B[i_b] < A[i_a]) {
+            i_b++;
+        } else {
+            count++;
+            i_a++;
+            i_b++;
+        }
+    }
+
+    return count;
+}
+
+
 /**
  * From Schlegel et al., Fast Sorted-Set Intersection using SIMD Instructions
  *
@@ -483,6 +543,37 @@ size_t intersect_partitioned(const uint16_t *A, const size_t s_a,
     }
     end: return counter;
 }
+size_t original_intersect_partitioned(const uint16_t *A, const size_t s_a,
+        const uint16_t *B, const size_t s_b, uint16_t * C) {
+    size_t i_a = 0, i_b = 0;
+    size_t counter = 0;
+    while (i_a < s_a && i_b < s_b) {
+        if (A[i_a] < B[i_b]) {
+            do {
+                i_a += static_cast<size_t> (A[i_a + 1]) + 2 + 1;
+                if (i_a >= s_a)
+                    goto end;
+            } while (A[i_a] < B[i_b]);
+        }
+        if (B[i_b] < A[i_a]) {
+            do {
+                i_b += static_cast<size_t> (B[i_b + 1]) + 2 + 1;
+                if (i_b >= s_b)
+                    goto end;
+            } while (B[i_b] < A[i_a]);
+        } else {
+            size_t partition_size = _original_intersect_vector16(
+                    &A[i_a + 2], &B[i_b + 2],
+                    static_cast<size_t> (A[i_a + 1]) + 1,
+                    static_cast<size_t> (B[i_b + 1]) + 1, &C[counter + 1]);
+            C[counter++] = partition_size; // write partition size
+            counter += partition_size;
+            i_a += static_cast<size_t> (A[i_a + 1]) + 2 + 1;
+            i_b += static_cast<size_t> (B[i_b + 1]) + 2 + 1;
+        }
+    }
+    end: return counter;
+}
 
 
 void printusage() {
@@ -562,7 +653,7 @@ int main(int argc, char **argv) {
     for (string intername : IntersectionFactory::allNames()) {
         cout << intername << "\t";
     }
-    cout <<" partioned (Schlegel et al.) ";
+    cout <<" partioned (improved and Schlegel et al.) ";
     cout << "relative-intersection-size " << endl;
 
     for (float ir = 1.001; ir <= 10000; ir = ir * sqrt(1.9)) {
@@ -620,6 +711,20 @@ int main(int argc, char **argv) {
 			volume += (data[k].first.size() + data[k].second.size()) * loop;
 			for (size_t L = 0; L < loop; ++L) {
 				aratio = intersect_partitioned(datapart[k].first.data(),
+						(datapart[k].first).size(),
+						datapart[k].second.data(),
+						(datapart[k].second).size(),
+						(uint16_t *) buffer.data());
+				bogus += aratio;
+			}
+		}
+        cout << setw(10) << setprecision(5) << (volume / (static_cast<double>(z.split()))) << "\t";
+        z.reset();
+        volume = 0;
+		for (size_t k = 0; k < data.size(); ++k) {
+			volume += (data[k].first.size() + data[k].second.size()) * loop;
+			for (size_t L = 0; L < loop; ++L) {
+				aratio = original_intersect_partitioned(datapart[k].first.data(),
 						(datapart[k].first).size(),
 						datapart[k].second.data(),
 						(datapart[k].second).size(),
