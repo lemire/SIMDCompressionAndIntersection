@@ -371,23 +371,24 @@ int main(int argc, char **argv) {
                 }
             }
             cout << setw(10) << setprecision(5) << (volume / (static_cast<double>(z.split()))) << "\t";
-            z.reset();
-			for (size_t k = 0; k < data.size(); ++k) {
-				volume += (data[k].first.size() + data[k].second.size()) * loop;
-				for (size_t L = 0; L < loop; ++L) {
-					aratio = intersect_partitioned(datapart[k].first.data(),
-							(datapart[k].first).size(),
-							datapart[k].second.data(),
-							(datapart[k].second).size(),
-							(uint16_t *) buffer.data());
-					bogus += aratio;
-				}
-			}
-             cout << setw(10) << setprecision(5) << (volume / (static_cast<double>(z.split()))) << "\t";
 #ifdef LIKWID_MARKERS
             likwid_markerStopRegion(currentMarker);
 #endif
         }
+        z.reset();
+        size_t volume = 0;
+		for (size_t k = 0; k < data.size(); ++k) {
+			volume += (data[k].first.size() + data[k].second.size()) * loop;
+			for (size_t L = 0; L < loop; ++L) {
+				aratio = intersect_partitioned(datapart[k].first.data(),
+						(datapart[k].first).size(),
+						datapart[k].second.data(),
+						(datapart[k].second).size(),
+						(uint16_t *) buffer.data());
+				bogus += aratio;
+			}
+		}
+        cout << setw(10) << setprecision(5) << (volume / (static_cast<double>(z.split()))) << "\t";
         cout << "\t\t" << aratio / smallsize;
         cout << endl;
 
