@@ -48,9 +48,9 @@ public:
      * the bulk of the data one way, and they then they compress remaining
      * integers using another scheme).
      *
-     * As with encodeArray, you need to have length element allocated
+     * As with encodeArray, you need to have length elements allocated
      * for *in and at least nvalue elements allocated for out. The value
-     * of the variable nvalue gets updated with the number actually use
+     * of the variable nvalue gets updated with the number actually used
      * (if nvalue exceeds the original value, there might be a buffer
      * overrun).
      */
