@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
         size_t volumeout = 0;
         WallClockTimer z;
         while (reader.loadIntegers(buffer)) {
-            if (obuffer.size() < buffer.size()) {
+            if (obuffer.size() < buffer.size() + 1024) {
                 obuffer.resize(buffer.size() + 1024);
             }
             size_t outsize = obuffer.size();
