@@ -38,6 +38,8 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     schemes["copy"] = shared_ptr<IntegerCODEC> (new JustCopy());
 
     schemes["varint"] = shared_ptr<IntegerCODEC> (new VariableByte<true> ());
+    schemes["vbyte"] = shared_ptr<IntegerCODEC> (new AltVariableByte<true> ());
+
     schemes["s4-fastpfor-d4"] = shared_ptr<IntegerCODEC> (
                                    new CompositeCodec<SIMDFastPFor<CoarseDelta4SIMD> , leftovercodec> ());
 
