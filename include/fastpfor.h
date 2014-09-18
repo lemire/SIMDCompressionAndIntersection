@@ -156,7 +156,7 @@ public:
         assert(gccbits(BlockSizeInUnitsOfPackSize * PACKSIZE - 1) <= 8);
     }
     enum {
-        BlockSizeInUnitsOfPackSize = 4,
+        BlockSizeInUnitsOfPackSize = 8,
         PACKSIZE = 32,
         overheadofeachexcept = 8,
         overheadduetobits = 8,
@@ -289,10 +289,10 @@ public:
                     }
                 }
             }
-            for (size_t k = 0; k < 4; ++k) {
+            for (size_t k = 0; k < BlockSizeInUnitsOfPackSize; ++k) {
                 BitPackingHelpers::fastpack(in + k * 32, out + k * bestb, bestb);
             }
-            out += 4 * bestb;
+            out += BlockSizeInUnitsOfPackSize * bestb;
         }
         headerout[0] = static_cast<uint32_t>(out - headerout);
         const uint32_t bytescontainersize = static_cast<uint32_t>(bc - bytescontainer.data());
@@ -324,10 +324,10 @@ public:
              += BlockSize) {
             const uint8_t b = *bytep++;
             const uint8_t cexcept = *bytep++;
-            for (size_t k = 0; k < 4; ++k) {
+            for (size_t k = 0; k < BlockSizeInUnitsOfPackSize; ++k) {
                 BitPackingHelpers::fastunpack(in + k * b, out + k * 32, b);
             }
-            in += 4 * b;
+            in += BlockSizeInUnitsOfPackSize * b;
             if (cexcept > 0) {
                 const uint8_t maxbits = *bytep++;
                 const uint32_t *vals = unpackpointers[maxbits - b];
