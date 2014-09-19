@@ -41,16 +41,16 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     schemes["vbyte"] = shared_ptr<IntegerCODEC> (new AltVariableByte<true> ());
 
     schemes["s4-fastpfor-d4"] = shared_ptr<IntegerCODEC> (
-                                   new CompositeCodec<SIMDFastPFor<CoarseDelta4SIMD> , leftovercodec> ());
+                                   new CompositeCodec<SIMDFastPFor<8,CoarseDelta4SIMD> , leftovercodec> ());
 
     schemes["s4-fastpfor-dm"]
         = shared_ptr<IntegerCODEC> (
-              new CompositeCodec<SIMDFastPFor<Max4DeltaSIMD> ,
+              new CompositeCodec<SIMDFastPFor<8,Max4DeltaSIMD> ,
               VariableByte<true>> ());
     schemes["s4-fastpfor-d1"] = shared_ptr<IntegerCODEC> (
-                                   new CompositeCodec<SIMDFastPFor<RegularDeltaSIMD> , leftovercodec> ());
+                                   new CompositeCodec<SIMDFastPFor<8,RegularDeltaSIMD> , leftovercodec> ());
     schemes["s4-fastpfor-d2"] = shared_ptr<IntegerCODEC> (
-                                   new CompositeCodec<SIMDFastPFor<CoarseDelta2SIMD> , leftovercodec> ());
+                                   new CompositeCodec<SIMDFastPFor<8,CoarseDelta2SIMD> , leftovercodec> ());
 
     schemes["bp32"] = shared_ptr<IntegerCODEC> (
                           new CompositeCodec<BinaryPacking<BasicBlockPacker> , VariableByte<

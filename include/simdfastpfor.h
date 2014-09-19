@@ -30,7 +30,7 @@
  * Designed by D. Lemire with ideas from Leonid Boytsov. This scheme is NOT patented.
  *
  */
-template <class DeltaHelper = NoDelta, class SortedBitPacker = BasicSortedBitPacker<false>, bool arraydispatch = true>
+template <uint32_t BlockSizeInUnitsOfPackSize = 8, class DeltaHelper = NoDelta, class SortedBitPacker = BasicSortedBitPacker<false>, bool arraydispatch = true>
 class SIMDFastPFor: public IntegerCODEC {
 public:
     /**
@@ -44,7 +44,6 @@ public:
         assert(gccbits(BlockSizeInUnitsOfPackSize * PACKSIZE - 1) <= 8);
     }
     enum {
-        BlockSizeInUnitsOfPackSize = 8,
         PACKSIZE = 32,
         overheadofeachexcept = 8,
         overheadduetobits = 8,
@@ -144,6 +143,7 @@ public:
             cexcept += freqs[b + 1];
             uint32_t thiscost = cexcept * overheadofeachexcept + cexcept
                                 * (maxb - b) + b * BlockSize + 8;// the  extra 8 is the cost of storing maxbits
+            if(bestb - b == 1) thiscost -= cexcept;
             if (thiscost < bestcost) {
                 bestcost = thiscost;
                 bestb = static_cast<uint8_t>(b);
@@ -228,13 +228,20 @@ public:
             in += 4 * b;
             }
             if (cexcept > 0) {
-                const uint8_t maxbits = *bytep++;
-                const uint32_t *vals = unpackpointers[maxbits - b];
-                unpackpointers[maxbits - b] += cexcept;
-                for (uint32_t k = 0; k < cexcept; ++k) {
-                    const uint8_t pos = *(bytep++);
-                    out[pos] |= vals[k] << b;
-                }
+            	const uint8_t maxbits = *bytep++;
+            	if(maxbits - b == 1) {
+            		for (uint32_t k = 0; k < cexcept; ++k) {
+            			const uint8_t pos = *(bytep++);
+            			out[pos] |= static_cast<uint32_t>(1) << b;
+            		}
+            	} else {
+            		const uint32_t *vals = unpackpointers[maxbits - b];
+            		unpackpointers[maxbits - b] += cexcept;
+            		for (uint32_t k = 0; k < cexcept; ++k) {
+            			const uint8_t pos = *(bytep++);
+            			out[pos] |= vals[k] << b;
+            		}
+            	}
             }
             prev = SIMDDeltaProcessor<DeltaHelper, BlockSize>::runPrefixSum(prev, out);
 

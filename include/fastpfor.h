@@ -78,13 +78,13 @@ public:
 
     uint32_t *write(uint32_t *out) {
         uint32_t bitmap = 0;
-        for (uint32_t k = 0; k < 32; ++k) {
+        for (uint32_t k = 1; k < 32; ++k) {
             if (sizes[k] != 0)
                 bitmap |= (1U << k);
         }
         *(out++) = bitmap;
 
-        for (uint32_t k = 0; k < 32; ++k) {
+        for (uint32_t k = 1; k < 32; ++k) {
             if (sizes[k] != 0) {
                 *out = sizes[k];
                 out++;
@@ -101,7 +101,7 @@ public:
         clear();
         const uint32_t bitmap = *(in++);
 
-        for (uint32_t k = 0; k < 32; ++k) {
+        for (uint32_t k = 1; k < 32; ++k) {
             if ((bitmap & (1U << k)) != 0) {
                 sizes[k] = *in++;
                 if (actualsizes[k] < sizes[k]) {
@@ -142,7 +142,7 @@ private:
  * Designed by D. Lemire with ideas from Leonid Boytsov. This scheme is NOT patented.
  *
  */
-template<bool useDelta = true>
+template<uint32_t BlockSizeInUnitsOfPackSize = 8,bool useDelta = true>//BlockSizeInUnitsOfPackSize should be 4 or 8
 class FastPFor: public IntegerCODEC {
 public:
     /**
@@ -156,7 +156,6 @@ public:
         assert(gccbits(BlockSizeInUnitsOfPackSize * PACKSIZE - 1) <= 8);
     }
     enum {
-        BlockSizeInUnitsOfPackSize = 8,
         PACKSIZE = 32,
         overheadofeachexcept = 8,
         overheadduetobits = 8,
@@ -250,6 +249,7 @@ public:
             cexcept += freqs[b + 1];
             uint32_t thiscost = cexcept * overheadofeachexcept + cexcept
                                 * (maxb - b) + b * BlockSize + 8;// the  extra 8 is the cost of storing maxbits
+            if(bestb - b == 1) thiscost -= cexcept;
             if (thiscost < bestcost) {
                 bestcost = thiscost;
                 bestb = static_cast<uint8_t>(b);
@@ -330,12 +330,19 @@ public:
             in += BlockSizeInUnitsOfPackSize * b;
             if (cexcept > 0) {
                 const uint8_t maxbits = *bytep++;
-                const uint32_t *vals = unpackpointers[maxbits - b];
-                unpackpointers[maxbits - b] += cexcept;
-                for (uint32_t k = 0; k < cexcept; ++k) {
-                    const uint8_t pos = *(bytep++);
-                    out[pos] |= vals[k] << b;
-                }
+				if (maxbits - b == 1) {
+					for (uint32_t k = 0; k < cexcept; ++k) {
+						const uint8_t pos = *(bytep++);
+						out[pos] |= static_cast<uint32_t>(1) << b;
+					}
+				} else {
+					const uint32_t *vals = unpackpointers[maxbits - b];
+					unpackpointers[maxbits - b] += cexcept;
+					for (uint32_t k = 0; k < cexcept; ++k) {
+						const uint8_t pos = *(bytep++);
+						out[pos] |= vals[k] << b;
+					}
+				}
             }
             if (useDelta) {
                 inverseDelta(prev, out, BlockSize);

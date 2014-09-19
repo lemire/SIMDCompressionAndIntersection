@@ -117,13 +117,13 @@ public:
 
     uint32_t *write(uint32_t *out) {
         uint32_t bitmap = 0;
-        for (uint32_t k = 0; k < 32; ++k) {
+        for (uint32_t k = 1; k < 32; ++k) {
             if (sizes[k] != 0)
                 bitmap |= (1U << k);
         }
         *(out++) = bitmap;
 
-        for (uint32_t k = 0; k < 32; ++k) {
+        for (uint32_t k = 1; k < 32; ++k) {
             if (sizes[k] != 0) {
                 *out = sizes[k];
                 out++;
@@ -158,7 +158,7 @@ public:
         clear();
         const uint32_t bitmap = *(in++);
 
-        for (uint32_t k = 0; k < 32; ++k) {
+        for (uint32_t k = 1; k < 32; ++k) {
             if ((bitmap & (1U << k)) != 0) {
                 sizes[k] = *in++;
                 if (actualsizes[k] < sizes[k]) {
