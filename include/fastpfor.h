@@ -20,6 +20,7 @@ class ScalarSortedBitPacker {
 public:
 
     enum {DEFAULTSIZE = 128};
+	uint32_t buffer[32];
 
     ScalarSortedBitPacker() {
         for (uint32_t i = 0; i < 32; ++i) {
@@ -88,34 +89,49 @@ public:
             if (sizes[k] != 0) {
                 *out = sizes[k];
                 out++;
-                for (uint32_t j = 0; j < sizes[k]; j += 32) {
+                uint32_t j = 0;
+                for (; j < sizes[k]; j += 32) {
                     BitPackingHelpers::fastpackwithoutmask(&data[k][j], out,
                                                            k + 1);
                     out += k + 1;
                 }
+                out -= ( j - sizes[k] ) * (k+1) / 32;
+
             }
         }
         return out;
     }
+
     const uint32_t *read(const uint32_t *in) {
         clear();
         const uint32_t bitmap = *(in++);
 
-        for (uint32_t k = 1; k < 32; ++k) {
-            if ((bitmap & (1U << k)) != 0) {
-                sizes[k] = *in++;
-                if (actualsizes[k] < sizes[k]) {
-                    delete[] data[k];
-                    actualsizes[k] = (sizes[k] + 31) / 32 * 32;
-                    data[k] = new uint32_t[actualsizes[k]];
-                }
-                for (uint32_t j = 0; j < sizes[k]; j += 32) {
-                    BitPackingHelpers::fastunpack(in, &data[k][j], k + 1);
-                    in += k + 1;
-                }
-            }
-        }
-        return in;
+    	for (uint32_t k = 1; k < 32; ++k) {
+    		if ((bitmap & (1U << k)) != 0) {
+    			sizes[k] = *in++;
+    			if (actualsizes[k] < sizes[k]) {
+    				delete[] data[k];
+    				actualsizes[k] = (sizes[k] + 31) / 32 * 32;
+    				data[k] = new uint32_t[actualsizes[k]];
+    			}
+    			uint32_t j = 0;
+    			for (; j + 31 < sizes[k]; j += 32) {
+    				BitPackingHelpers::fastunpack(in, &data[k][j], k + 1);
+    				in += k + 1;
+    			}
+    			uint32_t remaining = sizes[k] - j;
+    			memcpy(buffer,in,(remaining * (k + 1) + 31)/32*sizeof(uint32_t));
+    			uint32_t * bpointer = buffer;
+    			in += ((sizes[k] + 31) / 32 * 32-j)/32 * (k+1);
+    			for (; j < sizes[k]; j += 32) {
+    				BitPackingHelpers::fastunpack(bpointer, &data[k][j], k + 1);
+    				bpointer+= k + 1;
+    			}
+    			in -= ( j - sizes[k] ) * (k+1) / 32;
+
+    		}
+    	}
+    	return in;
 
     }
 private:
@@ -265,8 +281,6 @@ public:
         uint32_t *const headerout = out++;  // keep track of this
         bpacker.clear();
         uint8_t *bc = bytescontainer.data();
-        //out = padTo128bits(out);
-        //if(needPaddingTo128Bits(in)) throw std::runtime_error("alignment bug");
         for (const uint32_t *const final = in + length; (in + BlockSize
                 <= final); in += BlockSize) {
             uint8_t bestb, bestcexcept, maxb;
