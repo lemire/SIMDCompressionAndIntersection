@@ -30,7 +30,7 @@
  * Designed by D. Lemire with ideas from Leonid Boytsov. This scheme is NOT patented.
  *
  */
-template <uint32_t BlockSizeInUnitsOfPackSize = 8, class DeltaHelper = NoDelta, class SortedBitPacker = BasicSortedBitPacker<false>, bool arraydispatch = true>
+template <uint32_t BlockSizeInUnitsOfPackSize = 8, class DeltaHelper = NoDelta, class SortedBitPacker = BasicSortedBitPacker, bool arraydispatch = true>
 class SIMDFastPFor: public IntegerCODEC {
 public:
     /**

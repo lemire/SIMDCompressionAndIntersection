@@ -28,14 +28,14 @@ static T *padTo128bits(T *inbyte) {
  *
  * Design by D. Lemire
  */
-template<bool forcealign>
 class BasicSortedBitPacker {
 public:
 
     enum {DEFAULTSIZE = 128}; // should be a multiple of 128
+	uint32_t buffer[32];
 
     static string name() {
-        return forcealign ? "BSBP" : "uBSBP";
+        return  "uBSBP";
     }
 
     BasicSortedBitPacker() {
@@ -103,11 +103,9 @@ public:
             if (sizes[k] != 0) {
                 uint32_t j = sizes[k] / 128 * 128;
                 if (j < sizes[k]) {
-                    if (forcealign)  {
-                        answer += j + 128 - sizes[k];
-                    } else {
-                        answer += sizes[k] / 32 * 32 + 32 - sizes[k];
-                    }
+
+                    answer += sizes[k] / 32 * 32 + 32 - sizes[k];
+
                 }
             }
         }
@@ -127,29 +125,21 @@ public:
             if (sizes[k] != 0) {
                 *out = sizes[k];
                 out++;
-                if (forcealign) out = padTo128bits(out);
                 uint32_t j = 0;
                 for (; j + 128 <= sizes[k]; j += 128) {
-                    if (forcealign)  {
-                        simdpackwithoutmask(&data[k][j], reinterpret_cast<__m128i *>(out), k + 1);
-                        out += 4 * (k + 1);
-                    } else {
-                        usimdpackwithoutmask(&data[k][j], reinterpret_cast<__m128i *>(out), k + 1);
-                        out += 4 * (k + 1);
-                    }
+                	usimdpackwithoutmask(&data[k][j], reinterpret_cast<__m128i *>(out), k + 1);
+                	out += 4 * (k + 1);
                 }
-                if (j < sizes[k]) {
-                    if (forcealign)  {
-                        simdpackwithoutmask(&data[k][j], reinterpret_cast<__m128i *>(out), k + 1);
-                        out += 4 * (k + 1);
-                    } else {
-                        // falling back on scalar
-                        for (; j < sizes[k]; j += 32) {
-                            BitPackingHelpers::fastpackwithoutmask(&data[k][j], out, k + 1);
-                            out += k + 1;
-                        }
-                    }
+                // falling back on scalar
+                for (; j < sizes[k]; j += 32) {
+                	BitPackingHelpers::fastpackwithoutmask(&data[k][j], out, k + 1);
+                	out += k + 1;
                 }
+                out -= ( j - sizes[k] ) * (k + 1) / 32;
+
+
+
+
             }
         }
         return out;
@@ -159,37 +149,35 @@ public:
         const uint32_t bitmap = *(in++);
 
         for (uint32_t k = 1; k < 32; ++k) {
-            if ((bitmap & (1U << k)) != 0) {
-                sizes[k] = *in++;
-                if (actualsizes[k] < sizes[k]) {
-                    delete[] data[k];
-                    actualsizes[k] = (sizes[k] + 127) / 128 * 128;
-                    data[k] = new uint32_t[actualsizes[k]];
-                }
-                if (forcealign) in = padTo128bits(in);
-                uint32_t j = 0;
-                for (; j + 128 <= sizes[k] ; j += 128) {
-                    if (forcealign) {
-                        simdunpack(reinterpret_cast<const __m128i *>(in), &data[k][j], k + 1);
-                        in += 4 * (k + 1);
-                    } else {
-                        usimdunpack(reinterpret_cast<const __m128i *>(in), &data[k][j], k + 1);
-                        in += 4 * (k + 1);
-                    }
-                }
-                if (j < sizes[k]) {
-                    if (forcealign) {
-                        simdunpack(reinterpret_cast<const __m128i *>(in), &data[k][j], k + 1);
-                        in += 4 * (k + 1);
-                    } else {
-                        // falling back on scalar
-                        for (; j < sizes[k]; j += 32) {
-                            BitPackingHelpers::fastunpack(in, &data[k][j], k + 1);
-                            in += k + 1;
-                        }
-                    }
-                }
-            }
+        	if ((bitmap & (1U << k)) != 0) {
+        		sizes[k] = *in++;
+        		if (actualsizes[k] < sizes[k]) {
+        			delete[] data[k];
+        			actualsizes[k] = (sizes[k] + 127) / 128 * 128;
+        			data[k] = new uint32_t[actualsizes[k]];
+        		}
+        		uint32_t j = 0;
+        		for (; j + 128 <= sizes[k] ; j += 128) {
+
+        			usimdunpack(reinterpret_cast<const __m128i *>(in), &data[k][j], k + 1);
+        			in += 4 * (k + 1);
+
+        		}
+        		for (; j + 31 < sizes[k]; j += 32) {
+        			BitPackingHelpers::fastunpack(in, &data[k][j], k + 1);
+        			in += k + 1;
+        		}
+        		uint32_t remaining = sizes[k] - j;
+        		memcpy(buffer,in,(remaining * (k + 1) + 31)/32*sizeof(uint32_t));
+        		uint32_t * bpointer = buffer;
+        		in += ((sizes[k]+31)/32*32-j)/32 * (k+1);
+        		for(; j  < sizes[k]; j += 32) {
+        			BitPackingHelpers::fastunpack(bpointer, &data[k][j], k + 1);
+        			bpointer += k + 1;
+        		}
+        		in -= ( j - sizes[k] ) * (k + 1) / 32;
+
+        	}
         }
         return in;
 
