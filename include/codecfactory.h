@@ -31,7 +31,7 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     std::map <string, shared_ptr<IntegerCODEC>> schemes;
 
     schemes["fastpfor"] = shared_ptr<IntegerCODEC> (
-                              new CompositeCodec<FastPFor<true> ,
+                              new CompositeCodec<FastPFor<8,true> ,
                               leftovercodec> ());
 
 

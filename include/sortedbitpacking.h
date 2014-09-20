@@ -93,25 +93,6 @@ public:
             sizes[i] = 0;// memset "might" be faster.
     }
 
-    /**
-     * The data structure can be slightly inefficient sometimes. This
-     * reports the number of "padded" bits (wasted bits) used.
-     */
-    uint32_t computeWaste() {
-        uint32_t answer = 0;
-        for (uint32_t k = 0; k < 32; ++k) {
-            if (sizes[k] != 0) {
-                uint32_t j = sizes[k] / 128 * 128;
-                if (j < sizes[k]) {
-
-                    answer += sizes[k] / 32 * 32 + 32 - sizes[k];
-
-                }
-            }
-        }
-        return answer;
-    }
-
 
     uint32_t *write(uint32_t *out) {
         uint32_t bitmap = 0;
@@ -219,16 +200,7 @@ public:
         }
         return true;
     }
-    void print() {
-        for (uint32_t k = 0; k < 32; ++k) {
-            if (sizes[k] > 0) {
-                cout << k << "=\t\t";
-                for (uint32_t j = 0; j < sizes[k]; ++j)
-                    cout << data[k][j] << " ";
-                cout << endl;
-            }
-        }
-    }
+
 
 private:
     uint32_t *data[32];

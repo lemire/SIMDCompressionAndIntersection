@@ -251,7 +251,7 @@ public:
     }
 
     string name() const {
-        return string("SIMDFastPFor") + DeltaHelper::name() + SortedBitPacker::name();
+        return string("SIMDFastPFor") + DeltaHelper::name();
     }
 
 };
