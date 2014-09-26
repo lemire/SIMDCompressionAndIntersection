@@ -22,6 +22,7 @@
 #include "fastpfor.h"
 #include "simdfastpfor.h"
 #include "variablebyte.h"
+#include "varintgb.h"
 
 using namespace std;
 
@@ -39,6 +40,7 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
 
     schemes["varint"] = shared_ptr<IntegerCODEC> (new VariableByte<true> ());
     schemes["vbyte"] = shared_ptr<IntegerCODEC> (new AltVariableByte<true> ());
+    schemes["varintgb"] = std::shared_ptr<IntegerCODEC> (new VarIntGB<>());
 
     schemes["s4-fastpfor-d4"] = shared_ptr<IntegerCODEC> (
                                    new CompositeCodec<SIMDFastPFor<8,CoarseDelta4SIMD> , leftovercodec> ());
