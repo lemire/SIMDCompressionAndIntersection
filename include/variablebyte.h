@@ -14,6 +14,7 @@
 /***
  * VariableByte and AltVariableByte are basically identical, except that
  * one uses 0..0..0..1 to indicate 4 whereas the other one uses 1..1..1..0.
+ * The latter is maybe more common.
  */
 
 

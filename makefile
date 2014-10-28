@@ -5,17 +5,22 @@
 ifeq ($(INTEL), 1)
 # if you wish to use the Intel compiler, please do "make INTEL=1".
     CXX ?= /opt/intel/bin/icpc
+    CC ?= /opt/intel/bin/icpc
 ifeq ($(DEBUG),1)
     CXXFLAGS = -std=c++11 -O3 -Wall -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
+    CCFLAGS = -std=c99 -O3 -Wall -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
 else
-    CXXFLAGS = -std=c++11 -O3 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
+    CXXFLAGS = -std=c++11 -O2 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
+    CCFLAGS = -std=c99 -O2 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
 endif # debug
 else #intel
     CXX ?= g++-4.7
 ifeq ($(DEBUG),1)
-    CXXFLAGS = -mavx -std=c++11  -Weffc++ -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra  -Wcast-align  
+    CXXFLAGS = -mavx -std=c++11  -Weffc++ -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra   
+    CCFLAGS =-mavx -std=c99  -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra 
 else
-    CXXFLAGS = -mavx -std=c++11  -Weffc++ -pedantic -O3 -Wall -Wextra  -Wcast-align  
+    CXXFLAGS = -mavx -std=c++11  -Weffc++ -pedantic -O3 -Wall -Wextra 
+    CCFLAGS =-mavx -std=c99 -pedantic -O3 -Wall -Wextra  
 endif #debug
 endif #intel
 
@@ -46,6 +51,9 @@ integratedbitpacking.o: include/integratedbitpacking.h src/integratedbitpacking.
 	$(CXX) $(CXXFLAGS) -c src/integratedbitpacking.cpp -Iinclude
 
 
+varintdecode.o:  src/varintdecode.c
+	$(CC) $(CCFLAGS) -c src/varintdecode.c 
+
 simdbitpacking.o: include/simdbitpacking.h src/simdbitpacking.cpp
 	$(CXX) $(CXXFLAGS) -c src/simdbitpacking.cpp -Iinclude
 
@@ -60,7 +68,7 @@ simdintegratedbitpacking.o: include/simdintegratedbitpacking.h include/delta.h s
 UNAME := $(shell uname)
 
 
-OBJECTS= bitpacking.o integratedbitpacking.o simdbitpacking.o usimdbitpacking.o    simdintegratedbitpacking.o   intersection.o  
+OBJECTS= bitpacking.o integratedbitpacking.o simdbitpacking.o usimdbitpacking.o    simdintegratedbitpacking.o   intersection.o  varintdecode.o 
 
 
 unit: $(HEADERS)   src/unit.cpp $(OBJECTS)

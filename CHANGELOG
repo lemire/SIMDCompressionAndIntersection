@@ -1,5 +1,6 @@
 upcoming
   - FastPFOR users 256-int blocks
+  - Added MaskedVByte
 version 0.1.1 (Jan 20th 2014)
   - minor fixes
 
