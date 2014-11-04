@@ -40,7 +40,7 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     schemes["copy"] = shared_ptr<IntegerCODEC> (new JustCopy());
 
     schemes["varint"] = shared_ptr<IntegerCODEC> (new VariableByte<true> ());
-    schemes["vbyte"] = shared_ptr<IntegerCODEC> (new AltVariableByte<true> ());
+    schemes["vbyte"] = shared_ptr<IntegerCODEC> (new VByte<true> ());
     schemes["maskedvbyte"] = shared_ptr<IntegerCODEC> (
                               new MaskedVByte<true> ());
     schemes["varintgb"] = std::shared_ptr<IntegerCODEC> (new VarIntGB<>());

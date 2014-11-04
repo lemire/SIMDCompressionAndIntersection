@@ -12,10 +12,11 @@
 #include "util.h"
 
 /***
- * VariableByte and AltVariableByte are basically identical, except that
+ * VariableByte and VByte are basically identical, except that
  * one uses 0..0..0..1 to indicate 4 whereas the other one uses 1..1..1..0.
  * The latter is maybe more common.
  */
+
 
 
 template<bool delta>
@@ -79,27 +80,6 @@ public:
 		assert((storageinbytes % 4) == 0);
 		nvalue = storageinbytes / 4;
 	}
-	// this assumes that there is a value to be read
-	int read_int(const uint8_t* in, uint32_t* out) {
-		*out = in[0] & 0x7F;
-		if (in[0] >= 128) {
-			return 1;
-		}
-		*out = ((in[1] & 0x7FU) << 7) | *out;
-		if (in[1] >= 128) {
-			return 2;
-		}
-		*out = ((in[2] & 0x7FU) << 14) | *out;
-		if (in[2] >= 128) {
-			return 3;
-		}
-		*out = ((in[3] & 0x7FU) << 21) | *out;
-		if (in[3] >= 128) {
-			return 4;
-		}
-		*out = ((in[4] & 0x7FU) << 28) | *out;
-		return 5;
-	}
 
 	const uint32_t *decodeArray(const uint32_t *in, const size_t length,
 			uint32_t *out, size_t &nvalue) {
@@ -114,14 +94,88 @@ public:
 		const uint32_t * const initout(out);
 		// this assumes that there is a value to be read
 
-		for (uint32_t v = 0; endbyte > inbyte + 5;) {
+		while(endbyte > inbyte + 5) {
 			if (delta) {
-				inbyte += read_int(inbyte, &v);
-				*out = (prev = v + prev);
+	            uint8_t c;
+	            uint32_t v;
+
+	            c = inbyte[0];
+	            v = c & 0x7F;
+	            if (c >= 128) {
+	                inbyte += 1;
+	                *out++ = (prev = v + prev);
+	                continue;
+	            }
+
+	            c = inbyte[1];
+	            v |= (c & 0x7F) << 7;
+	            if (c >= 128) {
+	                inbyte += 2;
+	                *out++ = (prev = v + prev);
+	                continue;
+	            }
+
+	            c = inbyte[2];
+	            v |= (c & 0x7F) << 14;
+	            if (c >= 128) {
+	                inbyte += 3;
+	                *out++ = (prev = v + prev);
+	                continue;
+	            }
+
+	            c = inbyte[3];
+	            v |= (c & 0x7F) << 21;
+	            if (c >= 128) {
+	                inbyte += 4;
+	                *out++ = (prev = v + prev);
+	                continue;
+	            }
+
+	            c = inbyte[4];
+	            inbyte += 5;
+	            v |= (c & 0x0F) << 28;
+	            *out++ = (prev = v + prev);
 			} else {
-				inbyte += read_int(inbyte, out);
+	            uint8_t c;
+	            uint32_t v;
+
+	            c = inbyte[0];
+	            v = c & 0x7F;
+	            if (c >= 128) {
+	                inbyte += 1;
+	                *out++ = v;
+	                continue;
+	            }
+
+	            c = inbyte[1];
+	            v |= (c & 0x7F) << 7;
+	            if (c >= 128) {
+	                inbyte += 2;
+	                *out++ = v;
+	                continue;
+	            }
+
+	            c = inbyte[2];
+	            v |= (c & 0x7F) << 14;
+	            if (c >= 128) {
+	                inbyte += 3;
+	                *out++ = v;
+	                continue;
+	            }
+
+	            c = inbyte[3];
+	            v |= (c & 0x7F) << 21;
+	            if (c >= 128) {
+	                inbyte += 4;
+	                *out++ = v;
+	                continue;
+	            }
+
+	            c = inbyte[4];
+	            inbyte += 5;
+	            v |= (c & 0x0F) << 28;
+	            *out++ = v;
 			}
-			++out;
 		}
 		while (endbyte > inbyte) {
 			unsigned int shift = 0;
@@ -157,7 +211,7 @@ private:
 };
 
 template<bool delta>
-class AltVariableByte: public IntegerCODEC {
+class VByte: public IntegerCODEC {
 public:
 	void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
 			size_t &nvalue) {
@@ -217,28 +271,6 @@ public:
 		nvalue = storageinbytes / 4;
 	}
 
-	// this assumes that there is a value to be read
-	static int read_int(const uint8_t* in, uint32_t* out) {
-		*out = in[0] & 0x7F;
-		if (in[0] < 128) {
-			return 1;
-		}
-		*out = ((in[1] & 0x7FU) << 7) | *out;
-		if (in[1] < 128) {
-			return 2;
-		}
-		*out = ((in[2] & 0x7FU) << 14) | *out;
-		if (in[2] < 128) {
-			return 3;
-		}
-		*out = ((in[3] & 0x7FU) << 21) | *out;
-		if (in[3] < 128) {
-			return 4;
-		}
-		*out = ((in[4] & 0x7FU) << 28) | *out;
-		return 5;
-	}
-
 	const uint32_t *decodeArray(const uint32_t *in, const size_t length,
 			uint32_t *out, size_t &nvalue) {
 		uint32_t prev = 0;
@@ -252,14 +284,88 @@ public:
 		const uint32_t * const initout(out);
 		// this assumes that there is a value to be read
 
-		for (uint32_t v = 0; endbyte > inbyte + 5;) {
+		while(endbyte > inbyte + 5) {
 			if (delta) {
-				inbyte += read_int(inbyte, &v);
-				*out = (prev = v + prev);
+	            uint8_t c;
+	            uint32_t v;
+
+	            c = inbyte[0];
+	            v = c & 0x7F;
+	            if (c < 128) {
+	                inbyte += 1;
+	                *out++ = (prev = v + prev);
+	                continue;
+	            }
+
+	            c = inbyte[1];
+	            v |= (c & 0x7F) << 7;
+	            if (c < 128) {
+	                inbyte += 2;
+	                *out++ = (prev = v + prev);
+	                continue;
+	            }
+
+	            c = inbyte[2];
+	            v |= (c & 0x7F) << 14;
+	            if (c < 128) {
+	                inbyte += 3;
+	                *out++ = (prev = v + prev);
+	                continue;
+	            }
+
+	            c = inbyte[3];
+	            v |= (c & 0x7F) << 21;
+	            if (c < 128) {
+	                inbyte += 4;
+	                *out++ = (prev = v + prev);
+	                continue;
+	            }
+
+	            c = inbyte[4];
+	            inbyte += 5;
+	            v |= (c & 0x0F) << 28;
+	            *out++ = (prev = v + prev);
 			} else {
-				inbyte += read_int(inbyte, out);
+	            uint8_t c;
+	            uint32_t v;
+
+	            c = inbyte[0];
+	            v = c & 0x7F;
+	            if (c < 128) {
+	                inbyte += 1;
+	                *out++ = v;
+	                continue;
+	            }
+
+	            c = inbyte[1];
+	            v |= (c & 0x7F) << 7;
+	            if (c < 128) {
+	                inbyte += 2;
+	                *out++ = v;
+	                continue;
+	            }
+
+	            c = inbyte[2];
+	            v |= (c & 0x7F) << 14;
+	            if (c < 128) {
+	                inbyte += 3;
+	                *out++ = v;
+	                continue;
+	            }
+
+	            c = inbyte[3];
+	            v |= (c & 0x7F) << 21;
+	            if (c < 128) {
+	                inbyte += 4;
+	                *out++ = v;
+	                continue;
+	            }
+
+	            c = inbyte[4];
+	            inbyte += 5;
+	            v |= (c & 0x0F) << 28;
+	            *out++ = v;
 			}
-			++out;
 		}
 		while (endbyte > inbyte) {
 			unsigned int shift = 0;
@@ -278,9 +384,9 @@ public:
 
 	std::string name() const {
 		if (delta)
-			return "AltVByteDelta";
+			return "VByteDelta";
 		else
-			return "AltVByte";
+			return "VByte";
 	}
 
 private:
@@ -295,5 +401,6 @@ private:
 	}
 
 };
+
 
 #endif /* VARIABLEBYTE_H_ */
