@@ -33,7 +33,7 @@ HEADERS= $(shell ls include/*h)
 all: unit  testcodecs  testintegration  advancedbenchmarking benchintersection
 	echo "please run unit tests by running the unit executable"
 
-advancedbenchmarking: simplesynth compress uncompress budgetedtest entropy 
+advancedbenchmarking: simplesynth compress uncompress budgetedtest entropy compflatstat
 
 bitpacking.o: include/bitpacking.h src/bitpacking.cpp
 	$(CXX) $(CXXFLAGS) -c src/bitpacking.cpp -Iinclude
@@ -115,6 +115,9 @@ entropy: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/entropy.cpp $(OBJEC
 
 uncompress: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/uncompress.cpp $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o uncompress advancedbenchmarking/src/uncompress.cpp $(OBJECTS) -Iinclude -Iadvancedbenchmarking/include 
+
+compflatstat: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/compflatstat.cpp $(OBJECTS) 
+	$(CXX) $(CXXFLAGS) -o compflatstat advancedbenchmarking/src/compflatstat.cpp $(OBJECTS)  -Iinclude -Iadvancedbenchmarking/include
 
 astyle:
 	astyle --options=astyle.conf --recursive "*.cpp" "*.h"
