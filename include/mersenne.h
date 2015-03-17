@@ -3,8 +3,8 @@
  * Apache License Version 2.0 http://www.apache.org/licenses/.
  */
 
-#ifndef MERSENNE_H_
-#define MERSENNE_H_
+#ifndef SIMDCompressionAndIntersection_MERSENNE_H_
+#define SIMDCompressionAndIntersection_MERSENNE_H_
 
 #include "common.h"
 #include "util.h"
@@ -95,4 +95,4 @@ unsigned int ZRandom::getValue() {
     return y;
 }
 
-#endif /* MERSENNE_H_ */
+#endif /* SIMDCompressionAndIntersection_MERSENNE_H_ */

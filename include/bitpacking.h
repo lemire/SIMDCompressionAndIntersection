@@ -4,8 +4,8 @@
  *
  * (c) Daniel Lemire, http://lemire.me/en/
  */
-#ifndef BITPACKING
-#define BITPACKING
+#ifndef SIMDCompressionAndIntersection_BITPACKING
+#define SIMDCompressionAndIntersection_BITPACKING
 #include <stdint.h>
 
 void __fastunpack0(const uint32_t   *__restrict__ in, uint32_t   *__restrict__  out);
@@ -111,4 +111,4 @@ void __fastpackwithoutmask30(const uint32_t   *__restrict__ in, uint32_t   *__re
 void __fastpackwithoutmask31(const uint32_t   *__restrict__ in, uint32_t   *__restrict__  out);
 void __fastpackwithoutmask32(const uint32_t   *__restrict__ in, uint32_t   *__restrict__  out);
 
-#endif // BITPACKING
+#endif // SIMDCompressionAndIntersection_BITPACKING

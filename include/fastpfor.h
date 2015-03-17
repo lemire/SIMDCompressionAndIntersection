@@ -4,8 +4,8 @@
  * comparison purposes.
  */
 
-#ifndef FASTPFOR_H_
-#define FASTPFOR_H_
+#ifndef SIMDCompressionAndIntersection_FASTPFOR_H_
+#define SIMDCompressionAndIntersection_FASTPFOR_H_
 
 
 #include "common.h"
@@ -378,4 +378,4 @@ public:
 
 
 
-#endif /* FASTPFOR_H_ */
+#endif /* SIMDCompressionAndIntersection_FASTPFOR_H_ */

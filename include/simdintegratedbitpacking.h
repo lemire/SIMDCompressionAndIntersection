@@ -5,8 +5,8 @@
  * (c) Leonid Boytsov, Nathan Kurz and Daniel Lemire
  */
 
-#ifndef SIMD_INTEGRATED_BITPACKING_H
-#define SIMD_INTEGRATED_BITPACKING_H
+#ifndef SIMDCompressionAndIntersection_SIMD_INTEGRATED_BITPACKING_H
+#define SIMDCompressionAndIntersection_SIMD_INTEGRATED_BITPACKING_H
 
 
 /**

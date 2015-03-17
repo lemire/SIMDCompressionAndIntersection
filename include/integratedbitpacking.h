@@ -4,8 +4,8 @@
  *
  * (c) Daniel Lemire, http://lemire.me/en/
  */
-#ifndef INTEGRATEDBITPACKING
-#define INTEGRATEDBITPACKING
+#ifndef SIMDCompressionAndIntersection_INTEGRATEDBITPACKING
+#define SIMDCompressionAndIntersection_INTEGRATEDBITPACKING
 #include <stdint.h>
 
 
@@ -134,4 +134,4 @@ void __integratedfastpack31(const uint32_t initoffset, const uint32_t   *__restr
 void __integratedfastpack32(const uint32_t initoffset, const uint32_t   *__restrict__ in,
                             uint32_t   *__restrict__  out);
 
-#endif // INTEGRATEDBITPACKING
+#endif // SIMDCompressionAndIntersection_INTEGRATEDBITPACKING

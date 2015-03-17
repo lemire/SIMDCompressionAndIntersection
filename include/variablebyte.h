@@ -5,8 +5,8 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef VARIABLEBYTE_H_
-#define VARIABLEBYTE_H_
+#ifndef SIMDCompressionAndIntersection_VARIABLEBYTE_H_
+#define SIMDCompressionAndIntersection_VARIABLEBYTE_H_
 #include "common.h"
 #include "codecs.h"
 #include "util.h"
@@ -403,4 +403,4 @@ private:
 };
 
 
-#endif /* VARIABLEBYTE_H_ */
+#endif /* SIMDCompressionAndIntersection_VARIABLEBYTE_H_ */

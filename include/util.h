@@ -5,8 +5,8 @@
  * (c) Daniel Lemire
  */
 
-#ifndef UTIL_H_
-#define UTIL_H_
+#ifndef SIMDCompressionAndIntersection_UTIL_H_
+#define SIMDCompressionAndIntersection_UTIL_H_
 
 #include "common.h"
 
@@ -140,4 +140,4 @@ bool is_strictlysorted(iterator first, iterator last)  {
     }
     return true;
 }
-#endif /* UTIL_H_ */
+#endif /* SIMDCompressionAndIntersection_UTIL_H_ */

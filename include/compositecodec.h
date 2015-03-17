@@ -4,8 +4,8 @@
  *
  * (c) Daniel Lemire, http://lemire.me/en/
  */
-#ifndef COMPOSITECODEC_H_
-#define COMPOSITECODEC_H_
+#ifndef SIMDCompressionAndIntersection_COMPOSITECODEC_H_
+#define SIMDCompressionAndIntersection_COMPOSITECODEC_H_
 
 #include "common.h"
 #include "util.h"
@@ -65,4 +65,4 @@ public:
     }
 };
 
-#endif /* COMPOSITECODEC_H_ */
+#endif /* SIMDCompressionAndIntersection_COMPOSITECODEC_H_ */

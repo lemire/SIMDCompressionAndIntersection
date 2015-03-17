@@ -7,8 +7,8 @@
  *      Implemented by Daniel Lemire
  */
 
-#ifndef HYBM2_H_
-#define HYBM2_H_
+#ifndef SIMDCompressionAndIntersection_HYBM2_H_
+#define SIMDCompressionAndIntersection_HYBM2_H_
 
 #include "common.h"
 #include "codecs.h"
@@ -636,4 +636,4 @@ private:
 
 
 };
-#endif /* HYBM2_H_ */
+#endif /* SIMDCompressionAndIntersection_HYBM2_H_ */

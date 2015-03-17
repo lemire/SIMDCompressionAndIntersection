@@ -4,8 +4,8 @@
  *
  * (c) Daniel Lemire
  */
-#ifndef SIMDBITPACKING_H_
-#define SIMDBITPACKING_H_
+#ifndef SIMDCompressionAndIntersection_SIMDBITPACKING_H_
+#define SIMDCompressionAndIntersection_SIMDBITPACKING_H_
 
 #include "common.h"
 
@@ -114,4 +114,4 @@ void __SIMD_fastpack32(const uint32_t *, __m128i *);
 
 
 
-#endif /* SIMDBITPACKING_H_ */
+#endif /* SIMDCompressionAndIntersection_SIMDBITPACKING_H_ */

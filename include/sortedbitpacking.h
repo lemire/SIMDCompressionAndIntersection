@@ -5,8 +5,8 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef SORTEDBITPACKING_H_
-#define SORTEDBITPACKING_H_
+#ifndef SIMDCompressionAndIntersection_SORTEDBITPACKING_H_
+#define SIMDCompressionAndIntersection_SORTEDBITPACKING_H_
 
 
 #include "common.h"
@@ -215,4 +215,4 @@ private:
 };
 
 
-#endif /* SORTEDBITPACKING_H_ */
+#endif /* SIMDCompressionAndIntersection_SORTEDBITPACKING_H_ */

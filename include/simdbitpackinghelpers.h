@@ -5,8 +5,8 @@
  * (c) Leonid Boytsov, Nathan Kurz and Daniel Lemire
  */
 
-#ifndef SIMD_BITPACKING_HELPERS_H_
-#define SIMD_BITPACKING_HELPERS_H_
+#ifndef SIMDCompressionAndIntersection_SIMD_BITPACKING_HELPERS_H_
+#define SIMDCompressionAndIntersection_SIMD_BITPACKING_HELPERS_H_
 
 #include "common.h"
 #include "simdbitpacking.h"

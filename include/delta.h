@@ -5,8 +5,8 @@
  * (c) Leonid Boytsov, Nathan Kurz and Daniel Lemire
  */
 
-#ifndef DELTA_H_
-#define DELTA_H_
+#ifndef SIMDCompressionAndIntersection_DELTA_H_
+#define SIMDCompressionAndIntersection_DELTA_H_
 
 
 #include "common.h"
@@ -80,4 +80,4 @@ void inverseDelta(const T initoffset, T *data) {
 }
 
 
-#endif /* DELTA_H_ */
+#endif /* SIMDCompressionAndIntersection_DELTA_H_ */

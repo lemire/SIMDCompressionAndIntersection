@@ -5,8 +5,8 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef SIMDBINARYPACKING_H_
-#define SIMDBINARYPACKING_H_
+#ifndef SIMDCompressionAndIntersection_SIMDBINARYPACKING_H_
+#define SIMDCompressionAndIntersection_SIMDBINARYPACKING_H_
 
 #include "codecs.h"
 #include "simdbitpackinghelpers.h"
@@ -236,4 +236,4 @@ public:
 
 };
 
-#endif /* SIMDBINARYPACKING_H_ */
+#endif /* SIMDCompressionAndIntersection_SIMDBINARYPACKING_H_ */

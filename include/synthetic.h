@@ -5,8 +5,8 @@
  * (c) Daniel Lemire
  */
 
-#ifndef SYNTHETIC_H_
-#define SYNTHETIC_H_
+#ifndef SIMDCompressionAndIntersection_SYNTHETIC_H_
+#define SIMDCompressionAndIntersection_SYNTHETIC_H_
 
 
 #include "common.h"
@@ -375,4 +375,4 @@ float intersectionratio) {
 }
 
 
-#endif /* SYNTHETIC_H_ */
+#endif /* SIMDCompressionAndIntersection_SYNTHETIC_H_ */

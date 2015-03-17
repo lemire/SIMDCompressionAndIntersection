@@ -5,8 +5,8 @@
  *      Author: lemire
  */
 
-#ifndef VARINTGB_H_
-#define VARINTGB_H_
+#ifndef SIMDCompressionAndIntersection_VARINTGB_H_
+#define SIMDCompressionAndIntersection_VARINTGB_H_
 
 #include "common.h"
 #include "codecs.h"
@@ -212,4 +212,4 @@ public:
 
 
 
-#endif /* VARINTGB_H_ */
+#endif /* SIMDCompressionAndIntersection_VARINTGB_H_ */

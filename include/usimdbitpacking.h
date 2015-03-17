@@ -4,8 +4,8 @@
  *
  * (c) Daniel Lemire
  */
-#ifndef USIMDBITPACKING_H_
-#define USIMDBITPACKING_H_
+#ifndef SIMDCompressionAndIntersection_USIMDBITPACKING_H_
+#define SIMDCompressionAndIntersection_USIMDBITPACKING_H_
 
 #include "common.h"
 

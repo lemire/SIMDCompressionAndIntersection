@@ -5,8 +5,8 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef BINARYPACKING_H_
-#define BINARYPACKING_H_
+#ifndef SIMDCompressionAndIntersection_BINARYPACKING_H_
+#define SIMDCompressionAndIntersection_BINARYPACKING_H_
 
 #include "codecs.h"
 #include "bitpackinghelpers.h"
@@ -185,4 +185,4 @@ public:
 
 
 
-#endif /* BINARYPACKING_H_ */
+#endif /* SIMDCompressionAndIntersection_BINARYPACKING_H_ */

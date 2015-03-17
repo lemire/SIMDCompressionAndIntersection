@@ -8,8 +8,8 @@
  * improved by Nathan Kurz.
  */
 
-#ifndef SIMDVARIABLEBYTE_H_
-#define SIMDVARIABLEBYTE_H_
+#ifndef SIMDCompressionAndIntersection_SIMDVARIABLEBYTE_H_
+#define SIMDCompressionAndIntersection_SIMDVARIABLEBYTE_H_
 
 #include "common.h"
 #include "codecs.h"
@@ -244,4 +244,4 @@ private:
 
 };
 
-#endif /* SIMDVARIABLEBYTE_H_ */
+#endif /* SIMDCompressionAndIntersection_SIMDVARIABLEBYTE_H_ */

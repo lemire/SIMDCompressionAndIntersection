@@ -5,8 +5,8 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef CODECS_H_
-#define CODECS_H_
+#ifndef SIMDCompressionAndIntersection_CODECS_H_
+#define SIMDCompressionAndIntersection_CODECS_H_
 
 
 #include "common.h"
@@ -133,4 +133,4 @@ public:
 };
 
 
-#endif /* CODECS_H_ */
+#endif /* SIMDCompressionAndIntersection_CODECS_H_ */

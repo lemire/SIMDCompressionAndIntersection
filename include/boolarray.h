@@ -4,8 +4,8 @@
  *
  */
 
-#ifndef BOOLARRAY_H_
-#define BOOLARRAY_H_
+#ifndef SIMDCompressionAndIntersection_BOOLARRAY_H_
+#define SIMDCompressionAndIntersection_BOOLARRAY_H_
 
 #include "common.h"
 
@@ -197,4 +197,4 @@ public:
 };
 
 
-#endif /* BOOLARRAY_H_ */
+#endif /* SIMDCompressionAndIntersection_BOOLARRAY_H_ */

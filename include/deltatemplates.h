@@ -5,8 +5,8 @@
  * (c) Leonid Boytsov, Nathan Kurz and Daniel Lemire
  */
 
-#ifndef DELTATEMPLATES_H_
-#define DELTATEMPLATES_H_
+#ifndef SIMDCompressionAndIntersection_DELTATEMPLATES_H_
+#define SIMDCompressionAndIntersection_DELTATEMPLATES_H_
 
 #include "common.h"
 
@@ -161,4 +161,4 @@ struct SIMDDeltaProcessor {
 
 
 
-#endif /* DELTATEMPLATES_H_ */
+#endif /* SIMDCompressionAndIntersection_DELTATEMPLATES_H_ */

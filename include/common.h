@@ -4,8 +4,8 @@
  *
  * (c) Daniel Lemire, http://lemire.me/en/
  */
-#ifndef COMMON_H_
-#define COMMON_H_
+#ifndef SIMDCompressionAndIntersection_COMMON_H_
+#define SIMDCompressionAndIntersection_COMMON_H_
 
 
 #include <errno.h>
@@ -43,4 +43,4 @@
 #include <vector>
 
 
-#endif /* COMMON_H_ */
+#endif /* SIMDCompressionAndIntersection_COMMON_H_ */

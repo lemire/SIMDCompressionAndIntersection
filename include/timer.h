@@ -4,8 +4,8 @@
  *
  */
 
-#ifndef TIMER_H_
-#define TIMER_H_
+#ifndef SIMDCompressionAndIntersection_TIMER_H_
+#define SIMDCompressionAndIntersection_TIMER_H_
 
 
 #include <sys/stat.h>
@@ -86,4 +86,4 @@ public:
 };
 #endif
 
-#endif /* TIMER_H_ */
+#endif /* SIMDCompressionAndIntersection_TIMER_H_ */
