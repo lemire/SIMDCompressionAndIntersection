@@ -12,6 +12,7 @@
 #include "maropuparser.h"
 #include "intersection.h"
 
+using namespace SIMDCompressionLib;
 
 
 /*

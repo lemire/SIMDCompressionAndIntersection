@@ -5,6 +5,8 @@
 
 #include <common.h>
 
+namespace SIMDCompressionLib {
+
 using namespace std;
 /*
  * Given two arrays, this writes the intersection to out. Returns the
@@ -90,5 +92,7 @@ public:
 };
 
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_INTERSECTION_H_ */

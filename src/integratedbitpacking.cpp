@@ -8,6 +8,8 @@
 #include "integratedbitpacking.h"
 
 
+namespace SIMDCompressionLib {
+
 void __integratedfastunpack0(const uint32_t initoffset, const uint32_t   *__restrict__ ,
                              uint32_t   *__restrict__  out) {
     for (uint32_t i = 0; i < 32; ++i)
@@ -6784,4 +6786,4 @@ void __integratedfastpack16(const uint32_t initoffset, const uint32_t   *__restr
     ++out;
 }
 
-
+} // namespace SIMDCompressionLib

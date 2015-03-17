@@ -19,7 +19,7 @@
 #include "codecfactory.h"
 
 using namespace std;
-
+using namespace SIMDCompressionLib;
 
 struct dataarray {
     dataarray() : name(), data() {}

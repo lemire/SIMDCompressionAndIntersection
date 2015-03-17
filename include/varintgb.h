@@ -12,6 +12,8 @@
 #include "codecs.h"
 #include "variablebyte.h"
 
+namespace SIMDCompressionLib {
+
 using namespace std;
 
 
@@ -211,5 +213,7 @@ public:
 
 
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_VARINTGB_H_ */

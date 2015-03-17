@@ -21,6 +21,8 @@
 
 #include "common.h"
 
+namespace SIMDCompressionLib {
+
 class Skipping {
 public:
 
@@ -270,5 +272,7 @@ void Skipping::load(const  uint32_t *data, uint32_t len) {
     mainbuffer.resize(static_cast<uint32_t>(bout - boutinit));
     mainbuffer.shrink_to_fit();
 }
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_SKIPPING_H_ */

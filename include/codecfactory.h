@@ -25,6 +25,8 @@
 #include "variablebyte.h"
 #include "varintgb.h"
 
+namespace SIMDCompressionLib {
+
 using namespace std;
 
 typedef VariableByte<true>  leftovercodec;
@@ -164,4 +166,6 @@ map<string, shared_ptr<IntegerCODEC>> CODECFactory::scodecmap =
                                        initializefactory();
 
 shared_ptr<IntegerCODEC> CODECFactory::defaultptr = shared_ptr<IntegerCODEC>(nullptr);
+} // namespace SIMDCompressionLib
+
 #endif /* SIMDCompressionAndIntersection_CODECFACTORY_H_ */

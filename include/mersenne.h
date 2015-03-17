@@ -9,6 +9,8 @@
 #include "common.h"
 #include "util.h"
 
+namespace SIMDCompressionLib {
+
 /**
  *  Mersenne twister - random number generator.
  *  Generate uniform distribution of 32 bit integers with the MT19937 algorithm.
@@ -94,5 +96,7 @@ unsigned int ZRandom::getValue() {
     y ^= y >> 18;
     return y;
 }
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_MERSENNE_H_ */

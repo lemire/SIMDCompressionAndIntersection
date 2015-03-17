@@ -11,6 +11,8 @@
 #include "util.h"
 #include "codecs.h"
 
+namespace SIMDCompressionLib {
+
 /**
  * This is a useful class for CODEC that only compress
  * data having length a multiple of some unit length.
@@ -64,5 +66,7 @@ public:
         return convert.str();
     }
 };
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_COMPOSITECODEC_H_ */

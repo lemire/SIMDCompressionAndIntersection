@@ -8,6 +8,8 @@
 #define SIMDCompressionAndIntersection_BITPACKING
 #include <stdint.h>
 
+namespace SIMDCompressionLib {
+
 void __fastunpack0(const uint32_t   *__restrict__ in, uint32_t   *__restrict__  out);
 void __fastunpack1(const uint32_t   *__restrict__ in, uint32_t   *__restrict__  out);
 void __fastunpack2(const uint32_t   *__restrict__ in, uint32_t   *__restrict__  out);
@@ -110,5 +112,7 @@ void __fastpackwithoutmask29(const uint32_t   *__restrict__ in, uint32_t   *__re
 void __fastpackwithoutmask30(const uint32_t   *__restrict__ in, uint32_t   *__restrict__  out);
 void __fastpackwithoutmask31(const uint32_t   *__restrict__ in, uint32_t   *__restrict__  out);
 void __fastpackwithoutmask32(const uint32_t   *__restrict__ in, uint32_t   *__restrict__  out);
+
+} // namespace SIMDCompressionLib
 
 #endif // SIMDCompressionAndIntersection_BITPACKING

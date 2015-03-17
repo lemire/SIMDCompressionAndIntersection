@@ -15,6 +15,8 @@
 #include "intersection.h"
 #include "boolarray.h"
 
+namespace SIMDCompressionLib {
+
 using namespace std;
 
 
@@ -374,5 +376,7 @@ float intersectionratio) {
     return pair<vector<uint32_t>, vector<uint32_t>>(smallest, largest);
 }
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_SYNTHETIC_H_ */

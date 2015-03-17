@@ -9,6 +9,8 @@
 #include "compositecodec.h"
 #include "codecfactory.h"
 
+using namespace SIMDCompressionLib;
+
 struct dataarray {
     dataarray() :
         name(), data() {

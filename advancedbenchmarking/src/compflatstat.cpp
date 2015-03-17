@@ -12,6 +12,7 @@
 #include "timer.h"
 #include "maropuparser.h"
 
+using namespace SIMDCompressionLib;
 
 uint32_t FakeCheckSum(const uint32_t *p, size_t qty) {
     return std::accumulate(p, p + qty, 0);

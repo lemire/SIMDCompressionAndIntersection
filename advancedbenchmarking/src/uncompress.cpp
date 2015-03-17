@@ -13,6 +13,7 @@
 #include "maropuparser.h"
 #include "codecfactory.h"
 
+using namespace SIMDCompressionLib;
 
 void printusage() {
     cout << " Try ./uncompress input.bin output.bin" << endl;

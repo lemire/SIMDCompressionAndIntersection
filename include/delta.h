@@ -11,6 +11,8 @@
 
 #include "common.h"
 
+namespace SIMDCompressionLib {
+
 /**
  * To avoid crazy dependencies, this header should not
  * include any other header file.
@@ -79,5 +81,7 @@ void inverseDelta(const T initoffset, T *data) {
     }
 }
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_DELTA_H_ */

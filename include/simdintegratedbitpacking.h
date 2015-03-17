@@ -15,6 +15,8 @@
  */
 #include "deltatemplates.h"
 
+namespace SIMDCompressionLib {
+
 
 
 template <class DeltaHelper>
@@ -694,5 +696,7 @@ void SIMDipack(__m128i initOffset, const uint32_t    *in, __m128i     *out, cons
     }
     throw std::logic_error("number of bits is unsupported");
 }
+
+} // namespace SIMDCompressionLib
 
 #endif

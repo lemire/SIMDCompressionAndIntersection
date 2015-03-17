@@ -42,5 +42,9 @@
 #include <unordered_set>
 #include <vector>
 
+namespace SIMDCompressionLib {
+
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_COMMON_H_ */

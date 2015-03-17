@@ -13,6 +13,8 @@
 #include "simdbitpacking.h"
 #include "bitpackinghelpers.h"
 
+namespace SIMDCompressionLib {
+
 
 template <class T>
 __attribute__((const))
@@ -214,5 +216,7 @@ private:
 
 };
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_SORTEDBITPACKING_H_ */

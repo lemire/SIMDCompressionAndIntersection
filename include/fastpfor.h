@@ -14,6 +14,8 @@
 #include "util.h"
 #include "delta.h"
 
+namespace SIMDCompressionLib {
+
 
 
 class ScalarSortedBitPacker {
@@ -377,5 +379,7 @@ public:
 
 
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_FASTPFOR_H_ */

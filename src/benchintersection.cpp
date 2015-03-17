@@ -14,6 +14,8 @@
 #include <likwid.h>
 #endif
 
+using namespace SIMDCompressionLib;
+
 /**
  * Goal: have the largest array count about 4M terms (this
  * matches our experiments), and vary the size of the

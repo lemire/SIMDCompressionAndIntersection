@@ -11,6 +11,8 @@
 #include "codecs.h"
 #include "util.h"
 
+namespace SIMDCompressionLib {
+
 /***
  * VariableByte and VByte are basically identical, except that
  * one uses 0..0..0..1 to indicate 4 whereas the other one uses 1..1..1..0.
@@ -402,5 +404,7 @@ private:
 
 };
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_VARIABLEBYTE_H_ */

@@ -15,6 +15,8 @@
 #include "codecs.h"
 #include "util.h"
 
+namespace SIMDCompressionLib {
+
 extern "C" {
 void simdvbyteinit(void);
 size_t masked_vbyte_read_loop(const uint8_t* in, uint32_t* out, uint64_t length);
@@ -243,5 +245,7 @@ private:
     }
 
 };
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_SIMDVARIABLEBYTE_H_ */

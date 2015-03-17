@@ -15,6 +15,8 @@
 #include "delta.h"
 #include "util.h"
 
+namespace SIMDCompressionLib {
+
 const size_t SIMDBlockSize = 128;
 
 
@@ -647,5 +649,7 @@ struct SIMDBitPackingHelpers {
         }
     }
 };
+
+} // namespace SIMDCompressionLib
 
 #endif

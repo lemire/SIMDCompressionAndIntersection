@@ -13,7 +13,7 @@
 #include "synthetic.h"
 
 using namespace std;
-
+using namespace SIMDCompressionLib;
 
 
 vector<uint32_t> maskedcopy(const vector<uint32_t> &in, const uint32_t bit) {

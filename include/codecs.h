@@ -13,6 +13,8 @@
 #include "util.h"
 #include "bitpackinghelpers.h"
 
+namespace SIMDCompressionLib {
+
 using namespace std;
 
 class NotEnoughStorage: public std::runtime_error {
@@ -132,5 +134,7 @@ public:
     }
 };
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_CODECS_H_ */

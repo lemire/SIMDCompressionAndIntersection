@@ -14,6 +14,8 @@
 #include "util.h"
 #include "delta.h"
 
+namespace SIMDCompressionLib {
+
 
 
 /**
@@ -261,5 +263,7 @@ public:
 
 
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_SIMDFASTPFOR_H_ */

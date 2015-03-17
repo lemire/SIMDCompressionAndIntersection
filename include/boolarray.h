@@ -9,6 +9,8 @@
 
 #include "common.h"
 
+namespace SIMDCompressionLib {
+
 using namespace std;
 
 
@@ -196,5 +198,7 @@ public:
 
 };
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_BOOLARRAY_H_ */

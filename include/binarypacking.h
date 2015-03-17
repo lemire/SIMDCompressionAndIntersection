@@ -12,6 +12,8 @@
 #include "bitpackinghelpers.h"
 #include "util.h"
 
+namespace SIMDCompressionLib {
+
 
 struct BasicBlockPacker {
     static void inline unpackblock(const uint32_t *in,  uint32_t *out,  const uint32_t bit, uint32_t &initoffset) {
@@ -184,5 +186,7 @@ public:
 };
 
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_BINARYPACKING_H_ */

@@ -12,6 +12,8 @@
 #include "simdbitpackinghelpers.h"
 #include "util.h"
 
+namespace SIMDCompressionLib {
+
 
 template <class DeltaHelper, bool ArrayDispatch>
 struct SIMDBlockPacker {
@@ -235,5 +237,7 @@ public:
     }
 
 };
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_SIMDBINARYPACKING_H_ */

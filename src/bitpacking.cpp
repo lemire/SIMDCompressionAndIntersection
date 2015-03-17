@@ -7,7 +7,7 @@
 
 #include "bitpacking.h"
 
-
+namespace SIMDCompressionLib {
 
 
 void __fastunpack0(const uint32_t   *__restrict__ , uint32_t   *__restrict__  out) {
@@ -9229,3 +9229,4 @@ void fastpackwithoutmask(const uint32_t   *__restrict__ in, uint32_t   *__restri
     }
 }
 
+} // namespace SIMDCompressionLib

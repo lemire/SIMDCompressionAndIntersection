@@ -9,6 +9,8 @@
 
 #include "common.h"
 
+namespace SIMDCompressionLib {
+
 
 void __SIMD_fastunpack1(const  __m128i *, uint32_t *);
 void __SIMD_fastunpack2(const  __m128i *, uint32_t *);
@@ -113,5 +115,7 @@ void __SIMD_fastpack32(const uint32_t *, __m128i *);
 
 
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_SIMDBITPACKING_H_ */

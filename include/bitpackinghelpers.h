@@ -13,6 +13,8 @@
 #include "delta.h"
 #include "util.h"
 
+namespace SIMDCompressionLib {
+
 struct BitPackingHelpers {
     const static unsigned BlockSize = 32;
 
@@ -678,5 +680,7 @@ struct BitPackingHelpers {
     }
 };
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_BITPACKINGHELPERS_H_ */

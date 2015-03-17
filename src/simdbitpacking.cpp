@@ -6,6 +6,7 @@
  */
 #include "simdbitpacking.h"
 
+namespace SIMDCompressionLib {
 using namespace std;
 
 void __SIMD_fastpackwithoutmask0(const uint32_t   *__restrict__ , __m128i   *__restrict__) {}
@@ -13789,4 +13790,4 @@ void __SIMD_fastunpack32(const  __m128i  *__restrict__ in, uint32_t   *__restric
     }
 }
 
-
+} // namespace SIMDCompressionLib

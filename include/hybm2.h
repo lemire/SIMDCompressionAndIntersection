@@ -17,6 +17,8 @@
 #include "intersection.h"
 #include "skipping.h"
 
+namespace SIMDCompressionLib {
+
 
 class HybM2 {
 public:
@@ -636,4 +638,6 @@ private:
 
 
 };
+} // namespace SIMDCompressionLib
+
 #endif /* SIMDCompressionAndIntersection_HYBM2_H_ */

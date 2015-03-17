@@ -10,6 +10,8 @@
 
 #include "common.h"
 
+namespace SIMDCompressionLib {
+
 inline uint32_t random(int b) {
     if (b == 32) return rand();
     return rand() % (1U << b);
@@ -140,4 +142,6 @@ bool is_strictlysorted(iterator first, iterator last)  {
     }
     return true;
 }
+} // namespace SIMDCompressionLib
+
 #endif /* SIMDCompressionAndIntersection_UTIL_H_ */

@@ -10,6 +10,8 @@
 
 #include "common.h"
 
+namespace SIMDCompressionLib {
+
 /**
  * To avoid crazy dependencies, this header should not
  * include any other header file.
@@ -160,5 +162,7 @@ struct SIMDDeltaProcessor {
 };
 
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_DELTATEMPLATES_H_ */
