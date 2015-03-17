@@ -30,7 +30,7 @@ endif #intel
 
 HEADERS= $(shell ls include/*h)
 
-all: unit  testcodecs  testintegration  advancedbenchmarking benchintersection
+all: unit  testcodecs  testintegration  advancedbenchmarking benchintersection libSIMDCompressionAndIntersection.a
 	echo "please run unit tests by running the unit executable"
 
 advancedbenchmarking: simplesynth compress uncompress budgetedtest entropy compflatstat
@@ -86,6 +86,9 @@ example:  $(HEADERS) example.cpp  $(OBJECTS)
 
 testintegration:  bitpacking.o simdbitpacking.o usimdbitpacking.o integratedbitpacking.o     simdintegratedbitpacking.o src/testintegration.cpp  $(HEADERS) 
 	$(CXX) $(CXXFLAGS) -Iinclude -o testintegration src/testintegration.cpp   bitpacking.o integratedbitpacking.o  simdbitpacking.o usimdbitpacking.o     simdintegratedbitpacking.o 
+
+libSIMDCompressionAndIntersection.a: $(OBJECTS)
+	ar rvs $@ $^
 
 
 
