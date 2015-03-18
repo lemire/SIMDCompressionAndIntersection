@@ -1,6 +1,7 @@
 upcoming
   - FastPFOR users 256-int blocks
   - Added MaskedVByte
+  - Introducing namespaces (Andrew Consroe)
 version 0.1.1 (Jan 20th 2014)
   - minor fixes
 
