@@ -5,12 +5,14 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef BINARYPACKING_H_
-#define BINARYPACKING_H_
+#ifndef SIMDCompressionAndIntersection_BINARYPACKING_H_
+#define SIMDCompressionAndIntersection_BINARYPACKING_H_
 
 #include "codecs.h"
 #include "bitpackinghelpers.h"
 #include "util.h"
+
+namespace SIMDCompressionLib {
 
 
 struct BasicBlockPacker {
@@ -185,4 +187,6 @@ public:
 
 
 
-#endif /* BINARYPACKING_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_BINARYPACKING_H_ */

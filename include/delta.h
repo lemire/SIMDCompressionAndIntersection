@@ -5,11 +5,13 @@
  * (c) Leonid Boytsov, Nathan Kurz and Daniel Lemire
  */
 
-#ifndef DELTA_H_
-#define DELTA_H_
+#ifndef SIMDCompressionAndIntersection_DELTA_H_
+#define SIMDCompressionAndIntersection_DELTA_H_
 
 
 #include "common.h"
+
+namespace SIMDCompressionLib {
 
 /**
  * To avoid crazy dependencies, this header should not
@@ -80,4 +82,6 @@ void inverseDelta(const T initoffset, T *data) {
 }
 
 
-#endif /* DELTA_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_DELTA_H_ */

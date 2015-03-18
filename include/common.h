@@ -4,8 +4,8 @@
  *
  * (c) Daniel Lemire, http://lemire.me/en/
  */
-#ifndef COMMON_H_
-#define COMMON_H_
+#ifndef SIMDCompressionAndIntersection_COMMON_H_
+#define SIMDCompressionAndIntersection_COMMON_H_
 
 
 #include <errno.h>
@@ -42,5 +42,9 @@
 #include <unordered_set>
 #include <vector>
 
+namespace SIMDCompressionLib {
 
-#endif /* COMMON_H_ */
+
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_COMMON_H_ */

@@ -6,6 +6,7 @@
 */
 #include "simdintegratedbitpacking.h"
 
+namespace SIMDCompressionLib {
 
 
 template <class DeltaHelper>
@@ -25285,3 +25286,4 @@ template __m128i  iunpack32<Max4DeltaSIMD>(__m128i, const __m128i *, uint32_t *)
 template void ipack32<Max4DeltaSIMD>(__m128i, const uint32_t *, __m128i *);
 template void ipackwithoutmask32<Max4DeltaSIMD>(__m128i, const uint32_t *, __m128i *);
 
+} // namespace SIMDCompressionLib

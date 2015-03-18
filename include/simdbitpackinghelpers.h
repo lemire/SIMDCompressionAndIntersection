@@ -5,8 +5,8 @@
  * (c) Leonid Boytsov, Nathan Kurz and Daniel Lemire
  */
 
-#ifndef SIMD_BITPACKING_HELPERS_H_
-#define SIMD_BITPACKING_HELPERS_H_
+#ifndef SIMDCompressionAndIntersection_SIMD_BITPACKING_HELPERS_H_
+#define SIMDCompressionAndIntersection_SIMD_BITPACKING_HELPERS_H_
 
 #include "common.h"
 #include "simdbitpacking.h"
@@ -14,6 +14,8 @@
 #include "simdintegratedbitpacking.h"
 #include "delta.h"
 #include "util.h"
+
+namespace SIMDCompressionLib {
 
 const size_t SIMDBlockSize = 128;
 
@@ -647,5 +649,7 @@ struct SIMDBitPackingHelpers {
         }
     }
 };
+
+} // namespace SIMDCompressionLib
 
 #endif

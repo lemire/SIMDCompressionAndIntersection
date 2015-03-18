@@ -4,8 +4,8 @@
  *
  * (c) Daniel Lemire, http://lemire.me/en/
  */
-#ifndef SIMDFASTPFOR_H_
-#define SIMDFASTPFOR_H_
+#ifndef SIMDCompressionAndIntersection_SIMDFASTPFOR_H_
+#define SIMDCompressionAndIntersection_SIMDFASTPFOR_H_
 
 #include "common.h"
 #include "codecs.h"
@@ -13,6 +13,8 @@
 #include "simdbitpacking.h"
 #include "util.h"
 #include "delta.h"
+
+namespace SIMDCompressionLib {
 
 
 
@@ -262,4 +264,6 @@ public:
 
 
 
-#endif /* SIMDFASTPFOR_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_SIMDFASTPFOR_H_ */

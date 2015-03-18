@@ -12,6 +12,7 @@
 #include "timer.h"
 #include "synthetic.h"
 
+using namespace SIMDCompressionLib;
 
 void printusage() {
     cout << "This generate a file containing arrays. Each array is "

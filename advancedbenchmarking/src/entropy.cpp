@@ -14,6 +14,9 @@
 #include "delta.h"
 #include "budgetedpostingcollector.h"
 
+
+using namespace SIMDCompressionLib;
+
 void message(const char *prog) {
     cerr << " usage : " << prog << "  maropubinaryfile querylogfile"
          << endl;

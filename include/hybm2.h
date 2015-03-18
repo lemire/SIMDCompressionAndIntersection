@@ -7,8 +7,8 @@
  *      Implemented by Daniel Lemire
  */
 
-#ifndef HYBM2_H_
-#define HYBM2_H_
+#ifndef SIMDCompressionAndIntersection_HYBM2_H_
+#define SIMDCompressionAndIntersection_HYBM2_H_
 
 #include "common.h"
 #include "codecs.h"
@@ -16,6 +16,8 @@
 #include "boolarray.h"
 #include "intersection.h"
 #include "skipping.h"
+
+namespace SIMDCompressionLib {
 
 
 class HybM2 {
@@ -636,4 +638,6 @@ private:
 
 
 };
-#endif /* HYBM2_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_HYBM2_H_ */

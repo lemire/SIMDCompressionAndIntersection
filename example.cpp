@@ -12,6 +12,8 @@
 #include "codecfactory.h"
 #include "intersection.h"
 
+using namespace SIMDCompressionLib;
+
 int main() {
     // We pick a CODEC
     IntegerCODEC &codec =  * CODECFactory::getFromName("s4-bp128-dm");

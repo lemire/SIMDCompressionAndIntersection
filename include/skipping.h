@@ -16,10 +16,12 @@
  *      Author: Daniel Lemire
  */
 
-#ifndef SKIPPING_H_
-#define SKIPPING_H_
+#ifndef SIMDCompressionAndIntersection_SKIPPING_H_
+#define SIMDCompressionAndIntersection_SKIPPING_H_
 
 #include "common.h"
+
+namespace SIMDCompressionLib {
 
 class Skipping {
 public:
@@ -271,4 +273,6 @@ void Skipping::load(const  uint32_t *data, uint32_t len) {
     mainbuffer.shrink_to_fit();
 }
 
-#endif /* SKIPPING_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_SKIPPING_H_ */

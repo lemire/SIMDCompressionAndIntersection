@@ -3,8 +3,8 @@
  * Apache License Version 2.0 http://www.apache.org/licenses/.
  *
  */
-#ifndef BUDGETEDPOSTINGCOLLECTOR_H_
-#define BUDGETEDPOSTINGCOLLECTOR_H_
+#ifndef SIMDCompressionAndIntersection_BUDGETEDPOSTINGCOLLECTOR_H_
+#define SIMDCompressionAndIntersection_BUDGETEDPOSTINGCOLLECTOR_H_
 
 
 #include "common.h"
@@ -12,6 +12,7 @@
 #include "maropuparser.h"
 #include "intersection.h"
 
+using namespace SIMDCompressionLib;
 
 
 /*
@@ -230,4 +231,4 @@ private:
 
 
 
-#endif /* BUDGETEDPOSTINGCOLLECTOR_H_ */
+#endif /* SIMDCompressionAndIntersection_BUDGETEDPOSTINGCOLLECTOR_H_ */

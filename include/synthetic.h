@@ -5,8 +5,8 @@
  * (c) Daniel Lemire
  */
 
-#ifndef SYNTHETIC_H_
-#define SYNTHETIC_H_
+#ifndef SIMDCompressionAndIntersection_SYNTHETIC_H_
+#define SIMDCompressionAndIntersection_SYNTHETIC_H_
 
 
 #include "common.h"
@@ -14,6 +14,8 @@
 #include "mersenne.h"
 #include "intersection.h"
 #include "boolarray.h"
+
+namespace SIMDCompressionLib {
 
 using namespace std;
 
@@ -375,4 +377,6 @@ float intersectionratio) {
 }
 
 
-#endif /* SYNTHETIC_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_SYNTHETIC_H_ */

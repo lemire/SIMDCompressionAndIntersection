@@ -5,12 +5,14 @@
  *      Author: lemire
  */
 
-#ifndef VARINTGB_H_
-#define VARINTGB_H_
+#ifndef SIMDCompressionAndIntersection_VARINTGB_H_
+#define SIMDCompressionAndIntersection_VARINTGB_H_
 
 #include "common.h"
 #include "codecs.h"
 #include "variablebyte.h"
+
+namespace SIMDCompressionLib {
 
 using namespace std;
 
@@ -212,4 +214,6 @@ public:
 
 
 
-#endif /* VARINTGB_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_VARINTGB_H_ */

@@ -5,13 +5,15 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef CODECS_H_
-#define CODECS_H_
+#ifndef SIMDCompressionAndIntersection_CODECS_H_
+#define SIMDCompressionAndIntersection_CODECS_H_
 
 
 #include "common.h"
 #include "util.h"
 #include "bitpackinghelpers.h"
+
+namespace SIMDCompressionLib {
 
 using namespace std;
 
@@ -133,4 +135,6 @@ public:
 };
 
 
-#endif /* CODECS_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_CODECS_H_ */

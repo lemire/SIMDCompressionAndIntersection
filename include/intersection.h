@@ -1,9 +1,11 @@
 
 
-#ifndef INTERSECTION_H_
-#define INTERSECTION_H_
+#ifndef SIMDCompressionAndIntersection_INTERSECTION_H_
+#define SIMDCompressionAndIntersection_INTERSECTION_H_
 
 #include <common.h>
+
+namespace SIMDCompressionLib {
 
 using namespace std;
 /*
@@ -91,4 +93,6 @@ public:
 
 
 
-#endif /* INTERSECTION_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_INTERSECTION_H_ */

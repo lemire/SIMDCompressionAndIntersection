@@ -5,11 +5,13 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef VARIABLEBYTE_H_
-#define VARIABLEBYTE_H_
+#ifndef SIMDCompressionAndIntersection_VARIABLEBYTE_H_
+#define SIMDCompressionAndIntersection_VARIABLEBYTE_H_
 #include "common.h"
 #include "codecs.h"
 #include "util.h"
+
+namespace SIMDCompressionLib {
 
 /***
  * VariableByte and VByte are basically identical, except that
@@ -403,4 +405,6 @@ private:
 };
 
 
-#endif /* VARIABLEBYTE_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_VARIABLEBYTE_H_ */

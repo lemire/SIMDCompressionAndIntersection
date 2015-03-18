@@ -8,12 +8,14 @@
  * improved by Nathan Kurz.
  */
 
-#ifndef SIMDVARIABLEBYTE_H_
-#define SIMDVARIABLEBYTE_H_
+#ifndef SIMDCompressionAndIntersection_SIMDVARIABLEBYTE_H_
+#define SIMDCompressionAndIntersection_SIMDVARIABLEBYTE_H_
 
 #include "common.h"
 #include "codecs.h"
 #include "util.h"
+
+namespace SIMDCompressionLib {
 
 extern "C" {
 void simdvbyteinit(void);
@@ -244,4 +246,6 @@ private:
 
 };
 
-#endif /* SIMDVARIABLEBYTE_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_SIMDVARIABLEBYTE_H_ */

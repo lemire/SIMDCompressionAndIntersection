@@ -5,8 +5,8 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef MAROPUPARSER_H_
-#define MAROPUPARSER_H_
+#ifndef SIMDCompressionAndIntersection_MAROPUPARSER_H_
+#define SIMDCompressionAndIntersection_MAROPUPARSER_H_
 
 #include <stdexcept>
 #include <sstream>
@@ -165,4 +165,4 @@ private:
 
 };
 
-#endif /* MAROPUPARSER_H_ */
+#endif /* SIMDCompressionAndIntersection_MAROPUPARSER_H_ */

@@ -6,6 +6,7 @@
 
 #include "intersection.h"
 
+namespace SIMDCompressionLib {
 
 /**
  * This is often called galloping or exponential search.
@@ -753,4 +754,4 @@ inline std::map<std::string, intersectionfunction> initializeintersectionfactory
 std::map<std::string, intersectionfunction> IntersectionFactory::intersection_schemes = initializeintersectionfactory();
 
 
-
+} // namespace SIMDCompressionLib

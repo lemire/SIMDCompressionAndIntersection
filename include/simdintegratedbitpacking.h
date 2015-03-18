@@ -5,8 +5,8 @@
  * (c) Leonid Boytsov, Nathan Kurz and Daniel Lemire
  */
 
-#ifndef SIMD_INTEGRATED_BITPACKING_H
-#define SIMD_INTEGRATED_BITPACKING_H
+#ifndef SIMDCompressionAndIntersection_SIMD_INTEGRATED_BITPACKING_H
+#define SIMDCompressionAndIntersection_SIMD_INTEGRATED_BITPACKING_H
 
 
 /**
@@ -14,6 +14,8 @@
  * include any other header beside delta.h.
  */
 #include "deltatemplates.h"
+
+namespace SIMDCompressionLib {
 
 
 
@@ -694,5 +696,7 @@ void SIMDipack(__m128i initOffset, const uint32_t    *in, __m128i     *out, cons
     }
     throw std::logic_error("number of bits is unsupported");
 }
+
+} // namespace SIMDCompressionLib
 
 #endif

@@ -4,10 +4,12 @@
  *
  * (c) Daniel Lemire
  */
-#ifndef USIMDBITPACKING_H_
-#define USIMDBITPACKING_H_
+#ifndef SIMDCompressionAndIntersection_USIMDBITPACKING_H_
+#define SIMDCompressionAndIntersection_USIMDBITPACKING_H_
 
 #include "common.h"
+
+namespace SIMDCompressionLib {
 
 
 void __uSIMD_fastunpack1(const  __m128i *, uint32_t *);
@@ -114,5 +116,7 @@ void __uSIMD_fastpack32(const uint32_t *, __m128i *);
 
 
 
+
+} // namespace SIMDCompressionLib
 
 #endif /* SIMDBITPACKING_H_ */

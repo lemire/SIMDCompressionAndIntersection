@@ -4,14 +4,15 @@
  *
  */
 
-#ifndef TIMER_H_
-#define TIMER_H_
+#ifndef SIMDCompressionAndIntersection_TIMER_H_
+#define SIMDCompressionAndIntersection_TIMER_H_
 
 
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
 
+namespace SIMDCompressionLib {
 
 class WallClockTimer {
 public:
@@ -86,4 +87,6 @@ public:
 };
 #endif
 
-#endif /* TIMER_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_TIMER_H_ */

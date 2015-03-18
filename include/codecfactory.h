@@ -5,8 +5,8 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef CODECFACTORY_H_
-#define CODECFACTORY_H_
+#ifndef SIMDCompressionAndIntersection_CODECFACTORY_H_
+#define SIMDCompressionAndIntersection_CODECFACTORY_H_
 
 #include "common.h"
 #include "codecs.h"
@@ -24,6 +24,8 @@
 #include "simdfastpfor.h"
 #include "variablebyte.h"
 #include "varintgb.h"
+
+namespace SIMDCompressionLib {
 
 using namespace std;
 
@@ -164,4 +166,6 @@ map<string, shared_ptr<IntegerCODEC>> CODECFactory::scodecmap =
                                        initializefactory();
 
 shared_ptr<IntegerCODEC> CODECFactory::defaultptr = shared_ptr<IntegerCODEC>(nullptr);
-#endif /* CODECFACTORY_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_CODECFACTORY_H_ */

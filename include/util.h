@@ -5,10 +5,12 @@
  * (c) Daniel Lemire
  */
 
-#ifndef UTIL_H_
-#define UTIL_H_
+#ifndef SIMDCompressionAndIntersection_UTIL_H_
+#define SIMDCompressionAndIntersection_UTIL_H_
 
 #include "common.h"
+
+namespace SIMDCompressionLib {
 
 inline uint32_t random(int b) {
     if (b == 32) return rand();
@@ -140,4 +142,6 @@ bool is_strictlysorted(iterator first, iterator last)  {
     }
     return true;
 }
-#endif /* UTIL_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_UTIL_H_ */

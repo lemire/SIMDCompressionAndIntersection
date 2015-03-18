@@ -9,6 +9,8 @@
 #include "codecfactory.h"
 
 
+using namespace SIMDCompressionLib;
+
 void printusage(char *prog) {
     cout << "Usage: " << prog << " <uncompressed postings in the flat format>" << endl;
 

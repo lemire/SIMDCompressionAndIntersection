@@ -5,8 +5,8 @@
  */
 #
 
-#ifndef STATISTICSRECORDER_H_
-#define STATISTICSRECORDER_H_
+#ifndef SIMDCompressionAndIntersection_STATISTICSRECORDER_H_
+#define SIMDCompressionAndIntersection_STATISTICSRECORDER_H_
 
 #include "common.h"
 #include "timer.h"
@@ -89,4 +89,4 @@ private:
     vector<uint64_t> timesinmicros;
 };
 
-#endif /* STATISTICSRECORDER_H_ */
+#endif /* SIMDCompressionAndIntersection_STATISTICSRECORDER_H_ */

@@ -4,12 +4,14 @@
  *
  * (c) Daniel Lemire, http://lemire.me/en/
  */
-#ifndef COMPOSITECODEC_H_
-#define COMPOSITECODEC_H_
+#ifndef SIMDCompressionAndIntersection_COMPOSITECODEC_H_
+#define SIMDCompressionAndIntersection_COMPOSITECODEC_H_
 
 #include "common.h"
 #include "util.h"
 #include "codecs.h"
+
+namespace SIMDCompressionLib {
 
 /**
  * This is a useful class for CODEC that only compress
@@ -65,4 +67,6 @@ public:
     }
 };
 
-#endif /* COMPOSITECODEC_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_COMPOSITECODEC_H_ */

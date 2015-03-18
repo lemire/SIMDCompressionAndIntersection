@@ -5,13 +5,15 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef SORTEDBITPACKING_H_
-#define SORTEDBITPACKING_H_
+#ifndef SIMDCompressionAndIntersection_SORTEDBITPACKING_H_
+#define SIMDCompressionAndIntersection_SORTEDBITPACKING_H_
 
 
 #include "common.h"
 #include "simdbitpacking.h"
 #include "bitpackinghelpers.h"
+
+namespace SIMDCompressionLib {
 
 
 template <class T>
@@ -215,4 +217,6 @@ private:
 };
 
 
-#endif /* SORTEDBITPACKING_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_SORTEDBITPACKING_H_ */

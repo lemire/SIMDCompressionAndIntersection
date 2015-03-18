@@ -5,12 +5,14 @@
  * (c) Daniel Lemire, http://lemire.me/en/
  */
 
-#ifndef SIMDBINARYPACKING_H_
-#define SIMDBINARYPACKING_H_
+#ifndef SIMDCompressionAndIntersection_SIMDBINARYPACKING_H_
+#define SIMDCompressionAndIntersection_SIMDBINARYPACKING_H_
 
 #include "codecs.h"
 #include "simdbitpackinghelpers.h"
 #include "util.h"
+
+namespace SIMDCompressionLib {
 
 
 template <class DeltaHelper, bool ArrayDispatch>
@@ -236,4 +238,6 @@ public:
 
 };
 
-#endif /* SIMDBINARYPACKING_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_SIMDBINARYPACKING_H_ */

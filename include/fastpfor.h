@@ -4,8 +4,8 @@
  * comparison purposes.
  */
 
-#ifndef FASTPFOR_H_
-#define FASTPFOR_H_
+#ifndef SIMDCompressionAndIntersection_FASTPFOR_H_
+#define SIMDCompressionAndIntersection_FASTPFOR_H_
 
 
 #include "common.h"
@@ -13,6 +13,8 @@
 #include "bitpackinghelpers.h"
 #include "util.h"
 #include "delta.h"
+
+namespace SIMDCompressionLib {
 
 
 
@@ -378,4 +380,6 @@ public:
 
 
 
-#endif /* FASTPFOR_H_ */
+} // namespace SIMDCompressionLib
+
+#endif /* SIMDCompressionAndIntersection_FASTPFOR_H_ */
