@@ -161,44 +161,16 @@ SKIP_FIRST_COMPARE:
 FINISH:
     return (out - initout);
 }
-#define VEC_T __m128i
-
-/**
- * The following macros (VEC_OR, VEC_ADD_PTEST,VEC_CMP_EQUAL,VEC_SET_ALL_TO_INT,VEC_LOAD_OFFSET,
- * ASM_LEA_ADD_BYTES are only used in the v1 procedure below.
- */
-#define VEC_OR(dest, other)                                             \
-    __asm volatile("por %1, %0" : "+x" (dest) : "x" (other) )
-
-// // decltype is C++ and typeof is C
-#define VEC_ADD_PTEST(var, add, xmm)      {                             \
-        decltype(var) _new = var + add;                                   \
-        __asm volatile("ptest %2, %2\n\t"                           \
-                           "cmovnz %1, %0\n\t"                          \
-                           : /* writes */ "+r" (var)                    \
-                           : /* reads */  "r" (_new), "x" (xmm)         \
-                           : /* clobbers */ "cc");                      \
-    }
 
 
-#define VEC_CMP_EQUAL(dest, other)                                      \
-    __asm volatile("pcmpeqd %1, %0" : "+x" (dest) : "x" (other))
-
-#define VEC_SET_ALL_TO_INT(reg, int32)                                  \
-    __asm volatile("movd %1, %0; pshufd $0, %0, %0"                 \
-                       : "=x" (reg) : "g" (int32) )
-
-#define VEC_LOAD_OFFSET(xmm, ptr, bytes)                    \
-    __asm volatile("movdqu %c2(%1), %0" : "=x" (xmm) :  \
-                   "r" (ptr), "i" (bytes))
-
+#ifdef __GNUC__
 #define COMPILER_LIKELY(x)     __builtin_expect((x),1)
 #define COMPILER_RARELY(x)     __builtin_expect((x),0)
+#else
+#define COMPILER_LIKELY(x)     x
+#define COMPILER_RARELY(x)     x
+#endif
 
-#define ASM_LEA_ADD_BYTES(ptr, bytes)                            \
-    __asm volatile("lea %c1(%0), %0\n\t" :                       \
-                   /* reads/writes %0 */  "+r" (ptr) :           \
-                   /* reads */ "i" (bytes));
 
 /**
  * Intersections scheme designed by N. Kurz that works very
@@ -213,101 +185,90 @@ FINISH:
  *
  * The matchOut pointer can safely be equal to the rare pointer.
  *
- * This function  use inline assembly.
  */
-size_t v1
-(const uint32_t *rare, size_t lenRare,
- const uint32_t *freq, size_t lenFreq,
- uint32_t *matchOut) {
-    assert(lenRare <= lenFreq);
-    const uint32_t *matchOrig = matchOut;
-    if (lenFreq == 0 || lenRare == 0) return 0;
+size_t v1(const uint32_t *rare, size_t lenRare, const uint32_t *freq,
+		size_t lenFreq, uint32_t *matchOut) {
+	assert(lenRare <= lenFreq);
+	const uint32_t *matchOrig = matchOut;
+	if (lenFreq == 0 || lenRare == 0)
+		return 0;
 
-    const uint64_t kFreqSpace = 2 * 4 * (0 + 1) - 1;
-    const uint64_t kRareSpace = 0;
+	const uint64_t kFreqSpace = 2 * 4 * (0 + 1) - 1;
+	const uint64_t kRareSpace = 0;
 
-    const uint32_t *stopFreq = &freq[lenFreq] - kFreqSpace;
-    const uint32_t *stopRare = &rare[lenRare] - kRareSpace;
+	const uint32_t *stopFreq = &freq[lenFreq] - kFreqSpace;
+	const uint32_t *stopRare = &rare[lenRare] - kRareSpace;
 
-    VEC_T Rare;
+	__m128i Rare;
 
-    VEC_T F0, F1;
+	__m128i F0, F1;
 
-    if (COMPILER_RARELY((rare >= stopRare) || (freq >= stopFreq))) goto FINISH_SCALAR;
+	if (COMPILER_RARELY((rare >= stopRare) || (freq >= stopFreq)))
+		goto FINISH_SCALAR;
+	uint32_t valRare;
+	valRare = rare[0];
+	Rare = _mm_set1_epi32(valRare);
 
-    uint64_t valRare;
-    valRare = rare[0];
-    VEC_SET_ALL_TO_INT(Rare, valRare);
+	uint64_t maxFreq;
+	maxFreq = freq[2 * 4 - 1];
+	F0 = _mm_lddqu_si128(reinterpret_cast<const __m128i *>(freq));
+	F1 = _mm_lddqu_si128(reinterpret_cast<const __m128i *>(freq + 4));
 
-    uint64_t maxFreq;
-    maxFreq = freq[2 * 4 - 1];
-    VEC_LOAD_OFFSET(F0, freq, 0 * sizeof(VEC_T)) ;
-    VEC_LOAD_OFFSET(F1, freq, 1 * sizeof(VEC_T));
+	if (COMPILER_RARELY(maxFreq < valRare))
+		goto ADVANCE_FREQ;
 
-    if (COMPILER_RARELY(maxFreq < valRare)) goto ADVANCE_FREQ;
+	ADVANCE_RARE: do {
+		*matchOut = valRare;
+		valRare = rare[1]; // for next iteration
+		rare += 1;
+		if (COMPILER_RARELY(rare >= stopRare)) {
+			rare -= 1;
+			goto FINISH_SCALAR;
+		}
+		F0 = _mm_cmpeq_epi32(F0, Rare);
+		F1 = _mm_cmpeq_epi32(F1, Rare);
+		Rare = _mm_set1_epi32(valRare);
+		F0 = _mm_or_si128(F0, F1);
+		if (_mm_testz_si128(F0, F0) == 0)
+			matchOut++;
+		F0 = _mm_lddqu_si128(reinterpret_cast<const __m128i *>(freq));
+		F1 = _mm_lddqu_si128(reinterpret_cast<const __m128i *>(freq + 4));
 
-ADVANCE_RARE:
-    do {
-        *matchOut = static_cast<uint32_t>(valRare);
-        valRare = rare[1]; // for next iteration
-        ASM_LEA_ADD_BYTES(rare, sizeof(*rare)); // rare += 1;
+	} while (maxFreq >= valRare);
 
-        if (COMPILER_RARELY(rare >= stopRare)) {
-            rare -= 1;
-            goto FINISH_SCALAR;
-        }
+	uint64_t maxProbe;
 
-        VEC_CMP_EQUAL(F0, Rare) ;
-        VEC_CMP_EQUAL(F1, Rare);
+	ADVANCE_FREQ: do {
+		const uint64_t kProbe = (0 + 1) * 2 * 4;
+		const uint32_t *probeFreq = freq + kProbe;
+		maxProbe = freq[(0 + 2) * 2 * 4 - 1];
 
-        VEC_SET_ALL_TO_INT(Rare, valRare);
+		if (COMPILER_RARELY(probeFreq >= stopFreq)) {
+			goto FINISH_SCALAR;
+		}
 
-        VEC_OR(F0, F1);
-#ifdef __SSE4_1__
-        VEC_ADD_PTEST(matchOut, 1, F0);
-#else
-        matchOut += static_cast<uint32_t>(_mm_movemask_epi8(F0) != 0);
-#endif
+		freq = probeFreq;
 
-        VEC_LOAD_OFFSET(F0, freq, 0 * sizeof(VEC_T)) ;
-        VEC_LOAD_OFFSET(F1, freq, 1 * sizeof(VEC_T));
+	} while (maxProbe < valRare);
 
-    } while (maxFreq >= valRare);
+	maxFreq = maxProbe;
 
-    uint64_t maxProbe;
+	F0 = _mm_lddqu_si128(reinterpret_cast<const __m128i *>(freq));
+	F1 = _mm_lddqu_si128(reinterpret_cast<const __m128i *>(freq + 4));
 
-ADVANCE_FREQ:
-    do {
-        const uint64_t kProbe = (0 + 1) * 2 * 4;
-        const uint32_t *probeFreq = freq + kProbe;
-        maxProbe = freq[(0 + 2) * 2 * 4 - 1];
+	goto ADVANCE_RARE;
 
-        if (COMPILER_RARELY(probeFreq >= stopFreq)) {
-            goto FINISH_SCALAR;
-        }
+	size_t count;
+	FINISH_SCALAR: count = matchOut - matchOrig;
 
-        freq = probeFreq;
+	lenFreq = stopFreq + kFreqSpace - freq;
+	lenRare = stopRare + kRareSpace - rare;
 
-    } while (maxProbe < valRare);
+	size_t tail = match_scalar(freq, lenFreq, rare, lenRare, matchOut);
 
-    maxFreq = maxProbe;
-
-    VEC_LOAD_OFFSET(F0, freq, 0 * sizeof(VEC_T)) ;
-    VEC_LOAD_OFFSET(F1, freq, 1 * sizeof(VEC_T));
-
-    goto ADVANCE_RARE;
-
-    size_t count;
-FINISH_SCALAR:
-    count = matchOut - matchOrig;
-
-    lenFreq = stopFreq + kFreqSpace - freq;
-    lenRare = stopRare + kRareSpace - rare;
-
-    size_t tail = match_scalar(freq, lenFreq, rare, lenRare, matchOut);
-
-    return count + tail;
+	return count + tail;
 }
+
 
 
 /**
