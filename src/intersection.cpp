@@ -229,8 +229,12 @@ size_t v1(const uint32_t *rare, size_t lenRare, const uint32_t *freq,
 		F1 = _mm_cmpeq_epi32(F1, Rare);
 		Rare = _mm_set1_epi32(valRare);
 		F0 = _mm_or_si128(F0, F1);
-		if (_mm_testz_si128(F0, F0) == 0)
-			matchOut++;
+#ifdef __SSE4_1__
+        if (_mm_testz_si128(F0, F0))
+#else
+        if (!_mm_movemask_epi8(F0))
+#endif
+        	matchOut++;
 		F0 = _mm_lddqu_si128(reinterpret_cast<const __m128i *>(freq));
 		F1 = _mm_lddqu_si128(reinterpret_cast<const __m128i *>(freq + 4));
 
