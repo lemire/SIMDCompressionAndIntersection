@@ -14,6 +14,11 @@ using namespace std;
  * and _mm_storeu_si128 by _mm_storeu_si128.
  */
 
+void __uSIMD_fastpackwithoutmask0(const uint32_t   *__restrict__ _in, __m128i   *__restrict__  out) {
+    (void)_in;
+    (void)out;
+}
+
 void __uSIMD_fastpackwithoutmask1(const uint32_t   *__restrict__ _in, __m128i   *__restrict__  out) {
     const __m128i       *in = reinterpret_cast<const __m128i *>(_in);
     __m128i    OutReg;
@@ -4532,6 +4537,10 @@ void __uSIMD_fastpackwithoutmask16(const uint32_t   *__restrict__ _in, __m128i  
 }
 
 
+void __uSIMD_fastpack0(const uint32_t   *__restrict__ _in, __m128i   *__restrict__  out) {
+    (void)_in;
+    (void)out;
+}
 
 void __uSIMD_fastpack1(const uint32_t   *__restrict__ _in, __m128i   *__restrict__  out) {
     const __m128i       *in = reinterpret_cast<const __m128i *>(_in);

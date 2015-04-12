@@ -264,8 +264,136 @@ void tellmeaboutmachine() {
 #else
     cout << "Non-GCC compiler." << endl;
 #endif
-
 }
+
+template<typename T>
+void testFindSimple(T codec) {
+  const int max = 300;
+  uint32_t ints[max];
+  for (int i = 0; i < max; i++)
+    ints[i] = i;
+
+  // encode in a buffer
+  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+  size_t nvalue  = compressedbuffer.size();
+  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+
+  uint32_t k;
+  for (int i = 0; i < max; i++) {
+    int pos = codec.findLowerBoundDelta(compressedbuffer.data(), max, i, &k);
+    if (k != (uint32_t)i && pos != i) {
+      cout << codec.name() << "::findLowerBoundDelta failed with "
+              << i << endl;
+      throw std::logic_error("bug");
+    }
+  }
+
+  cout << codec.name() << "::findLowerBoundDelta ok" << endl;
+}
+
+template<typename T>
+void testFindAdvanced(T codec) {
+  const int max = 3000;
+  uint32_t ints[max];
+  // print random seed to make the test reproducable
+  time_t t = ::time(0);
+  cout << "Seed is " << t << endl;
+  ::srand(t);
+
+  // initialize 
+  for (int i = 0; i < max; i++)
+    ints[i] = 1 + i * 2;
+
+  // encode in a buffer
+  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+  size_t nvalue  = compressedbuffer.size();
+  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+
+  uint32_t k1, k2;
+  for (int i = 0; i < max * 2; i++) {
+    int pos1 = codec.findLowerBoundDelta(compressedbuffer.data(), max, i, &k1);
+    uint32_t *it = std::lower_bound(&ints[0], &ints[max], i);
+    int pos2 = it - &ints[0];
+    k2 = *it;
+    // key not found?
+    if (it == &ints[max] && pos1 != max) {
+      cout << codec.name() << "::findLowerBoundDelta failed in line "
+              << __LINE__ << "(i = " << i << ")" << endl;
+      throw std::logic_error("bug");
+    }
+    // otherwise make sure both results are equal
+    if (k1 != k2) {
+      cout << codec.name() << "::findLowerBoundDelta failed in line "
+              << __LINE__ << "(i = " << i << ")" << endl;
+      throw std::logic_error("bug");
+    }
+    if (pos1 != pos2) {
+      cout << codec.name() << "::findLowerBoundDelta failed in line "
+              << __LINE__ << "(i = " << i << ")" << endl;
+      throw std::logic_error("bug");
+    }
+  }
+
+  cout << codec.name() << "::findLowerBoundDelta ok" << endl;
+}
+
+template<typename T>
+void testSelectSimple(T codec) {
+  const int max = 300;
+  uint32_t ints[max];
+  for (int i = 0; i < max; i++)
+    ints[i] = i;
+
+  // encode in a buffer
+  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+  size_t nvalue  = compressedbuffer.size();
+  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+
+  for (int i = 0; i < max; i++) {
+    uint32_t k = codec.selectDelta(compressedbuffer.data(), max, i);
+    if (k != (uint32_t)i) {
+      cout << codec.name() << "::select failed with " << i << endl;
+      throw std::logic_error("bug");
+    }
+  }
+
+  cout << codec.name() << "::select ok" << endl;
+}
+
+template<typename T>
+void testSelectAdvanced(T codec) {
+  const int max = 3000;
+  uint32_t ints[max];
+  // print random seed to make the test reproducable
+  time_t t = ::time(0);
+  cout << "Seed is " << t << endl;
+  ::srand(t);
+
+  // fill array with "random" values
+  for (int i = 0; i < max; i++)
+    ints[i] = 1 + i * 2;
+  std::random_shuffle(&ints[0], &ints[max]);
+
+  // encode in a buffer
+  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+  size_t nvalue  = compressedbuffer.size();
+  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+
+  uint32_t k1, k2;
+  for (int i = 0; i < max; i++) {
+    k1 = codec.selectDelta(compressedbuffer.data(), max, i);
+    k2 = (uint32_t)ints[i];
+
+    if (k1 != k2) {
+      cout << codec.name() << "::selectDelta failed in line "
+              << __LINE__ << "(i = " << i << ")" << endl;
+      throw std::logic_error("bug");
+    }
+  }
+
+  cout << codec.name() << "::selectDelta ok" << endl;
+}
+
 int main() {
 	for (string n : IntersectionFactory::allNames()) {
 		int error = 0;
@@ -326,6 +454,18 @@ int main() {
         unit(true, allcodecs, 7, 1374809652 + k);
     }
     cout << endl;
+
+    testSelectSimple<VarIntGB<true>>(VarIntGB<true>());
+    testSelectSimple<MaskedVByte<true>>(MaskedVByte<true>());
+
+    testSelectAdvanced<VarIntGB<true>>(VarIntGB<true>());
+    testSelectAdvanced<MaskedVByte<true>>(MaskedVByte<true>());
+
+    testFindSimple<VarIntGB<true>>(VarIntGB<true>());
+    testFindSimple<MaskedVByte<true>>(MaskedVByte<true>());
+
+    testFindAdvanced<VarIntGB<true>>(VarIntGB<true>());
+    testFindAdvanced<MaskedVByte<true>>(MaskedVByte<true>());
 
     tellmeaboutmachine();
 

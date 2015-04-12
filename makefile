@@ -51,11 +51,11 @@ integratedbitpacking.o: include/integratedbitpacking.h src/integratedbitpacking.
 	$(CXX) $(CXXFLAGS) -c src/integratedbitpacking.cpp -Iinclude
 
 
-varintdecode.o:  src/varintdecode.c
-	$(CC) $(CCFLAGS) -c src/varintdecode.c
- 
 streamvbyte.o:  src/streamvbyte.c
 	$(CC) $(CCFLAGS) -c src/streamvbyte.c
+
+varintdecode.o:  src/varintdecode.c
+	$(CC) $(CCFLAGS) -c src/varintdecode.c
 
 simdbitpacking.o: include/simdbitpacking.h src/simdbitpacking.cpp
 	$(CXX) $(CXXFLAGS) -c src/simdbitpacking.cpp -Iinclude
