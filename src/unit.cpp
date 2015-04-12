@@ -158,8 +158,55 @@ void tellmeaboutmachine() {
 #else
     cout << "Non-GCC compiler." << endl;
 #endif
-
 }
+
+void testgroupvarintfind() {
+  const int max = 300;
+  VarIntGB<true> codec;
+  uint32_t ints[max];
+  for (int i = 0; i < max; i++)
+    ints[i] = i;
+
+  // encode in a buffer
+  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+  size_t nvalue  = compressedbuffer.size();
+  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+
+  uint32_t k;
+  for (int i = 0; i < max; i++) {
+    int pos = codec.findLowerBoundDelta(compressedbuffer.data(), max, i, &k);
+    if (k != (uint32_t)i && pos != i) {
+      cout << "GroupVarInt::findLowerBoundDelta failed with " << i << endl;
+      throw std::logic_error("bug");
+    }
+  }
+
+  cout << "GroupVarInt::findLowerBoundDelta ok" << endl;
+}
+
+void testgroupvarintselect() {
+  const int max = 300;
+  VarIntGB<true> codec;
+  uint32_t ints[max];
+  for (int i = 0; i < max; i++)
+    ints[i] = i;
+
+  // encode in a buffer
+  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+  size_t nvalue  = compressedbuffer.size();
+  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+
+  for (int i = 0; i < max; i++) {
+    uint32_t k = codec.selectDelta(compressedbuffer.data(), max, i);
+    if (k != (uint32_t)i) {
+      cout << "GroupVarInt::select failed with " << i << endl;
+      throw std::logic_error("bug");
+    }
+  }
+
+  cout << "GroupVarInt::select ok" << endl;
+}
+
 int main() {
     vector<shared_ptr<IntegerCODEC>> allcodecs = CODECFactory::allSchemes();
 
@@ -191,6 +238,9 @@ int main() {
         unit(true, allcodecs, 7, 1374809652 + k);
     }
     cout << endl;
+
+    testgroupvarintselect();
+    testgroupvarintfind();
 
     tellmeaboutmachine();
 
