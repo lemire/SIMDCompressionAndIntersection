@@ -231,7 +231,7 @@ size_t v1(const uint32_t *rare, size_t lenRare, const uint32_t *freq,
 		F0 = _mm_or_si128(F0, F1);
 #ifdef __SSE4_1__
 		if(_mm_testz_si128(F0,F0) == 0)
-		matchOut ++;
+			matchOut++;
 #else
 		if (_mm_movemask_epi8(F0))
 			matchOut++;
