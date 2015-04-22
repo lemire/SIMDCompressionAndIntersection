@@ -52,7 +52,10 @@ integratedbitpacking.o: include/integratedbitpacking.h src/integratedbitpacking.
 
 
 varintdecode.o:  src/varintdecode.c
-	$(CC) $(CCFLAGS) -c src/varintdecode.c 
+	$(CC) $(CCFLAGS) -c src/varintdecode.c
+ 
+streamvbyte.o:  src/streamvbyte.c
+	$(CC) $(CCFLAGS) -c src/streamvbyte.c
 
 simdbitpacking.o: include/simdbitpacking.h src/simdbitpacking.cpp
 	$(CXX) $(CXXFLAGS) -c src/simdbitpacking.cpp -Iinclude
@@ -68,7 +71,7 @@ simdintegratedbitpacking.o: include/simdintegratedbitpacking.h include/delta.h s
 UNAME := $(shell uname)
 
 
-OBJECTS= bitpacking.o integratedbitpacking.o simdbitpacking.o usimdbitpacking.o    simdintegratedbitpacking.o   intersection.o  varintdecode.o 
+OBJECTS= bitpacking.o integratedbitpacking.o simdbitpacking.o usimdbitpacking.o    simdintegratedbitpacking.o   intersection.o  varintdecode.o streamvbyte.o 
 
 
 unit: $(HEADERS)   src/unit.cpp $(OBJECTS)

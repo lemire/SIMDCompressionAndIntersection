@@ -24,6 +24,7 @@
 #include "simdfastpfor.h"
 #include "variablebyte.h"
 #include "varintgb.h"
+#include "streamvariablebyte.h"
 
 namespace SIMDCompressionLib {
 
@@ -45,6 +46,8 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     schemes["vbyte"] = shared_ptr<IntegerCODEC> (new VByte<true> ());
     schemes["maskedvbyte"] = shared_ptr<IntegerCODEC> (
                               new MaskedVByte<true> ());
+    schemes["maskedvbyte"] = shared_ptr<IntegerCODEC> (
+                              new StreamVByteD1 ());
     schemes["varintgb"] = std::shared_ptr<IntegerCODEC> (new VarIntGB<>());
 
     schemes["s4-fastpfor-d4"] = shared_ptr<IntegerCODEC> (
