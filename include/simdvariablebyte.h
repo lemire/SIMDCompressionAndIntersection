@@ -124,7 +124,7 @@ public:
     }
 
     // Returns a decompressed value in a delta-encoded array
-    uint32_t selectDelta(uint32_t *in, const size_t length, int index) {
+    uint32_t selectDelta(uint32_t *in, const size_t length, size_t index) {
       assert(delta == true);
       assert(index < length);
       return (masked_vbyte_select_delta((uint8_t *)in, length, 0, index));

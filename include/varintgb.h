@@ -205,13 +205,13 @@ public:
       }
 
       // Returns a decompressed value in a delta-encoded array
-      uint32_t selectDelta(uint32_t *in, const size_t length, int index) {
+      uint32_t selectDelta(uint32_t *in, const size_t length, size_t index) {
         assert(delta == true);
         assert(index < length);
 
         const uint8_t *inbyte = reinterpret_cast<const uint8_t *> (in);
         uint32_t out[4];
-        int i = 0;
+        size_t i = 0;
         uint32_t initial = 0;
         uint32_t nvalue = *in;
         inbyte += 4; // skip nvalue
