@@ -194,6 +194,174 @@ public:
 		return in + length;
 	}
 
+    // Performs a lower bound find in the encoded array.
+    // Returns the index
+	int findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
+			uint32_t *presult) {
+		uint32_t prev = 0;
+		if (length == 0) {
+			return 0; //abort
+		}
+		const uint8_t *inbyte = reinterpret_cast<const uint8_t *>(in);
+		const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(in
+				+ length);
+		size_t i = 0;
+		// this assumes that there is a value to be read
+
+		while (endbyte > inbyte + 5) {
+			if (delta) {
+				uint8_t c;
+				uint32_t v;
+
+				c = inbyte[0];
+				v = c & 0x7F;
+				if (c >= 128) {
+					inbyte += 1;
+					prev = v + prev;
+					if (prev >= key) {
+						*presult = prev;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[1];
+				v |= (c & 0x7F) << 7;
+				if (c >= 128) {
+					inbyte += 2;
+					prev = v + prev;
+					if (prev >= key) {
+						*presult = prev;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[2];
+				v |= (c & 0x7F) << 14;
+				if (c >= 128) {
+					inbyte += 3;
+					prev = v + prev;
+					if (prev >= key) {
+						*presult = prev;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[3];
+				v |= (c & 0x7F) << 21;
+				if (c >= 128) {
+					inbyte += 4;
+					prev = v + prev;
+					if (prev >= key) {
+						*presult = prev;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[4];
+				inbyte += 5;
+				v |= (c & 0x0F) << 28;
+				prev = v + prev;
+				if (prev >= key) {
+					*presult = prev;
+					return i;
+				}
+				i++;
+			} else {
+				uint8_t c;
+				uint32_t v;
+
+				c = inbyte[0];
+				v = c & 0x7F;
+				if (c >= 128) {
+					inbyte += 1;
+					if (v >= key) {
+						*presult = v;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[1];
+				v |= (c & 0x7F) << 7;
+				if (c >= 128) {
+					inbyte += 2;
+					if (v >= key) {
+						*presult = v;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[2];
+				v |= (c & 0x7F) << 14;
+				if (c >= 128) {
+					inbyte += 3;
+					if (v >= key) {
+						*presult = v;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[3];
+				v |= (c & 0x7F) << 21;
+				if (c >= 128) {
+					inbyte += 4;
+					if (v >= key) {
+						*presult = v;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[4];
+				inbyte += 5;
+				v |= (c & 0x0F) << 28;
+				if (v >= key) {
+					*presult = v;
+					return i;
+				}
+				i++;
+			}
+		}
+		while (endbyte > inbyte) {
+			unsigned int shift = 0;
+			for (uint32_t v = 0; endbyte > inbyte; shift += 7) {
+				uint8_t c = *inbyte++;
+				v += ((c & 127) << shift);
+				if ((c & 128)) {
+					if (delta) {
+						prev = v + prev;
+						if (prev >= key) {
+							*presult = prev;
+							return i;
+						}
+					} else {
+						if (v >= key) {
+							*presult = v;
+							return i;
+						}
+					}
+					i++;
+					break;
+				}
+			}
+		}
+		return i;
+	}
+
     // Returns a decompressed value in an encoded array
 	// could be greatly optimized in the non-differential coding case: currently just for delta coding
     uint32_t select(uint32_t *in, size_t index) {
@@ -444,6 +612,173 @@ public:
 		return in + length;
 	}
 
+	// Performs a lower bound find in the encoded array.
+	// Returns the index
+	int findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
+			uint32_t *presult) {
+		uint32_t prev = 0;
+		if (length == 0) {
+			return 0; //abort
+		}
+		size_t i = 0;
+		const uint8_t *inbyte = reinterpret_cast<const uint8_t *>(in);
+		const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(in
+				+ length);
+		// this assumes that there is a value to be read
+
+		while (endbyte > inbyte + 5) {
+			if (delta) {
+				uint8_t c;
+				uint32_t v;
+
+				c = inbyte[0];
+				v = c & 0x7F;
+				if (c < 128) {
+					inbyte += 1;
+					prev = v + prev;
+					if (prev >= key) {
+						*presult = prev;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[1];
+				v |= (c & 0x7F) << 7;
+				if (c < 128) {
+					inbyte += 2;
+					prev = v + prev;
+					if (prev >= key) {
+						*presult = prev;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[2];
+				v |= (c & 0x7F) << 14;
+				if (c < 128) {
+					inbyte += 3;
+					prev = v + prev;
+					if (prev >= key) {
+						*presult = prev;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[3];
+				v |= (c & 0x7F) << 21;
+				if (c < 128) {
+					inbyte += 4;
+					prev = v + prev;
+					if (prev >= key) {
+						*presult = prev;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[4];
+				inbyte += 5;
+				v |= (c & 0x0F) << 28;
+				prev = v + prev;
+				if (prev >= key) {
+					*presult = prev;
+					return i;
+				}
+				i++;
+			} else {
+				uint8_t c;
+				uint32_t v;
+
+				c = inbyte[0];
+				v = c & 0x7F;
+				if (c < 128) {
+					inbyte += 1;
+					if (v >= key) {
+						*presult = v;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[1];
+				v |= (c & 0x7F) << 7;
+				if (c < 128) {
+					inbyte += 2;
+					if (v >= key) {
+						*presult = v;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[2];
+				v |= (c & 0x7F) << 14;
+				if (c < 128) {
+					inbyte += 3;
+					if (v >= key) {
+						*presult = v;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[3];
+				v |= (c & 0x7F) << 21;
+				if (c < 128) {
+					inbyte += 4;
+					if (v >= key) {
+						*presult = v;
+						return i;
+					}
+					i++;
+					continue;
+				}
+
+				c = inbyte[4];
+				inbyte += 5;
+				v |= (c & 0x0F) << 28;
+				if (v >= key) {
+					*presult = v;
+					return i;
+				}
+				i++;
+			}
+		}
+		while (endbyte > inbyte) {
+			unsigned int shift = 0;
+			for (uint32_t v = 0; endbyte > inbyte; shift += 7) {
+				uint8_t c = *inbyte++;
+				v += ((c & 127) << shift);
+				if ((c < 128)) {
+					if (delta) {
+						prev = v + prev;
+						if (prev >= key) {
+							*presult = prev;
+							return i;
+						}
+					} else {
+						if (v >= key) {
+							*presult = v;
+							return i;
+						}
+					}
+					i++;
+					break;
+				}
+			}
+		}
+		return i;
+	}
 
 
     // Returns a decompressed value in an encoded array

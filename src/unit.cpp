@@ -269,7 +269,8 @@ void tellmeaboutmachine() {
 }
 
 template<typename T>
-void testFindSimple(T codec) {
+void testFindSimple() {
+	T codec;
     const int max = 300;
     uint32_t ints[max];
     for (int i = 0; i < max; i++)
@@ -294,7 +295,8 @@ void testFindSimple(T codec) {
 }
 
 template<typename T>
-void testFindAdvanced(T codec) {
+void testFindAdvanced() {
+	T codec;
     const int max = 3000;
     uint32_t ints[max];
     // print random seed to make the test reproducable
@@ -409,11 +411,16 @@ int main() {
     testSelectAdvanced<VariableByte<true>>();
     testSelectAdvanced<VByte<true>>();
 
-    testFindSimple<VarIntGB<true>>(VarIntGB<true>());
-    testFindSimple<MaskedVByte<true>>(MaskedVByte<true>());
+    testFindSimple<VarIntGB<true>>();
+    testFindSimple<MaskedVByte<true>>();
+    testFindSimple<VariableByte<true>>();
+    testFindSimple<VByte<true>>();
 
-    testFindAdvanced<VarIntGB<true>>(VarIntGB<true>());
-    testFindAdvanced<MaskedVByte<true>>(MaskedVByte<true>());
+    testFindAdvanced<VarIntGB<true>>();
+    testFindAdvanced<MaskedVByte<true>>();
+    testFindAdvanced<VariableByte<true>>();
+    testFindSimple<VByte<true>>();
+
 
     for (string n : IntersectionFactory::allNames()) {
         int error = 0;
