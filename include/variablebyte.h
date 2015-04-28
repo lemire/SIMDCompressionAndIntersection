@@ -196,7 +196,7 @@ public:
 
     // Performs a lower bound find in the encoded array.
     // Returns the index
-	int findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
+	size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
 			uint32_t *presult) {
 		uint32_t prev = 0;
 		if (length == 0) {
@@ -614,7 +614,7 @@ public:
 
 	// Performs a lower bound find in the encoded array.
 	// Returns the index
-	int findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
+	size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
 			uint32_t *presult) {
 		uint32_t prev = 0;
 		if (length == 0) {

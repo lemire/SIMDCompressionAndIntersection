@@ -134,7 +134,7 @@ public:
     // Performs a lower bound find in the delta-encoded array.
     // Returns the index
     // only supported for delta encoded data (TODO)
-    int findLowerBound(const uint32_t *in, const size_t length,
+    size_t findLowerBound(const uint32_t *in, const size_t length,
                     uint32_t key, uint32_t *presult) {
         assert(delta == true);
         return (masked_vbyte_search_delta((uint8_t *)in, (int)length,

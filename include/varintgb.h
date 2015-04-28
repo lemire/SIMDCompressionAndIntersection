@@ -143,11 +143,11 @@ public:
 
     // Performs a lower bound find in the encoded array.
     // Returns the index
-    int findLowerBound(const uint32_t *in, const size_t length,
+    size_t findLowerBound(const uint32_t *in, const size_t length,
                     uint32_t key, uint32_t *presult) {
         const uint8_t *inbyte = reinterpret_cast<const uint8_t *> (in);
         uint32_t out[4] = {0};
-        int i = 0;
+        size_t i = 0;
         uint32_t initial = 0;
         uint32_t nvalue = *in;
         inbyte += 4; // skip nvalue

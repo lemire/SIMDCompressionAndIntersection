@@ -30,7 +30,7 @@ endif #intel
 
 HEADERS= $(shell ls include/*h)
 
-all: unit  testcodecs  testintegration  advancedbenchmarking benchintersection libSIMDCompressionAndIntersection.a
+all: unit  testcodecs  testintegration  advancedbenchmarking benchintersection benchsearch libSIMDCompressionAndIntersection.a
 	echo "please run unit tests by running the unit executable"
 
 advancedbenchmarking: simplesynth compress uncompress budgetedtest entropy compflatstat
@@ -40,6 +40,7 @@ bitpacking.o: include/bitpacking.h src/bitpacking.cpp
 
 intersection.o: include/intersection.h src/intersection.cpp
 	$(CXX) $(CXXFLAGS) -c src/intersection.cpp -Iinclude
+
 
 benchintersection: intersection.o src/benchintersection.cpp include/synthetic.h include/timer.h
 	$(CXX) $(CXXFLAGS) -o benchintersection src/benchintersection.cpp intersection.o -Iinclude
@@ -72,6 +73,9 @@ UNAME := $(shell uname)
 
 
 OBJECTS= bitpacking.o integratedbitpacking.o simdbitpacking.o usimdbitpacking.o    simdintegratedbitpacking.o   intersection.o  varintdecode.o streamvbyte.o 
+
+benchsearch: $(HEADERS) src/benchsearch.cpp  $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o benchsearch src/benchsearch.cpp  $(OBJECTS) -Iinclude
 
 
 unit: $(HEADERS)   src/unit.cpp $(OBJECTS)
