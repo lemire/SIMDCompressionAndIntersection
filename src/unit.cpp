@@ -340,7 +340,8 @@ void testFindAdvanced(T codec) {
 }
 
 template<typename T>
-void testSelectSimple(T codec) {
+void testSelectSimple() {
+	T codec;
     const int max = 300;
     uint32_t ints[max];
     for (int i = 0; i < max; i++)
@@ -363,7 +364,8 @@ void testSelectSimple(T codec) {
 }
 
 template<typename T>
-void testSelectAdvanced(T codec) {
+void testSelectAdvanced() {
+	T codec;
     const int max = 3000;
     uint32_t ints[max];
     // print random seed to make the test reproducable
@@ -397,11 +399,15 @@ void testSelectAdvanced(T codec) {
 }
 
 int main() {
-    testSelectSimple<VarIntGB<true>>(VarIntGB<true>());
-    testSelectSimple<MaskedVByte<true>>(MaskedVByte<true>());
+    testSelectSimple<VarIntGB<true>>();
+    testSelectSimple<MaskedVByte<true>>();
+    testSelectSimple<VariableByte<true>>();
+    testSelectSimple<VByte<true>>();
 
-    testSelectAdvanced<VarIntGB<true>>(VarIntGB<true>());
-    testSelectAdvanced<MaskedVByte<true>>(MaskedVByte<true>());
+    testSelectAdvanced<VarIntGB<true>>();
+    testSelectAdvanced<MaskedVByte<true>>();
+    testSelectAdvanced<VariableByte<true>>();
+    testSelectAdvanced<VByte<true>>();
 
     testFindSimple<VarIntGB<true>>(VarIntGB<true>());
     testFindSimple<MaskedVByte<true>>(MaskedVByte<true>());

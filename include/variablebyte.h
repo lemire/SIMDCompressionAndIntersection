@@ -194,6 +194,66 @@ public:
 		return in + length;
 	}
 
+    // Returns a decompressed value in an encoded array
+	// could be greatly optimized in the non-differential coding case: currently just for delta coding
+    uint32_t select(uint32_t *in, size_t index) {
+    	assert(delta);
+		uint32_t prev = 0;
+		size_t i = 0;
+		const uint8_t *inbyte = reinterpret_cast<const uint8_t *>(in);
+		while(i <= index) {
+            uint8_t c;
+            uint32_t v;
+
+            c = inbyte[0];
+            v = c & 0x7F;
+            if (c >= 128) {
+                inbyte += 1;
+                prev = v + prev;
+                i++;
+                continue;
+            }
+
+            c = inbyte[1];
+            v |= (c & 0x7F) << 7;
+            if (c >= 128) {
+                inbyte += 2;
+                prev = v + prev;
+                i++;
+                continue;
+            }
+
+            c = inbyte[2];
+            v |= (c & 0x7F) << 14;
+            if (c >= 128) {
+                inbyte += 3;
+                prev = v + prev;
+                i++;
+                continue;
+            }
+
+            c = inbyte[3];
+            v |= (c & 0x7F) << 21;
+            if (c >= 128) {
+                inbyte += 4;
+                prev = v + prev;
+                i++;
+                continue;
+            }
+
+            c = inbyte[4];
+            inbyte += 5;
+            v |= (c & 0x0F) << 28;
+            prev = v + prev;
+            i++;
+
+		}
+		assert(i == index + 1);
+		return prev;
+
+    }
+
+
 	string name() const {
 		if (delta)
 			return "VariableByteDelta";
@@ -383,6 +443,67 @@ public:
 		nvalue = out - initout;
 		return in + length;
 	}
+
+
+
+    // Returns a decompressed value in an encoded array
+	// could be greatly optimized in the non-differential coding case: currently just for delta coding
+    uint32_t select(uint32_t *in, size_t index) {
+    	assert(delta);
+		uint32_t prev = 0;
+		size_t i = 0;
+		const uint8_t *inbyte = reinterpret_cast<const uint8_t *>(in);
+
+		while(i <= index) {
+	            uint8_t c;
+	            uint32_t v;
+
+	            c = inbyte[0];
+	            v = c & 0x7F;
+	            if (c < 128) {
+	                inbyte += 1;
+	                prev = v + prev;
+	                ++i;
+	                continue;
+	            }
+
+	            c = inbyte[1];
+	            v |= (c & 0x7F) << 7;
+	            if (c < 128) {
+	                inbyte += 2;
+	                prev = v + prev;
+	                ++i;
+	                continue;
+	            }
+
+	            c = inbyte[2];
+	            v |= (c & 0x7F) << 14;
+	            if (c < 128) {
+	                inbyte += 3;
+	                prev = v + prev;
+	                ++i;
+	                continue;
+	            }
+
+	            c = inbyte[3];
+	            v |= (c & 0x7F) << 21;
+	            if (c < 128) {
+	                inbyte += 4;
+	                prev = v + prev;
+	                ++i;
+	                continue;
+	            }
+
+	            c = inbyte[4];
+	            inbyte += 5;
+	            v |= (c & 0x0F) << 28;
+	            prev = v + prev;
+	            ++i;
+		}
+		assert(i == index + 1);
+		return prev;
+
+    }
 
 	std::string name() const {
 		if (delta)
