@@ -224,13 +224,20 @@ public:
         }// else
 
         // we finish with the uncommon case
-
-        while (i + 3 < nvalue) {
+        while (i + 3 < index) { // a single branch will do for this case (bulk of the computation)
             inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
         			decodeGroupVarInt(inbyte, out);
             i += 4;
         }
-        while (true) {
+        // lots of branching ahead... 
+        while (i + 3 < nvalue) {
+            inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
+        			decodeGroupVarInt(inbyte, out);
+            i += 4;
+            if (i > index)
+                 return (out[index - (i - 4)]);
+         }
+        {
             nvalue = nvalue - 1 - i;
             inbyte = decodeSingleVarint(inbyte, &initial, out, &nvalue);
             if (index == i)
@@ -243,6 +250,7 @@ public:
                 return (out[3]);
             i += nvalue;
         }
+        assert(false);// we should never get here
         return (0);
     }
 
