@@ -175,7 +175,7 @@ void benchmarkSearch() {
         S1 = time_snap();
         for (i = 0; i < 128 * 10; i++) {
             uint32_t pseudorandomkey  =  buffer[i%128];
-            uint32_t result;
+            uint32_t result = 0;
             size_t pos = codec.findLowerBound(out, nvalue, pseudorandomkey, &result);
             if((result < pseudorandomkey) || (buffer[pos] != result)) {
                 printf("bug A.\n");
