@@ -28,7 +28,7 @@ typedef clock_t time_snap_t;
 #endif
 
 template<typename T>
-void benchmarkSelect() {
+int benchmarkSelect() {
 	T codec;
     uint32_t buffer[128];
     uint32_t backbuffer[128];
@@ -69,18 +69,23 @@ void benchmarkSelect() {
         S1 = time_snap();
         for (i = 0; i < 128 * 10; i++) {
         	uint32_t valretrieved =  codec.select(out, i % 128);
-            assert(valretrieved == buffer[i%128]);
+            if(valretrieved != buffer[i%128]) {
+            	return -1;
+            }
         }
         S2 = time_snap();
         for (i = 0; i < 128 * 10; i++) {
         	size_t recovlength = 128;
         	codec.decodeArray(out,nvalue,backbuffer,recovlength);
-            assert(backbuffer[i % 128] == buffer[i % 128]);
+            if(backbuffer[i % 128] != buffer[i % 128]) {
+            	return -1;
+            }
         }
         S3 = time_snap();
         printf("# bit width = %d, fast select function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT "  \n", b, (S2-S1), (S3-S2));
         printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
     }
+    return 0;
 }
 
 int uint32_cmp(const void *a, const void *b)
@@ -134,7 +139,7 @@ int lower_bound(uint32_t * A, uint32_t key, int imin, int imax)
 
 
 template<typename T>
-void benchmarkSearch() {
+int benchmarkSearch() {
 	T codec;
 	uint32_t buffer[128];
     uint32_t backbuffer[128];
@@ -178,10 +183,13 @@ void benchmarkSearch() {
             uint32_t result = 0;
             size_t pos = codec.findLowerBound(out, nvalue, pseudorandomkey, &result);
             if((result < pseudorandomkey) || (buffer[pos] != result)) {
-                printf("bug A.\n");
+                printf("bug A: pseudorandomkey = %u result = %u  buffer[%zu] = %u .\n",pseudorandomkey, result,pos,buffer[pos]);
+                return -1;
             } else if (pos > 0) {
-                if(buffer[pos-1] >= pseudorandomkey)
+                if(buffer[pos-1] >= pseudorandomkey) {
                     printf("bug B.\n");
+                    return -1;
+                }
             }
         }
         S2 = time_snap();
@@ -195,31 +203,45 @@ void benchmarkSearch() {
 
             if((result < pseudorandomkey) || (buffer[pos] != result)) {
                 printf("bug C.\n");
+                return -1;
             } else if (pos > 0) {
-                if(buffer[pos-1] >= pseudorandomkey)
+                if(buffer[pos-1] >= pseudorandomkey) {
                     printf("bug D.\n");
+                    return -1;
+                }
             }
         }
         S3 = time_snap();
         printf("# bit width = %d, fast search function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  " \n", b, (S2-S1), (S3-S2) );
         printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
     }
+    return 0;
 }
 
 
 int main() {
+	int r = 0;
 #ifdef _MSC_VER
     QueryPerformanceFrequency((LARGE_INTEGER *)&freq);
 #endif
-    benchmarkSearch<SIMDCompressionLib::VarIntGB<true>>();
-    benchmarkSearch<SIMDCompressionLib::MaskedVByte<true>>();
-    benchmarkSearch<SIMDCompressionLib::VariableByte<true>>();
-    benchmarkSearch<SIMDCompressionLib::VByte<true>>();
 
-    benchmarkSelect<SIMDCompressionLib::VarIntGB<true>>();
-    benchmarkSelect<SIMDCompressionLib::MaskedVByte<true>>();
-    benchmarkSelect<SIMDCompressionLib::VariableByte<true>>();
-    benchmarkSelect<SIMDCompressionLib::VByte<true>>();
+    r = benchmarkSearch<SIMDCompressionLib::VarIntGB<true>>();
+    if(r < 0) return r;
+    r = benchmarkSearch<SIMDCompressionLib::MaskedVByte<true>>();
+    if(r < 0) return r;
+    r = benchmarkSearch<SIMDCompressionLib::VariableByte<true>>();
+    if(r < 0) return r;
+    r = benchmarkSearch<SIMDCompressionLib::VByte<true>>();
+    if(r < 0) return r;
+
+    r = benchmarkSelect<SIMDCompressionLib::VarIntGB<true>>();
+    if(r < 0) return r;
+    r = benchmarkSelect<SIMDCompressionLib::MaskedVByte<true>>();
+    if(r < 0) return r;
+    r = benchmarkSelect<SIMDCompressionLib::VariableByte<true>>();
+    if(r < 0) return r;
+    r = benchmarkSelect<SIMDCompressionLib::VByte<true>>();
+    if(r < 0) return r;
     return 0;
 }
 

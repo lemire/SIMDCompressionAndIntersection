@@ -150,14 +150,16 @@ public:
         size_t i = 0;
         uint32_t initial = 0;
         uint32_t nvalue = *in;
+
         inbyte += 4; // skip nvalue
 
         const uint8_t *const endbyte = reinterpret_cast<const uint8_t *> (in
                     + length);
 
-        while (endbyte > inbyte + 1 + 4 * 4) {
+        while (i + 3 < nvalue) {
             inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
                     			decodeGroupVarInt(inbyte, out);
+
             if (key <= out[3]) {
                 if (key <= out[0]) {
                     *presult = out[0];
@@ -176,29 +178,30 @@ public:
             }
             i += 4;
         }
-
-        if (endbyte > inbyte && nvalue > 0) {
-            nvalue = nvalue - 1 - i;
-            inbyte = decodeSingleVarint(inbyte, &initial, out, &nvalue);
+        if (endbyte > inbyte && nvalue > i) {
+        	uint32_t tnvalue = nvalue - 1 - i;
+            inbyte = decodeCarefully(inbyte, &initial, out, &tnvalue);
             assert(inbyte <= endbyte);
             if (key <= out[0]) {
                 *presult = out[0];
                 return (i + 0);
             }
-            if (nvalue > 0 && key <= out[1]) {
+            if (tnvalue > 0 && key <= out[1]) {
                 *presult = out[1];
                 return (i + 1);
             }
-            if (nvalue > 1 && key <= out[2]) {
+            if (tnvalue > 1 && key <= out[2]) {
                 *presult = out[2];
                 return (i + 2);
             }
-            if (nvalue > 2 && key <= out[3]) {
+            if (tnvalue > 2 && key <= out[3]) {
                 *presult = out[3];
                 return (i + 3);
             }
-            i += nvalue;
-          }
+            i += tnvalue;
+
+        }
+        assert(false);
           *presult = key + 1;
           return (i);
       }
@@ -239,7 +242,7 @@ public:
          }
         {
             nvalue = nvalue - 1 - i;
-            inbyte = decodeSingleVarint(inbyte, &initial, out, &nvalue);
+            inbyte = decodeCarefully(inbyte, &initial, out, &nvalue);
             if (index == i)
                 return (out[0]);
             if (nvalue > 1 && index == i + 1)
@@ -308,7 +311,7 @@ public:
       	    return in;
     }
 
-    const uint8_t *decodeSingleVarint(const uint8_t *inbyte,
+    const uint8_t *decodeCarefully(const uint8_t *inbyte,
     		uint32_t *initial, uint32_t *out, uint32_t *count) {
     	uint32_t val;
     	uint32_t k, key = *inbyte++;
