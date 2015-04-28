@@ -280,7 +280,7 @@ void testFindSimple(T codec) {
 
   uint32_t k;
   for (int i = 0; i < max; i++) {
-    int pos = codec.findLowerBoundDelta(compressedbuffer.data(), max, i, &k);
+    int pos = codec.findLowerBound(compressedbuffer.data(), max, i, &k);
     if (k != (uint32_t)i && pos != i) {
       cout << codec.name() << "::findLowerBoundDelta failed with "
               << i << endl;
@@ -311,7 +311,7 @@ void testFindAdvanced(T codec) {
 
   uint32_t k1, k2;
   for (int i = 0; i < max * 2; i++) {
-    int pos1 = codec.findLowerBoundDelta(compressedbuffer.data(), max, i, &k1);
+    int pos1 = codec.findLowerBound(compressedbuffer.data(), max, i, &k1);
     uint32_t *it = std::lower_bound(&ints[0], &ints[max], i);
     int pos2 = it - &ints[0];
     k2 = *it;
@@ -350,7 +350,7 @@ void testSelectSimple(T codec) {
   codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
 
   for (int i = 0; i < max; i++) {
-    uint32_t k = codec.selectDelta(compressedbuffer.data(), max, i);
+    uint32_t k = codec.select(compressedbuffer.data(), i);
     if (k != (uint32_t)i) {
       cout << codec.name() << "::select failed with " << i << endl;
       throw std::logic_error("bug");
@@ -381,7 +381,7 @@ void testSelectAdvanced(T codec) {
 
   uint32_t k1, k2;
   for (int i = 0; i < max; i++) {
-    k1 = codec.selectDelta(compressedbuffer.data(), max, i);
+    k1 = codec.select(compressedbuffer.data(),  i);
     k2 = (uint32_t)ints[i];
 
     if (k1 != k2) {

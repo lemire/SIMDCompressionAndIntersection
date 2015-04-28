@@ -124,15 +124,17 @@ public:
     }
 
     // Returns a decompressed value in a delta-encoded array
-    uint32_t selectDelta(uint32_t *in, const size_t length, size_t index) {
+    // only supported for delta encoded data (TODO)
+    uint32_t select(uint32_t *in, size_t index) {
       assert(delta == true);
-      assert(index < length);
+      size_t length = index + 1;
       return (masked_vbyte_select_delta((uint8_t *)in, length, 0, index));
     }
 
     // Performs a lower bound find in the delta-encoded array.
     // Returns the index
-    int findLowerBoundDelta(const uint32_t *in, const size_t length,
+    // only supported for delta encoded data (TODO)
+    int findLowerBound(const uint32_t *in, const size_t length,
                     uint32_t key, uint32_t *presult) {
         assert(delta == true);
         return (masked_vbyte_search_delta((uint8_t *)in, (int)length,
