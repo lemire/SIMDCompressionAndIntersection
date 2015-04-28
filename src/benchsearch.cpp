@@ -35,7 +35,8 @@ void benchmarkSelect() {
     uint32_t b;
     time_snap_t S1, S2, S3;
     int i;
-    printf("benchmarking select %s \n",codec.name().c_str());
+    printf("\n");
+    printf("# benchmarking select %s \n",codec.name().c_str());
 
     /* this test creates delta encoded buffers with different bits, then
      * performs lower bound searches for each key */
@@ -77,7 +78,8 @@ void benchmarkSelect() {
             assert(backbuffer[i % 128] == buffer[i % 128]);
         }
         S3 = time_snap();
-        printf("bit width = %d, fast select function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT "  \n", b, (S2-S1), (S3-S2));
+        printf("# bit width = %d, fast select function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT "  \n", b, (S2-S1), (S3-S2));
+        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
     }
 }
 
@@ -140,8 +142,8 @@ void benchmarkSearch() {
     uint32_t result, initial = 0;
     uint32_t b, i;
     time_snap_t S1, S2, S3;
-
-    printf("benchmarking search %s \n",codec.name().c_str());
+    printf("\n");
+    printf("# benchmarking search %s \n",codec.name().c_str());
 
     /* this test creates delta encoded buffers with different bits, then
      * performs lower bound searches for each key */
@@ -199,7 +201,8 @@ void benchmarkSearch() {
             }
         }
         S3 = time_snap();
-        printf("bit width = %d, fast search function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  " \n", b, (S2-S1), (S3-S2) );
+        printf("# bit width = %d, fast search function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  " \n", b, (S2-S1), (S3-S2) );
+        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
     }
 }
 
