@@ -58,7 +58,7 @@ void testSmall(vector<shared_ptr<IntegerCODEC>> codecs) {
 void sillyunittest(vector<dataarray> datas, vector<uint32_t> &compressedbuffer,
                    vector<uint32_t> &recoverybuffer, IntegerCODEC &codec) {
     for (vector<dataarray>::const_iterator i = datas.begin() ;
-         i != datas.end() ; ++i) {
+            i != datas.end() ; ++i) {
         const vector<uint32_t> &data = i->data;
         vector<uint32_t> dirtycopy(data);
         size_t nvalue  = compressedbuffer.size();
@@ -141,14 +141,14 @@ void unit(bool deltacode, vector<shared_ptr<IntegerCODEC>> &allcodecs, const uin
 int test1(intersectionfunction f, bool testwriteback) {
 
     const uint32_t firstpost[13] = {27181,35350,39241,39277,39278,44682,64706,120447,120450,159274,159290,173895,173942,
-};
+                                   };
     const uint32_t secondpost[13] = {25369,28789,28790,28792,28794,28797,37750,42317,68797,68877,68881,68990,85488};
     vector < uint32_t > inter(13);
     size_t s = f(firstpost, 13, secondpost, 13, inter.data());
     inter.resize(s);
     vector < uint32_t > correct(13);
     size_t cs = classicalintersection(firstpost, 13, secondpost, 13,
-            correct.data());
+                                      correct.data());
     correct.resize(cs);
     if (inter != correct) {
         cout << inter.size() << " " << correct.size() << endl;
@@ -169,34 +169,36 @@ int test1(intersectionfunction f, bool testwriteback) {
 
 int test2(intersectionfunction f) {
     const uint32_t firstpost[5] = { 12635, 12921, 12923, 12924,
-            12926};
+                                    12926
+                                  };
 
     const uint32_t secondpost[173] = { 3756, 11996, 12044, 12049, 12109, 12128,
-            12131, 12141, 12142, 12150, 12154, 12160, 12167, 12168, 12172,
-            12177, 12201, 12208, 12215, 12216, 12223, 12228, 12232, 12233,
-            12234, 12235, 12236, 12240, 12241, 12242, 12243, 12254, 12255,
-            12256, 12257, 12259, 12260, 12261, 12262, 12264, 12265, 12266,
-            12275, 12295, 12471, 12482, 12486, 12508, 12509, 12510, 12511,
-            12512, 12530, 12536, 12572, 12573, 12589, 12607, 12609, 12611,
-            12630, 12631, 12632, 12633, 12634, 12635, 12636, 12653, 12655,
-            12657, 12668, 12672, 12685, 12702, 12716, 12721, 12741, 12745,
-            12750, 12755, 12757, 12761, 12765, 12767, 12768, 12794, 12802,
-            12803, 12823, 12842, 12851, 12871, 12891, 12893, 12894, 12895,
-            12896, 12897, 12915, 12917, 12918, 12919, 12920, 12921, 12922,
-            12923, 12924, 12925, 12927, 12929, 12932, 12933, 12934, 12935,
-            12936, 12937, 12938, 12939, 12942, 12946, 12951, 12955, 12963,
-            12972, 13011, 13013, 13014, 13015, 13017, 13032, 13033, 13036,
-            13042, 13050, 13051, 13052, 13057, 13058, 13060, 13090, 13120,
-            13132, 13136, 13147, 13185, 13191, 13192, 13193, 13194, 13195,
-            13198, 13202, 13205, 13219, 13228, 13230, 13232, 13233, 13238,
-            13240, 13246, 13248, 13277, 13278, 13281, 13282, 13283, 13284,
-            13291, 13320, 13338, 13346, 13347 };
+                                       12131, 12141, 12142, 12150, 12154, 12160, 12167, 12168, 12172,
+                                       12177, 12201, 12208, 12215, 12216, 12223, 12228, 12232, 12233,
+                                       12234, 12235, 12236, 12240, 12241, 12242, 12243, 12254, 12255,
+                                       12256, 12257, 12259, 12260, 12261, 12262, 12264, 12265, 12266,
+                                       12275, 12295, 12471, 12482, 12486, 12508, 12509, 12510, 12511,
+                                       12512, 12530, 12536, 12572, 12573, 12589, 12607, 12609, 12611,
+                                       12630, 12631, 12632, 12633, 12634, 12635, 12636, 12653, 12655,
+                                       12657, 12668, 12672, 12685, 12702, 12716, 12721, 12741, 12745,
+                                       12750, 12755, 12757, 12761, 12765, 12767, 12768, 12794, 12802,
+                                       12803, 12823, 12842, 12851, 12871, 12891, 12893, 12894, 12895,
+                                       12896, 12897, 12915, 12917, 12918, 12919, 12920, 12921, 12922,
+                                       12923, 12924, 12925, 12927, 12929, 12932, 12933, 12934, 12935,
+                                       12936, 12937, 12938, 12939, 12942, 12946, 12951, 12955, 12963,
+                                       12972, 13011, 13013, 13014, 13015, 13017, 13032, 13033, 13036,
+                                       13042, 13050, 13051, 13052, 13057, 13058, 13060, 13090, 13120,
+                                       13132, 13136, 13147, 13185, 13191, 13192, 13193, 13194, 13195,
+                                       13198, 13202, 13205, 13219, 13228, 13230, 13232, 13233, 13238,
+                                       13240, 13246, 13248, 13277, 13278, 13281, 13282, 13283, 13284,
+                                       13291, 13320, 13338, 13346, 13347
+                                     };
     vector < uint32_t > inter(173);
     size_t s = f(firstpost, 5, secondpost, 173, inter.data());
     inter.resize(s);
     vector < uint32_t > correct(173);
     size_t cs = classicalintersection(firstpost, 5, secondpost, 173,
-            correct.data());
+                                      correct.data());
     correct.resize(cs);
     if (inter != correct) {
         cout << inter.size() << " " << correct.size() << endl;
@@ -219,10 +221,10 @@ int test3(intersectionfunction f) {
     vector<uint32_t> secondpost;
     vector<uint32_t> trueinter;
 
-    for(uint32_t i = 10; i < 31;++i) {
+    for(uint32_t i = 10; i < 31; ++i) {
         firstpost.push_back((1U<<i) | 3U);
         trueinter.push_back((1U<<i) | 3U);
-        for(uint32_t j = 3; j< 1000;j+=11) {
+        for(uint32_t j = 3; j< 1000; j+=11) {
             secondpost.push_back((1U<<i) | j);
         }
         firstpost.push_back((1U<<i) | 1001U);
@@ -268,163 +270,175 @@ void tellmeaboutmachine() {
 
 template<typename T>
 void testFindSimple(T codec) {
-  const int max = 300;
-  uint32_t ints[max];
-  for (int i = 0; i < max; i++)
-    ints[i] = i;
+    const int max = 300;
+    uint32_t ints[max];
+    for (int i = 0; i < max; i++)
+        ints[i] = i;
 
-  // encode in a buffer
-  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
-  size_t nvalue  = compressedbuffer.size();
-  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+    // encode in a buffer
+    vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+    size_t nvalue  = compressedbuffer.size();
+    codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
 
-  uint32_t k;
-  for (int i = 0; i < max; i++) {
-    int pos = codec.findLowerBound(compressedbuffer.data(), max, i, &k);
-    if (k != (uint32_t)i && pos != i) {
-      cout << codec.name() << "::findLowerBoundDelta failed with "
-              << i << endl;
-      throw std::logic_error("bug");
+    uint32_t k;
+    for (int i = 0; i < max; i++) {
+        int pos = codec.findLowerBound(compressedbuffer.data(), max, i, &k);
+        if (k != (uint32_t)i && pos != i) {
+            cout << codec.name() << "::findLowerBoundDelta failed with "
+                 << i << endl;
+            throw std::logic_error("bug");
+        }
     }
-  }
 
-  cout << codec.name() << "::findLowerBoundDelta ok" << endl;
+    cout << codec.name() << "::findLowerBoundDelta ok" << endl;
 }
 
 template<typename T>
 void testFindAdvanced(T codec) {
-  const int max = 3000;
-  uint32_t ints[max];
-  // print random seed to make the test reproducable
-  time_t t = ::time(0);
-  cout << "Seed is " << t << endl;
-  ::srand(t);
+    const int max = 3000;
+    uint32_t ints[max];
+    // print random seed to make the test reproducable
+    time_t t = ::time(0);
+    cout << "Seed is " << t << endl;
+    ::srand(t);
 
-  // initialize 
-  for (int i = 0; i < max; i++)
-    ints[i] = 1 + i * 2;
+    // initialize
+    for (int i = 0; i < max; i++)
+        ints[i] = 1 + i * 2;
 
-  // encode in a buffer
-  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
-  size_t nvalue  = compressedbuffer.size();
-  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+    // encode in a buffer
+    vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+    size_t nvalue  = compressedbuffer.size();
+    codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
 
-  uint32_t k1, k2;
-  for (int i = 0; i < max * 2; i++) {
-    int pos1 = codec.findLowerBound(compressedbuffer.data(), max, i, &k1);
-    uint32_t *it = std::lower_bound(&ints[0], &ints[max], i);
-    int pos2 = it - &ints[0];
-    k2 = *it;
-    // key not found?
-    if (it == &ints[max] && pos1 != max) {
-      cout << codec.name() << "::findLowerBoundDelta failed in line "
-              << __LINE__ << "(i = " << i << ")" << endl;
-      throw std::logic_error("bug");
+    uint32_t k1, k2;
+    for (int i = 0; i < max * 2; i++) {
+        int pos1 = codec.findLowerBound(compressedbuffer.data(), max, i, &k1);
+        uint32_t *it = std::lower_bound(&ints[0], &ints[max], i);
+        int pos2 = it - &ints[0];
+        k2 = *it;
+        // key not found?
+        if (it == &ints[max] && pos1 != max) {
+            cout << codec.name() << "::findLowerBoundDelta failed in line "
+                 << __LINE__ << "(i = " << i << ")" << endl;
+            throw std::logic_error("bug");
+        }
+        // otherwise make sure both results are equal
+        if (k1 != k2) {
+            cout << codec.name() << "::findLowerBoundDelta failed in line "
+                 << __LINE__ << "(i = " << i << ")" << endl;
+            throw std::logic_error("bug");
+        }
+        if (pos1 != pos2) {
+            cout << codec.name() << "::findLowerBoundDelta failed in line "
+                 << __LINE__ << "(i = " << i << ")" << endl;
+            throw std::logic_error("bug");
+        }
     }
-    // otherwise make sure both results are equal
-    if (k1 != k2) {
-      cout << codec.name() << "::findLowerBoundDelta failed in line "
-              << __LINE__ << "(i = " << i << ")" << endl;
-      throw std::logic_error("bug");
-    }
-    if (pos1 != pos2) {
-      cout << codec.name() << "::findLowerBoundDelta failed in line "
-              << __LINE__ << "(i = " << i << ")" << endl;
-      throw std::logic_error("bug");
-    }
-  }
 
-  cout << codec.name() << "::findLowerBoundDelta ok" << endl;
+    cout << codec.name() << "::findLowerBoundDelta ok" << endl;
 }
 
 template<typename T>
 void testSelectSimple(T codec) {
-  const int max = 300;
-  uint32_t ints[max];
-  for (int i = 0; i < max; i++)
-    ints[i] = i;
+    const int max = 300;
+    uint32_t ints[max];
+    for (int i = 0; i < max; i++)
+        ints[i] = i;
 
-  // encode in a buffer
-  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
-  size_t nvalue  = compressedbuffer.size();
-  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+    // encode in a buffer
+    vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+    size_t nvalue  = compressedbuffer.size();
+    codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
 
-  for (int i = 0; i < max; i++) {
-    uint32_t k = codec.select(compressedbuffer.data(), i);
-    if (k != (uint32_t)i) {
-      cout << codec.name() << "::select failed with " << i << endl;
-      throw std::logic_error("bug");
+    for (int i = 0; i < max; i++) {
+        uint32_t k = codec.select(compressedbuffer.data(), i);
+        if (k != (uint32_t)i) {
+            cout << codec.name() << "::select failed with " << i << endl;
+            throw std::logic_error("bug");
+        }
     }
-  }
 
-  cout << codec.name() << "::select ok" << endl;
+    cout << codec.name() << "::select ok" << endl;
 }
 
 template<typename T>
 void testSelectAdvanced(T codec) {
-  const int max = 3000;
-  uint32_t ints[max];
-  // print random seed to make the test reproducable
-  time_t t = ::time(0);
-  cout << "Seed is " << t << endl;
-  ::srand(t);
+    const int max = 3000;
+    uint32_t ints[max];
+    // print random seed to make the test reproducable
+    time_t t = ::time(0);
+    cout << "Seed is " << t << endl;
+    ::srand(t);
 
-  // fill array with "random" values
-  for (int i = 0; i < max; i++)
-    ints[i] = 1 + i * 2;
-  std::random_shuffle(&ints[0], &ints[max]);
+    // fill array with "random" values
+    for (int i = 0; i < max; i++)
+        ints[i] = 1 + i * 2;
+    std::random_shuffle(&ints[0], &ints[max]);
 
-  // encode in a buffer
-  vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
-  size_t nvalue  = compressedbuffer.size();
-  codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+    // encode in a buffer
+    vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+    size_t nvalue  = compressedbuffer.size();
+    codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
 
-  uint32_t k1, k2;
-  for (int i = 0; i < max; i++) {
-    k1 = codec.select(compressedbuffer.data(),  i);
-    k2 = (uint32_t)ints[i];
+    uint32_t k1, k2;
+    for (int i = 0; i < max; i++) {
+        k1 = codec.select(compressedbuffer.data(),  i);
+        k2 = (uint32_t)ints[i];
 
-    if (k1 != k2) {
-      cout << codec.name() << "::selectDelta failed in line "
-              << __LINE__ << "(i = " << i << ")" << endl;
-      throw std::logic_error("bug");
+        if (k1 != k2) {
+            cout << codec.name() << "::selectDelta failed in line "
+                 << __LINE__ << "(i = " << i << ")" << endl;
+            throw std::logic_error("bug");
+        }
     }
-  }
 
-  cout << codec.name() << "::selectDelta ok" << endl;
+    cout << codec.name() << "::selectDelta ok" << endl;
 }
 
 int main() {
-	for (string n : IntersectionFactory::allNames()) {
-		int error = 0;
-		intersectionfunction interfnc = IntersectionFactory::getFromName(
-				n);
+    testSelectSimple<VarIntGB<true>>(VarIntGB<true>());
+    testSelectSimple<MaskedVByte<true>>(MaskedVByte<true>());
+
+    testSelectAdvanced<VarIntGB<true>>(VarIntGB<true>());
+    testSelectAdvanced<MaskedVByte<true>>(MaskedVByte<true>());
+
+    testFindSimple<VarIntGB<true>>(VarIntGB<true>());
+    testFindSimple<MaskedVByte<true>>(MaskedVByte<true>());
+
+    testFindAdvanced<VarIntGB<true>>(VarIntGB<true>());
+    testFindAdvanced<MaskedVByte<true>>(MaskedVByte<true>());
+
+    for (string n : IntersectionFactory::allNames()) {
+        int error = 0;
+        intersectionfunction interfnc = IntersectionFactory::getFromName(
+                                            n);
         cout<<"testing "<<n<<" ... ";
         cout.flush();
         int code;
         if((code = test1(interfnc,false))==0)
-        cout<<"ok ";
+            cout<<"ok ";
         else {
             cout<<" Error"<<code<<" ";
             ++error;
         }
         if((code = test2(interfnc))==0)
-        cout<<"ok ";
+            cout<<"ok ";
         else {
             cout<<" Error"<<code<<endl;
             ++error;
         }
         if((code = test3(interfnc))==0)
-        cout<<"ok"<<endl;
+            cout<<"ok"<<endl;
         else {
             cout<<" Error"<<code<<endl;
             ++error;
         }
         assert(error == 0);
 
-	}
+    }
 
-	vector<shared_ptr<IntegerCODEC>> allcodecs = CODECFactory::allSchemes();
+    vector<shared_ptr<IntegerCODEC>> allcodecs = CODECFactory::allSchemes();
 
     testSmall(allcodecs);
 
@@ -454,18 +468,6 @@ int main() {
         unit(true, allcodecs, 7, 1374809652 + k);
     }
     cout << endl;
-
-    testSelectSimple<VarIntGB<true>>(VarIntGB<true>());
-    testSelectSimple<MaskedVByte<true>>(MaskedVByte<true>());
-
-    testSelectAdvanced<VarIntGB<true>>(VarIntGB<true>());
-    testSelectAdvanced<MaskedVByte<true>>(MaskedVByte<true>());
-
-    testFindSimple<VarIntGB<true>>(VarIntGB<true>());
-    testFindSimple<MaskedVByte<true>>(MaskedVByte<true>());
-
-    testFindAdvanced<VarIntGB<true>>(VarIntGB<true>());
-    testFindAdvanced<MaskedVByte<true>>(MaskedVByte<true>());
 
     tellmeaboutmachine();
 
