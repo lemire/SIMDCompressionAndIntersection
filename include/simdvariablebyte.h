@@ -127,17 +127,20 @@ public:
     // only supported for delta encoded data (TODO)
     uint32_t select(uint32_t *in, size_t index) {
       assert(delta == true);
-      size_t length = index + 1;
-      return (masked_vbyte_select_delta((uint8_t *)in, length, 0, index));
+      uint32_t num_ints = *in;
+      in++;
+      return (masked_vbyte_select_delta((uint8_t *)in, num_ints, 0, index));
     }
 
     // Performs a lower bound find in the delta-encoded array.
     // Returns the index
     // only supported for delta encoded data (TODO)
-    size_t findLowerBound(const uint32_t *in, const size_t length,
+    size_t findLowerBound(const uint32_t *in, const size_t /*length*/,
                     uint32_t key, uint32_t *presult) {
         assert(delta == true);
-        return (masked_vbyte_search_delta((uint8_t *)in, (int)length,
+        uint32_t num_ints = *in;
+        in++;
+        return (masked_vbyte_search_delta((uint8_t *)in, num_ints,
                     0, key, presult));
     }
 

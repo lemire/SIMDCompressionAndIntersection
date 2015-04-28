@@ -176,7 +176,14 @@ int benchmarkSearch() {
         size_t nvalue = 128 * 2;
 
         codec.encodeArray(buffer, 128,out,nvalue);
-
+		{
+			size_t recovlength = 128;
+			codec.decodeArray(out, nvalue, backbuffer, recovlength);
+			assert(recovlength == 128);
+			for (int k = 0; k < 128; k++) {
+				assert(backbuffer[k] == buffer[k]);
+			}
+		}
         S1 = time_snap();
         for (i = 0; i < 128 * 10; i++) {
             uint32_t pseudorandomkey  =  buffer[i%128];

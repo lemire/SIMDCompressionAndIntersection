@@ -1932,7 +1932,6 @@ int masked_vbyte_search_delta(const uint8_t *in, int length, uint32_t prev,
 	__m128i mprev = _mm_set1_epi32(prev);
 	int count = 0; // how many integers we have read so far
 
-	in += 4; // skip length
 
 	uint64_t sig = 0;
 	int availablebytes = 0;
@@ -2187,7 +2186,6 @@ uint32_t masked_vbyte_select_delta(const uint8_t *in, int length,
 	__m128i mprev = _mm_set1_epi32(prev);
 	int count = 0; // how many integers we have read so far
 
-	in += 4; // skip length
 
     // simply pretend that the encoded array ends with the required slot.
     length = slot + 1;
