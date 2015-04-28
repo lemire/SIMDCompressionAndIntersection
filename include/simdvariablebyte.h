@@ -27,6 +27,10 @@ size_t masked_vbyte_read_loop_fromcompressedsize_delta(const uint8_t* in, uint32
 		size_t inputsize, uint32_t  prev);
 //size_t read_ints(const uint8_t* in, uint32_t* out, int length) ;
 //size_t read_ints_delta(const uint8_t* in, uint32_t* out, int length, uint32_t  prev) ;
+uint32_t masked_vbyte_select_delta(const uint8_t *in, int length,
+                uint32_t prev, int slot);
+int masked_vbyte_search_delta(const uint8_t *in, int length, uint32_t prev,
+                uint32_t key, uint32_t *presult);
 }
 
 
@@ -119,7 +123,21 @@ public:
         return reinterpret_cast<const uint32_t *> (inbyte);
     }
 
+    // Returns a decompressed value in a delta-encoded array
+    uint32_t selectDelta(uint32_t *in, const size_t length, int index) {
+      assert(delta == true);
+      assert(index < length);
+      return (masked_vbyte_select_delta((uint8_t *)in, length, 0, index));
+    }
 
+    // Performs a lower bound find in the delta-encoded array.
+    // Returns the index
+    int findLowerBoundDelta(const uint32_t *in, const size_t length,
+                    uint32_t key, uint32_t *presult) {
+        assert(delta == true);
+        return (masked_vbyte_search_delta((uint8_t *)in, (int)length,
+                    0, key, presult));
+    }
 
     std::string name() const {
     	if (delta)
