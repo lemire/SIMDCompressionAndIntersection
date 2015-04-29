@@ -25,6 +25,7 @@
 #include "variablebyte.h"
 #include "varintgb.h"
 #include "streamvariablebyte.h"
+#include "VarIntG8IU.h" // warning: patented scheme
 
 namespace SIMDCompressionLib {
 
@@ -34,7 +35,10 @@ typedef VariableByte<true>  leftovercodec;
 
 static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     std::map <string, shared_ptr<IntegerCODEC>> schemes;
-
+#ifdef __SSSE3__
+    schemes["varintg8iu"] = shared_ptr<IntegerCODEC> (
+                              new VarIntG8IU<true> ());
+#endif /* __SSSE3__ */
     schemes["fastpfor"] = shared_ptr<IntegerCODEC> (
                               new CompositeCodec<FastPFor<8,true> ,
                               leftovercodec> ());
