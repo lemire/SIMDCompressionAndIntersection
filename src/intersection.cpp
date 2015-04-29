@@ -677,7 +677,7 @@ size_t highlyscalable_intersect_SIMD(const uint32_t *A, const size_t s_a,
         __m128i cmp_mask = _mm_or_si128(_mm_or_si128(cmp_mask1, cmp_mask2),
                 _mm_or_si128(cmp_mask3, cmp_mask4)); // OR-ing of comparison masks
         // convert the 128-bit mask to the 4-bit mask
-        const int mask = _mm_movemask_ps((__m128 ) cmp_mask);
+        const int mask = _mm_movemask_ps(_mm_castsi128_ps(cmp_mask));
         //]
 
         //[ copy out common elements
