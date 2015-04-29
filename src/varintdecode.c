@@ -2203,92 +2203,7 @@ static int masked_vbyte_select_group_delta(const uint8_t *in, uint64_t *p,
     return (0);
 }
 
-static int masked_vbyte_skip_group_delta(const uint8_t *in, uint64_t *p,
-                uint64_t mask, uint64_t *ints_read, __m128i *prev) {
-	__m128i initial = _mm_lddqu_si128((const __m128i *) (in));
 
-	if (!(mask & 0xFFFF)) {
-		__m128i result = _mm_cvtepi8_epi32(initial);
-		*prev = PrefixSum(result, *prev);
-		initial = _mm_srli_si128(initial, 4);
-		result = _mm_cvtepi8_epi32(initial);
-		*prev = PrefixSum(result, *prev);
-		initial = _mm_srli_si128(initial, 4);
-		result = _mm_cvtepi8_epi32(initial);
-		*prev = PrefixSum(result, *prev);
-		initial = _mm_srli_si128(initial, 4);
-		result = _mm_cvtepi8_epi32(initial);
-		*prev = PrefixSum(result, *prev);
-		*ints_read = 16;
-		*p = 16;
-        return (0);
-	}
-
-	uint32_t low_12_bits = mask & 0xFFF;
-	// combine index and bytes consumed into a single lookup
-	index_bytes_consumed combined = combined_lookup[low_12_bits];
-	uint64_t consumed = combined.bytes_consumed;
-	uint8_t index = combined.index;
-
-	__m128i shuffle_vector = vectors[index];
-	//	__m128i shuffle_vector = {0, 0};  // speed check: 20% faster at large, less at small
-
-	if (index < 64) {
-		*ints_read = 6;
-		__m128i bytes_to_decode = _mm_shuffle_epi8(initial, shuffle_vector);
-		__m128i low_bytes = _mm_and_si128(bytes_to_decode,
-				_mm_set1_epi16(0x007F));
-		__m128i high_bytes = _mm_and_si128(bytes_to_decode,
-				_mm_set1_epi16(0x7F00));
-		__m128i high_bytes_shifted = _mm_srli_epi16(high_bytes, 1);
-		__m128i packed_result = _mm_or_si128(low_bytes, high_bytes_shifted);
-		__m128i unpacked_result_a = _mm_and_si128(packed_result,
-				_mm_set1_epi32(0x0000FFFF));
-		*prev = PrefixSum(unpacked_result_a, *prev);
-		__m128i unpacked_result_b = _mm_srli_epi32(packed_result, 16);
-		*prev = PrefixSum2ints(unpacked_result_b, *prev);
-        //_mm_storel_epi64(&out, *prev);
-		*p = consumed;
-        return (0);
-	}
-	if (index < 145) {
-
-		*ints_read = 4;
-
-		__m128i bytes_to_decode = _mm_shuffle_epi8(initial, shuffle_vector);
-		__m128i low_bytes = _mm_and_si128(bytes_to_decode,
-				_mm_set1_epi32(0x0000007F));
-		__m128i middle_bytes = _mm_and_si128(bytes_to_decode,
-				_mm_set1_epi32(0x00007F00));
-		__m128i high_bytes = _mm_and_si128(bytes_to_decode,
-				_mm_set1_epi32(0x007F0000));
-		__m128i middle_bytes_shifted = _mm_srli_epi32(middle_bytes, 1);
-		__m128i high_bytes_shifted = _mm_srli_epi32(high_bytes, 2);
-		__m128i low_middle = _mm_or_si128(low_bytes, middle_bytes_shifted);
-		__m128i result = _mm_or_si128(low_middle, high_bytes_shifted);
-		*prev = PrefixSum(result, *prev);
-		*p = consumed;
-        return (0);
-	}
-
-	*ints_read = 2;
-
-	__m128i data_bits = _mm_and_si128(initial, _mm_set1_epi8(0x7F));
-	__m128i bytes_to_decode = _mm_shuffle_epi8(data_bits, shuffle_vector);
-	__m128i split_bytes = _mm_mullo_epi16(bytes_to_decode,
-			_mm_setr_epi16(128, 64, 32, 16, 128, 64, 32, 16));
-	__m128i shifted_split_bytes = _mm_slli_epi64(split_bytes, 8);
-	__m128i recombined = _mm_or_si128(split_bytes, shifted_split_bytes);
-	__m128i low_byte = _mm_srli_epi64(bytes_to_decode, 56);
-	__m128i result_evens = _mm_or_si128(recombined, low_byte);
-	__m128i result = _mm_shuffle_epi8(result_evens,
-			_mm_setr_epi8(0, 2, 4, 6, 8, 10, 12, 14, -1, -1, -1, -1, -1, -1, -1,
-					-1));
-	*prev = PrefixSum2ints(result, *prev);
-    //_mm_storel_epi64(&out, *prev);
-	*p = consumed;
-    return (0);
-}
 
 uint32_t masked_vbyte_select_delta(const uint8_t *in, uint64_t length,
                 uint32_t prev, size_t slot) {
@@ -2352,9 +2267,7 @@ uint32_t masked_vbyte_select_delta(const uint8_t *in, uint64_t length,
 			while (consumed < reload) {
                 uint32_t result;
 				uint64_t ints_read, bytes;
-				if(slot - count > 16) masked_vbyte_skip_group_delta(in + consumed, &bytes,
-                        sig, &ints_read, &mprev);
-				else if (masked_vbyte_select_group_delta(in + consumed, &bytes,
+				if (masked_vbyte_select_group_delta(in + consumed, &bytes,
                                     sig, &ints_read, &mprev,
                                     slot  - count, &result)) {
 					return (result);
@@ -2407,9 +2320,7 @@ uint32_t masked_vbyte_select_delta(const uint8_t *in, uint64_t length,
 
         uint32_t result;
 		uint64_t ints_read, bytes;
-		if(slot - count > 16) masked_vbyte_skip_group_delta(in + consumed, &bytes,
-                sig, &ints_read, &mprev);
-		else if (masked_vbyte_select_group_delta(in + consumed, &bytes,
+		if (masked_vbyte_select_group_delta(in + consumed, &bytes,
                             sig, &ints_read, &mprev,
                             slot  - count, &result)) {
             return (result);
