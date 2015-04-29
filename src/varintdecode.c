@@ -1827,6 +1827,23 @@ static const __m128i *shuffle_mask = (__m128i *) shuffle_mask_bytes1;
         i += 4;                                                             \
       } while (0)
 
+
+/* perform a lower-bound search for |key| in |out|; the resulting uint32
+* is stored in |*presult|.*/
+#define CHECK_AND_INCREMENT_2(i, out, key, presult)                           \
+      do {                                                                  \
+        __m128i tmpout = _mm_sub_epi32(out, conversion);                    \
+        uint32_t mask = 3 & _mm_movemask_ps(_mm_castsi128_ps(_mm_cmplt_epi32(tmpout, key4))); \
+        if (mask != 3) {                                                   \
+          __m128i p = _mm_shuffle_epi8(out, shuffle_mask[mask ^ 3]);       \
+          int offset;                                                       \
+          SIMDCOMP_CTZ(offset, mask ^ 3);                            \
+          *presult = _mm_cvtsi128_si32(p);                                  \
+          return (i + offset);                                              \
+        }                                                                   \
+        i += 2;                                                             \
+      } while (0)
+
 static int masked_vbyte_search_group_delta(const uint8_t *in, uint64_t *p,
                 uint64_t mask, uint64_t *ints_read, __m128i *prev,
                 int i, uint32_t key, uint32_t *presult) {
@@ -1880,7 +1897,7 @@ static int masked_vbyte_search_group_delta(const uint8_t *in, uint64_t *p,
 		__m128i unpacked_result_b = _mm_srli_epi32(packed_result, 16);
 		*prev = PrefixSum2ints(unpacked_result_b, *prev);
         //_mm_storel_epi64(&out, *prev);	
-        CHECK_AND_INCREMENT(i, *prev, key, presult);
+        CHECK_AND_INCREMENT_2(i, *prev, key, presult);
 		*p = consumed;
         return (-1);
 	}
@@ -1920,19 +1937,17 @@ static int masked_vbyte_search_group_delta(const uint8_t *in, uint64_t *p,
 					-1));
 	*prev = PrefixSum2ints(result, *prev);
     //_mm_storel_epi64(&out, *prev);
-    CHECK_AND_INCREMENT(i, *prev, key, presult);
+    CHECK_AND_INCREMENT_2(i, *prev, key, presult);
 	*p = consumed;
     return (-1);
 }
 
 // returns the index of the matching key
-int masked_vbyte_search_delta(const uint8_t *in, int length, uint32_t prev,
+int masked_vbyte_search_delta(const uint8_t *in, uint64_t length, uint32_t prev,
                 uint32_t key, uint32_t *presult) {
 	size_t consumed = 0; // number of bytes read
 	__m128i mprev = _mm_set1_epi32(prev);
-	int count = 0; // how many integers we have read so far
-
-
+	uint64_t count = 0; // how many integers we have read so far
 	uint64_t sig = 0;
 	int availablebytes = 0;
 	if (96 < length) {
@@ -2083,6 +2098,14 @@ static uint32_t branchlessextract (__m128i out, int i)  {
               return (1);                                                \
             }
 
+
+#define CHECK_SELECT_2(i, out, slot, presult)                                 \
+            i += 2;                                                         \
+            if (i > slot) {                                                 \
+              *presult = branchlessextract (out, slot - (i - 2));           \
+              return (1);                                                \
+            }
+
 static int masked_vbyte_select_group_delta(const uint8_t *in, uint64_t *p,
                 uint64_t mask, uint64_t *ints_read, __m128i *prev,
                 int slot, uint32_t *presult) {
@@ -2135,7 +2158,7 @@ static int masked_vbyte_select_group_delta(const uint8_t *in, uint64_t *p,
 		__m128i unpacked_result_b = _mm_srli_epi32(packed_result, 16);
 		*prev = PrefixSum2ints(unpacked_result_b, *prev);
         //_mm_storel_epi64(&out, *prev);	
-        CHECK_SELECT(i, *prev, slot, presult);
+        CHECK_SELECT_2(i, *prev, slot, presult);
 		*p = consumed;
         return (0);
 	}
@@ -2175,21 +2198,16 @@ static int masked_vbyte_select_group_delta(const uint8_t *in, uint64_t *p,
 					-1));
 	*prev = PrefixSum2ints(result, *prev);
     //_mm_storel_epi64(&out, *prev);
-    CHECK_SELECT(i, *prev, slot, presult);
+    CHECK_SELECT_2(i, *prev, slot, presult);
 	*p = consumed;
     return (0);
 }
 
-uint32_t masked_vbyte_select_delta(const uint8_t *in, int length,
-                uint32_t prev, int slot) {
+uint32_t masked_vbyte_select_delta(const uint8_t *in, uint64_t length,
+                uint32_t prev, size_t slot) {
 	size_t consumed = 0; // number of bytes read
 	__m128i mprev = _mm_set1_epi32(prev);
-	int count = 0; // how many integers we have read so far
-
-
-    // simply pretend that the encoded array ends with the required slot.
-    length = slot + 1;
-
+	uint64_t count = 0; // how many integers we have read so far
 	uint64_t sig = 0;
 	int availablebytes = 0;
 	if (96 < length) {
@@ -2247,10 +2265,12 @@ uint32_t masked_vbyte_select_delta(const uint8_t *in, int length,
 			while (consumed < reload) {
                 uint32_t result;
 				uint64_t ints_read, bytes;
-		        if (masked_vbyte_select_group_delta(in + consumed, &bytes,
+
+				if (masked_vbyte_select_group_delta(in + consumed, &bytes,
                                     sig, &ints_read, &mprev,
-                                    length - count, &result))
-                    return (result);
+                                    slot  - count, &result)) {
+					return (result);
+		        }
 				sig >>= bytes;
 
 				// seems like this might force the compiler to prioritize shifting sig >>= bytes
@@ -2299,17 +2319,20 @@ uint32_t masked_vbyte_select_delta(const uint8_t *in, int length,
 
         uint32_t result;
 		uint64_t ints_read, bytes;
+
         if (masked_vbyte_select_group_delta(in + consumed, &bytes,
                             sig, &ints_read, &mprev,
-                            length - count, &result))
+                            slot  - count, &result)) {
             return (result);
+        }
 		consumed += bytes;
 		availablebytes -= bytes;
 		sig >>= bytes;
 		count += ints_read;
 	}
+
 	prev = _mm_extract_epi32(mprev, 3);
-	for (; count < length; count++) {
+	for (; count < slot + 1; count++) {
         uint32_t out;
 		consumed += read_int_delta(in + consumed, &out, &prev);
 	}

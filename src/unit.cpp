@@ -281,7 +281,7 @@ void testFindSimple() {
     size_t nvalue  = compressedbuffer.size();
     codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
 
-    uint32_t k;
+    uint32_t k = 0;
     for (int i = 0; i < max; i++) {
         int pos = codec.findLowerBound(compressedbuffer.data(), max, i, &k);
         if (k != (uint32_t)i && pos != i) {
@@ -313,7 +313,8 @@ void testFindAdvanced() {
     size_t nvalue  = compressedbuffer.size();
     codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
 
-    uint32_t k1, k2;
+    uint32_t k1 = 0;
+    uint32_t k2 = 0;
     for (int i = 0; i < max * 2; i++) {
         int pos1 = codec.findLowerBound(compressedbuffer.data(), max, i, &k1);
         uint32_t *it = std::lower_bound(&ints[0], &ints[max], i);
@@ -321,19 +322,19 @@ void testFindAdvanced() {
         k2 = *it;
         // key not found?
         if (it == &ints[max] && pos1 != max) {
-            cout << codec.name() << "::findLowerBoundDelta failed in line "
-                 << __LINE__ << "(i = " << i << ")" << endl;
+            cout << codec.name() << "::findLowerBoundDelta failed at line "
+                 << __LINE__ << " (i = " << i << ")" << endl;
             throw std::logic_error("bug");
         }
         // otherwise make sure both results are equal
         if (k1 != k2) {
-            cout << codec.name() << "::findLowerBoundDelta failed in line "
-                 << __LINE__ << "(i = " << i << ")" << endl;
+            cout << codec.name() << "::findLowerBoundDelta failed at line "
+                 << __LINE__ << " (i = " << i << ")" << endl;
             throw std::logic_error("bug");
         }
         if (pos1 != pos2) {
-            cout << codec.name() << "::findLowerBoundDelta failed in line "
-                 << __LINE__ << "(i = " << i << ")" << endl;
+            cout << codec.name() << "::findLowerBoundDelta failed at line "
+                 << __LINE__ << " (i = " << i << ")" << endl;
             throw std::logic_error("bug");
         }
     }
@@ -391,8 +392,15 @@ void testSelectAdvanced() {
         k2 = (uint32_t)ints[i];
 
         if (k1 != k2) {
-            cout << codec.name() << "::selectDelta failed in line "
-                 << __LINE__ << "(i = " << i << ")" << endl;
+        	cout << "max = " << max << endl;
+        	cout << "got back " << k1 << endl;
+
+        	for (int j = 0; j <= i; j++) {//shit
+            	cout<<j<<"-->"<<ints[j]<<" "<<endl;
+            }
+
+        	cout << codec.name() << "::selectDelta failed at line "
+                 << __LINE__ << " (i = " << i << ")" << endl;
             throw std::logic_error("bug");
         }
     }

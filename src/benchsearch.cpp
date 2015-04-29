@@ -30,54 +30,54 @@ typedef clock_t time_snap_t;
 template<typename T>
 int benchmarkSelect() {
 	T codec;
-    uint32_t buffer[128];
-    uint32_t backbuffer[128];
+	static const size_t N = 128;
+    uint32_t buffer[N];
+    uint32_t backbuffer[N];
     uint32_t b;
     time_snap_t S1, S2, S3;
-    int i;
-    printf("\n");
+    size_t i;
     printf("# benchmarking select %s \n",codec.name().c_str());
 
     /* this test creates delta encoded buffers with different bits, then
      * performs lower bound searches for each key */
     for (b = 0; b <= 32; b++) {
-        uint32_t out[128 * 2];
+        uint32_t out[N * 2];
         uint32_t prev = 0;
         /* initialize the buffer */
-        for (i = 0; i < 128; i++) {
+        for (i = 0; i < N; i++) {
             buffer[i] =  ((uint32_t)(1655765 * i )) ;
             if(b < 32) buffer[i] %= (1<<b);
         }
-        for (i = 0; i < 128; i++) {
+        for (i = 0; i < N; i++) {
             buffer[i] = buffer[i] + prev;
             prev = buffer[i];
         }
 
-        for (i = 1; i < 128; i++) {
+        for (i = 1; i < N; i++) {
             if(buffer[i] < buffer[i-1] )
                 buffer[i] = buffer[i-1];
         }
 
-        for (i = 0; i < 128; i++) {
+        for (i = 0; i < N; i++) {
             out[i] = 0; /* memset would do too */
         }
 
         /* delta-encode to 'i' bits */
-        size_t nvalue = 2 * 128;
-        codec.encodeArray(buffer, 128,out,nvalue);
+        size_t nvalue = 2 * N;
+        codec.encodeArray(buffer, N,out,nvalue);
 
         S1 = time_snap();
-        for (i = 0; i < 128 * 10; i++) {
-        	uint32_t valretrieved =  codec.select(out, i % 128);
-            if(valretrieved != buffer[i%128]) {
+        for (i = 0; i < N * 10; i++) {
+        	uint32_t valretrieved =  codec.select(out, i % N);
+            if(valretrieved != buffer[i%N]) {
             	return -1;
             }
         }
         S2 = time_snap();
-        for (i = 0; i < 128 * 10; i++) {
-        	size_t recovlength = 128;
+        for (i = 0; i < N * 10; i++) {
+        	size_t recovlength = N;
         	codec.decodeArray(out,nvalue,backbuffer,recovlength);
-            if(backbuffer[i % 128] != buffer[i % 128]) {
+            if(backbuffer[i % N] != buffer[i % N]) {
             	return -1;
             }
         }
@@ -85,6 +85,7 @@ int benchmarkSelect() {
         printf("# bit width = %d, fast select function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT "  \n", b, (S2-S1), (S3-S2));
         printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
     }
+    printf("\n\n");
     return 0;
 }
 
@@ -140,14 +141,14 @@ int lower_bound(uint32_t * A, uint32_t key, int imin, int imax)
 
 template<typename T>
 int benchmarkSearch() {
+	static const size_t N = 128;
 	T codec;
-	uint32_t buffer[128];
-    uint32_t backbuffer[128];
-    uint32_t out[128 * 2];
+	uint32_t buffer[N];
+    uint32_t backbuffer[N];
+    uint32_t out[N * 2];
     uint32_t result, initial = 0;
     uint32_t b, i;
     time_snap_t S1, S2, S3;
-    printf("\n");
     printf("# benchmarking search %s \n",codec.name().c_str());
 
     /* this test creates delta encoded buffers with different bits, then
@@ -155,38 +156,38 @@ int benchmarkSearch() {
     for (b = 0; b <= 32; b++) {
         uint32_t prev = initial;
         /* initialize the buffer */
-        for (i = 0; i < 128; i++) {
+        for (i = 0; i < N; i++) {
             buffer[i] =  ((uint32_t)rand()) ;
             if(b < 32) buffer[i] %= (1<<b);
         }
 
-        qsort(buffer,128, sizeof(uint32_t), uint32_cmp);
+        qsort(buffer,N, sizeof(uint32_t), uint32_cmp);
 
-        for (i = 0; i < 128; i++) {
+        for (i = 0; i < N; i++) {
             buffer[i] = buffer[i] + prev;
             prev = buffer[i];
         }
-        for (i = 1; i < 128; i++) {
+        for (i = 1; i < N; i++) {
             if(buffer[i] < buffer[i-1] )
                 buffer[i] = buffer[i-1];
         }
-        for (i = 0; i < 128; i++) {
+        for (i = 0; i < N; i++) {
             out[i] = 0; /* memset would do too */
         }
-        size_t nvalue = 128 * 2;
+        size_t nvalue = N * 2;
 
-        codec.encodeArray(buffer, 128,out,nvalue);
+        codec.encodeArray(buffer, N,out,nvalue);
 		{
-			size_t recovlength = 128;
+			size_t recovlength = N;
 			codec.decodeArray(out, nvalue, backbuffer, recovlength);
-			assert(recovlength == 128);
-			for (int k = 0; k < 128; k++) {
+			assert(recovlength == N);
+			for (size_t k = 0; k < N; k++) {
 				assert(backbuffer[k] == buffer[k]);
 			}
 		}
         S1 = time_snap();
-        for (i = 0; i < 128 * 10; i++) {
-            uint32_t pseudorandomkey  =  buffer[i%128];
+        for (i = 0; i < N * 10; i++) {
+            uint32_t pseudorandomkey  =  buffer[i%N];
             uint32_t result = 0;
             size_t pos = codec.findLowerBound(out, nvalue, pseudorandomkey, &result);
             if((result < pseudorandomkey) || (buffer[pos] != result)) {
@@ -200,12 +201,12 @@ int benchmarkSearch() {
             }
         }
         S2 = time_snap();
-        for (i = 0; i < 128 * 10; i++) {
+        for (i = 0; i < N * 10; i++) {
             int pos;
-            uint32_t pseudorandomkey  =  buffer[i%128];
-            size_t recovlength = 128;
+            uint32_t pseudorandomkey  =  buffer[i%N];
+            size_t recovlength = N;
         	codec.decodeArray(out,nvalue,backbuffer,recovlength);
-            pos =  lower_bound(backbuffer, pseudorandomkey, 0, 128);
+            pos =  lower_bound(backbuffer, pseudorandomkey, 0, N);
             result = backbuffer[pos];
 
             if((result < pseudorandomkey) || (buffer[pos] != result)) {
@@ -222,6 +223,7 @@ int benchmarkSearch() {
         printf("# bit width = %d, fast search function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  " \n", b, (S2-S1), (S3-S2) );
         printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
     }
+    printf("\n\n");
     return 0;
 }
 
