@@ -31,7 +31,7 @@ class VarIntGB: public IntegerCODEC {
 public:
 
     void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
-            size_t &nvalue) {
+                     size_t &nvalue) {
         uint32_t prev = 0; // for delta
 
         uint8_t * bout = reinterpret_cast<uint8_t *> (out);
@@ -100,7 +100,7 @@ public:
     }
 
     const uint32_t * decodeArray(const uint32_t *in, const size_t length,
-            uint32_t *out, size_t & nvalue) {
+                                 uint32_t *out, size_t & nvalue) {
         uint32_t prev = 0; // for delta
 
         const uint8_t * inbyte = reinterpret_cast<const uint8_t *> (in);
@@ -108,13 +108,13 @@ public:
         inbyte += 4;
 
         const uint8_t * const endbyte = reinterpret_cast<const uint8_t *> (in
-                + length);
+                                        + length);
         const uint32_t * const endout(out + nvalue);
         uint32_t val;
 
         while (endbyte > inbyte + 1 + 4 * 4) {
-        	inbyte = delta ? decodeGroupVarIntDelta(inbyte, &prev, out) :
-        			decodeGroupVarInt(inbyte, out);
+            inbyte = delta ? decodeGroupVarIntDelta(inbyte, &prev, out) :
+                     decodeGroupVarInt(inbyte, out);
             out+=4;
         }
         while (endbyte > inbyte) {
@@ -144,7 +144,7 @@ public:
     // Performs a lower bound find in the encoded array.
     // Returns the index
     size_t findLowerBound(const uint32_t *in, const size_t length,
-                    uint32_t key, uint32_t *presult) {
+                          uint32_t key, uint32_t *presult) {
         const uint8_t *inbyte = reinterpret_cast<const uint8_t *> (in);
         uint32_t out[4] = {0};
         size_t i = 0;
@@ -154,11 +154,11 @@ public:
         inbyte += 4; // skip nvalue
 
         const uint8_t *const endbyte = reinterpret_cast<const uint8_t *> (in
-                    + length);
+                                       + length);
 
         while (i + 3 < nvalue) {
             inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
-                    			decodeGroupVarInt(inbyte, out);
+                     decodeGroupVarInt(inbyte, out);
 
             if (key <= out[3]) {
                 if (key <= out[0]) {
@@ -179,7 +179,7 @@ public:
             i += 4;
         }
         if (endbyte > inbyte && nvalue > i) {
-        	uint32_t tnvalue = nvalue - 1 - i;
+            uint32_t tnvalue = nvalue - 1 - i;
             inbyte = decodeCarefully(inbyte, &initial, out, &tnvalue);
             assert(inbyte <= endbyte);
             if (key <= out[0]) {
@@ -202,13 +202,13 @@ public:
 
         }
         assert(false);
-          *presult = key + 1;
-          return (i);
-      }
+        *presult = key + 1;
+        return (i);
+    }
 
-      // Returns a decompressed value in an encoded array
-      // This code has been optimized for delta-encoded arrays (TODO: optimize for the regular case).
-      uint32_t select(uint32_t *in, size_t index) {
+    // Returns a decompressed value in an encoded array
+    // This code has been optimized for delta-encoded arrays (TODO: optimize for the regular case).
+    uint32_t select(uint32_t *in, size_t index) {
         const uint8_t *inbyte = reinterpret_cast<const uint8_t *> (in);
         uint32_t out[4];
         size_t i = 0;
@@ -216,30 +216,30 @@ public:
         uint32_t nvalue = *in;
         inbyte += 4; // skip nvalue
         if(index + 3 < nvalue) {// this common case can be done with fewer branches
-        	while(true) {
+            while(true) {
                 inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
-             			decodeGroupVarInt(inbyte, out); // note: delta known at compile time: this is not a branch
-                 i += 4;
-                 if (i > index)
-                     return (out[index - (i - 4)]);
-        	}
-        	assert(false);// we should never get here
+                         decodeGroupVarInt(inbyte, out); // note: delta known at compile time: this is not a branch
+                i += 4;
+                if (i > index)
+                    return (out[index - (i - 4)]);
+            }
+            assert(false);// we should never get here
         }// else
 
         // we finish with the uncommon case
         while (i + 3 < index) { // a single branch will do for this case (bulk of the computation)
             inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
-        			decodeGroupVarInt(inbyte, out);
+                     decodeGroupVarInt(inbyte, out);
             i += 4;
         }
-        // lots of branching ahead... 
+        // lots of branching ahead...
         while (i + 3 < nvalue) {
             inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
-        			decodeGroupVarInt(inbyte, out);
+                     decodeGroupVarInt(inbyte, out);
             i += 4;
             if (i > index)
-                 return (out[index - (i - 4)]);
-         }
+                return (out[index - (i - 4)]);
+        }
         {
             nvalue = nvalue - 1 - i;
             inbyte = decodeCarefully(inbyte, &initial, out, &nvalue);
@@ -260,84 +260,84 @@ public:
     const uint32_t mask[4] = { 0xFF, 0xFFFF, 0xFFFFFF, 0xFFFFFFFF };
 
     const uint8_t* decodeGroupVarInt(const uint8_t* in, uint32_t* out) {
-	       const uint32_t sel = *in++;
-    	   if(sel == 0) {
-    	       out[0] = static_cast<uint32_t> (in[0]);
-    	       out[1] = static_cast<uint32_t> (in[1]);
-    	       out[2] = static_cast<uint32_t> (in[2]);
-    	       out[3] = static_cast<uint32_t> (in[3]);
-    	       return in + 4;
-    	    }
-    	    const uint32_t sel1 = (sel & 3);
-    	    *out++ = *((uint32_t*)(in)) & mask[sel1];
-    	    in += sel1 + 1;
-    	    const uint32_t sel2 = ((sel >> 2) & 3);
-    	    *out++ = *((uint32_t*)(in)) & mask[sel2];
-    	    in += sel2 + 1;
-    	    const uint32_t sel3 = ((sel >> 4) & 3);
-    	    *out++ = *((uint32_t*)(in)) & mask[sel3];
-    	    in += sel3 + 1;
-    	    const uint32_t sel4 = (sel >> 6);
-    	    *out++ = *((uint32_t*)(in)) & mask[sel4];
-    	    in += sel4 + 1;
-    	    return in;
+        const uint32_t sel = *in++;
+        if(sel == 0) {
+            out[0] = static_cast<uint32_t> (in[0]);
+            out[1] = static_cast<uint32_t> (in[1]);
+            out[2] = static_cast<uint32_t> (in[2]);
+            out[3] = static_cast<uint32_t> (in[3]);
+            return in + 4;
+        }
+        const uint32_t sel1 = (sel & 3);
+        *out++ = *((uint32_t*)(in)) & mask[sel1];
+        in += sel1 + 1;
+        const uint32_t sel2 = ((sel >> 2) & 3);
+        *out++ = *((uint32_t*)(in)) & mask[sel2];
+        in += sel2 + 1;
+        const uint32_t sel3 = ((sel >> 4) & 3);
+        *out++ = *((uint32_t*)(in)) & mask[sel3];
+        in += sel3 + 1;
+        const uint32_t sel4 = (sel >> 6);
+        *out++ = *((uint32_t*)(in)) & mask[sel4];
+        in += sel4 + 1;
+        return in;
     }
 
     const uint8_t* decodeGroupVarIntDelta(const uint8_t* in, uint32_t * val, uint32_t* out) {
-    	    const uint32_t sel = *in++;
-    	    if(sel == 0) {
-    	    	out[0] = (* val += static_cast<uint32_t> (in[0]));
-    	    	out[1] = (* val += static_cast<uint32_t> (in[1]));
-    	    	out[2] = (* val += static_cast<uint32_t> (in[2]));
-    	    	out[3] = (* val += static_cast<uint32_t> (in[3]));
-    	    	return in + 4;
-    	    }
-    	    const uint32_t sel1 = (sel & 3);
-    	    *val += *((uint32_t*)(in)) & mask[sel1];
-    	    *out++ = *val;
-    	    in += sel1 + 1;
-    	    const uint32_t sel2 = ((sel >> 2) & 3);
-    	    *val += *((uint32_t*)(in)) & mask[sel2];
-    	    *out++ = *val;
-    	    in += sel2 + 1;
-    	    const uint32_t sel3 = ((sel >> 4) & 3);
-    	    *val += *((uint32_t*)(in)) & mask[sel3];
-    	    *out++ = *val;
-    	    in += sel3 + 1;
-    	    const uint32_t sel4 = (sel >> 6);
-    	    *val += *((uint32_t*)(in)) & mask[sel4];
-    	    *out++ = *val;
-    	    in += sel4 + 1;
-      	    return in;
+        const uint32_t sel = *in++;
+        if(sel == 0) {
+            out[0] = (* val += static_cast<uint32_t> (in[0]));
+            out[1] = (* val += static_cast<uint32_t> (in[1]));
+            out[2] = (* val += static_cast<uint32_t> (in[2]));
+            out[3] = (* val += static_cast<uint32_t> (in[3]));
+            return in + 4;
+        }
+        const uint32_t sel1 = (sel & 3);
+        *val += *((uint32_t*)(in)) & mask[sel1];
+        *out++ = *val;
+        in += sel1 + 1;
+        const uint32_t sel2 = ((sel >> 2) & 3);
+        *val += *((uint32_t*)(in)) & mask[sel2];
+        *out++ = *val;
+        in += sel2 + 1;
+        const uint32_t sel3 = ((sel >> 4) & 3);
+        *val += *((uint32_t*)(in)) & mask[sel3];
+        *out++ = *val;
+        in += sel3 + 1;
+        const uint32_t sel4 = (sel >> 6);
+        *val += *((uint32_t*)(in)) & mask[sel4];
+        *out++ = *val;
+        in += sel4 + 1;
+        return in;
     }
 
     const uint8_t *decodeCarefully(const uint8_t *inbyte,
-    		uint32_t *initial, uint32_t *out, uint32_t *count) {
-    	uint32_t val;
-    	uint32_t k, key = *inbyte++;
-    	for (k = 0; k < *count && k < 4; k++) {
-    		const uint32_t howmanybyte = key & 3;
-    		key = static_cast<uint8_t>(key>>2);
-    		val = static_cast<uint32_t> (*inbyte++);
-    		if (howmanybyte >= 1) {
-    			val |= (static_cast<uint32_t> (*inbyte++) << 8) ;
-    			if (howmanybyte >= 2) {
-    				val |= (static_cast<uint32_t> (*inbyte++) << 16) ;
-    				if (howmanybyte >= 3) {
-    					val |= (static_cast<uint32_t> (*inbyte++) << 24);
-    				}
-    			}
-    		}
-    		if(delta) {
-    			*initial += val;
-    			*out = *initial;
-    		} else {
-    			*out = val;
-    		}
-    		out++;
-    	}
-    	*count = k;
-    	return (inbyte);
+                                   uint32_t *initial, uint32_t *out, uint32_t *count) {
+        uint32_t val;
+        uint32_t k, key = *inbyte++;
+        for (k = 0; k < *count && k < 4; k++) {
+            const uint32_t howmanybyte = key & 3;
+            key = static_cast<uint8_t>(key>>2);
+            val = static_cast<uint32_t> (*inbyte++);
+            if (howmanybyte >= 1) {
+                val |= (static_cast<uint32_t> (*inbyte++) << 8) ;
+                if (howmanybyte >= 2) {
+                    val |= (static_cast<uint32_t> (*inbyte++) << 16) ;
+                    if (howmanybyte >= 3) {
+                        val |= (static_cast<uint32_t> (*inbyte++) << 24);
+                    }
+                }
+            }
+            if(delta) {
+                *initial += val;
+                *out = *initial;
+            } else {
+                *out = val;
+            }
+            out++;
+        }
+        *count = k;
+        return (inbyte);
     }
 
 
