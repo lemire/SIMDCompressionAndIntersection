@@ -741,17 +741,13 @@ size_t lemire_highlyscalable_intersect_SIMD(const uint32_t *A, const size_t s_a,
             cmp_mask = _mm_or_si128(cmp_mask, cmp_mask4);
             // convert the 128-bit mask to the 4-bit mask
             const int mask = _mm_movemask_ps((__m128 ) cmp_mask);
-            //]
-
-            //[ copy out common elements
+            // copy out common elements
             const __m128i p = _mm_shuffle_epi8(v_a, shuffle_mask[mask]);
 
             _mm_storeu_si128((__m128i*)out, p);
-            //]
             out += _mm_popcnt_u32(mask); // a number of elements is a weight of the mask
 
             const uint32_t a_max = A[i_a + 3];
-            //const uint32_t b_max = B[i_b + 3];
             if (a_max <= B[i_b + 3]) {
                 i_a += 4;
                 if (i_a >= st_a)
