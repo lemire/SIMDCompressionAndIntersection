@@ -271,7 +271,7 @@ void tellmeaboutmachine() {
 template<typename T>
 void testFindSimple() {
 	T codec;
-    const int max = 300;
+    const int max = 256;
     uint32_t ints[max];
     for (int i = 0; i < max; i++)
         ints[i] = i;
@@ -297,7 +297,7 @@ void testFindSimple() {
 template<typename T>
 void testFindAdvanced() {
 	T codec;
-    const int max = 3000;
+    const int max = 2944;
     uint32_t ints[max];
     // print random seed to make the test reproducable
     time_t t = ::time(0);
@@ -345,7 +345,7 @@ void testFindAdvanced() {
 template<typename T>
 void testSelectSimple() {
 	T codec;
-    const int max = 300;
+    const int max = 256;
     uint32_t ints[max];
     for (int i = 0; i < max; i++)
         ints[i] = i;
@@ -369,7 +369,7 @@ void testSelectSimple() {
 template<typename T>
 void testSelectAdvanced() {
 	T codec;
-    const int max = 3000;
+    const int max = 2944;
     uint32_t ints[max];
     // print random seed to make the test reproducable
     time_t t = ::time(0);
@@ -413,22 +413,29 @@ int main() {
     testSelectSimple<MaskedVByte<true>>();
     testSelectSimple<VariableByte<true>>();
     testSelectSimple<VByte<true>>();
+    testSelectSimple<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
+                                    RegularDeltaSIMD, true>>>();
 
     testSelectAdvanced<VarIntGB<true>>();
     testSelectAdvanced<MaskedVByte<true>>();
     testSelectAdvanced<VariableByte<true>>();
     testSelectAdvanced<VByte<true>>();
+    testSelectAdvanced<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
+                                    RegularDeltaSIMD, true>>>();
 
     testFindSimple<VarIntGB<true>>();
     testFindSimple<MaskedVByte<true>>();
     testFindSimple<VariableByte<true>>();
     testFindSimple<VByte<true>>();
+    testFindSimple<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
+                                    RegularDeltaSIMD, true>>>();
 
     testFindAdvanced<VarIntGB<true>>();
     testFindAdvanced<MaskedVByte<true>>();
     testFindAdvanced<VariableByte<true>>();
-    testFindSimple<VByte<true>>();
-
+    testFindAdvanced<VByte<true>>();
+    testFindAdvanced<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
+                                    RegularDeltaSIMD, true>>>();
 
     for (string n : IntersectionFactory::allNames()) {
         int error = 0;

@@ -226,8 +226,7 @@ int benchmarkSearch() {
     printf("\n\n");
     return 0;
 }
-
-
+using namespace SIMDCompressionLib;
 int main() {
 	int r = 0;
 #ifdef _MSC_VER
@@ -242,6 +241,9 @@ int main() {
     if(r < 0) return r;
     r = benchmarkSearch<SIMDCompressionLib::VByte<true>>();
     if(r < 0) return r;
+    r = benchmarkSearch<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
+            RegularDeltaSIMD, true>>>();
+    if(r < 0) return r;
 
     r = benchmarkSelect<SIMDCompressionLib::VarIntGB<true>>();
     if(r < 0) return r;
@@ -251,6 +253,10 @@ int main() {
     if(r < 0) return r;
     r = benchmarkSelect<SIMDCompressionLib::VByte<true>>();
     if(r < 0) return r;
+    r = benchmarkSelect<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
+            RegularDeltaSIMD, true>>>();
+    if(r < 0) return r;
+
     return 0;
 }
 

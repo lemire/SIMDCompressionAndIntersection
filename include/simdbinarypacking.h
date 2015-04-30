@@ -280,10 +280,10 @@ public:
             }
             for (uint32_t i = 0; i < HowManyMiniBlocks; ++i) {
             	if(runningindex + 128 > index) {
-            		return simdselectd1(&init, in, Bs[i],
+            		return simdselectd1(&init, (const __m128i *)in, Bs[i],
             		                index - runningindex);
             	}
-            	simdscand1(&init, in, Bs[i]);
+            	simdscand1(&init, (const __m128i *)in, Bs[i]);
             	runningindex += MiniBlockSize;
                 in += MiniBlockSize / 32 * Bs[i];
             }
@@ -299,10 +299,10 @@ public:
             }
             for (uint32_t i = 0; i < howmany; ++i) {
             	if(runningindex + 128 > index) {
-            		return simdselectd1(&init, in, Bs[i],
+            		return simdselectd1(&init, (const __m128i *)in, Bs[i],
             		                index - runningindex);
             	}
-            	simdscand1(&init, in, Bs[i]);
+            	simdscand1(&init, (const __m128i *)in, Bs[i]);
             	runningindex += MiniBlockSize;
                 in += MiniBlockSize / 32 * Bs[i];
             }
@@ -335,7 +335,7 @@ public:
                 Bs[3 + 4 * i] = static_cast<uint8_t>(in[0]);
             }
             for (uint32_t i = 0; i < HowManyMiniBlocks; ++i) {
-            	int index = simdsearchd1(&init, in, Bs[i],
+            	size_t index = simdsearchd1(&init, (const __m128i* ) in, Bs[i],
             	                 key, presult);
             	runningindex += index;
             	if(index < MiniBlockSize) return runningindex;
@@ -352,7 +352,7 @@ public:
                 Bs[3 + 4 * i] = static_cast<uint8_t>(in[0]);
             }
             for (uint32_t i = 0; i < howmany; ++i) {
-            	int index = simdsearchd1(&init, in, Bs[i],
+            	size_t index = simdsearchd1(&init, (const __m128i* ) in, Bs[i],
             	            	                 key, presult);
             	runningindex += index;
             	if(index < MiniBlockSize) return runningindex;
