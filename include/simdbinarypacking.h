@@ -15,6 +15,32 @@
 namespace SIMDCompressionLib {
 
 
+
+extern "C" {
+
+/* searches "bit" 128-bit vectors from "in" (= 128 encoded integers) for the first encoded uint32 value
+ * which is >= |key|, and returns its position. It is assumed that the values
+ * stored are in sorted order.
+ * The encoded key is stored in "*presult". If no value is larger or equal to the key,
+* 128 is returned */
+int
+simdsearchd1(__m128i * initOffset, const __m128i *in, uint32_t bit,
+                uint32_t key, uint32_t *presult);
+
+
+/**
+ * Simply scan, updating initOffset as it proceeds.
+ */
+void
+simdscand1(__m128i * initOffset, const __m128i *in, uint32_t bit);
+
+/* returns the value stored at the specified "slot". */
+uint32_t simdselectd1(__m128i * initOffset, const __m128i *in, uint32_t bit,
+                int slot);
+
+
+}
+
 template <class DeltaHelper, bool ArrayDispatch>
 struct SIMDBlockPacker {
     typedef SIMDDeltaProcessor<DeltaHelper, SIMDBlockSize>  DeltaProcessor;
@@ -228,6 +254,112 @@ public:
         }
         nvalue = out - initout;
         return in;
+    }
+
+    // Returns a decompressed value in an encoded array
+    // could be greatly optimized in the non-differential coding case: currently just for delta coding
+    // WARNING: THIS IMPLEMENTATION WILL ONLY PROVIDE THE CORRECT RESULT
+    // WHEN USING REGULAR (D1) DIFFERENTIAL CODING.	 TODO: Generalize the support. TODO: Should check the type.
+    uint32_t select(uint32_t *in, size_t index) {
+        if (needPaddingTo128Bits(in)) throw
+            std::runtime_error("alignment issue: pointers should be aligned on 128-bit boundaries");
+        const uint32_t actuallength = *in++;
+        while (needPaddingTo128Bits(in)) {
+            if (in[0] != CookiePadder) throw logic_error("SIMDBinaryPacking alignment issue.");
+            ++in;
+        }
+        uint32_t Bs[HowManyMiniBlocks];
+        __m128i init = _mm_set1_epi32(0);
+        size_t runningindex = 0;
+        for (; runningindex <  actuallength / (HowManyMiniBlocks * MiniBlockSize) *HowManyMiniBlocks * MiniBlockSize ;) {
+            for (uint32_t i = 0; i < 4 ; ++i, ++in) {
+                Bs[0 + 4 * i] = static_cast<uint8_t>(in[0] >> 24);
+                Bs[1 + 4 * i] = static_cast<uint8_t>(in[0] >> 16);
+                Bs[2 + 4 * i] = static_cast<uint8_t>(in[0] >> 8);
+                Bs[3 + 4 * i] = static_cast<uint8_t>(in[0]);
+            }
+            for (uint32_t i = 0; i < HowManyMiniBlocks; ++i) {
+            	if(runningindex + 128 > index) {
+            		return simdselectd1(&init, in, Bs[i],
+            		                index - runningindex);
+            	}
+            	simdscand1(&init, in, Bs[i]);
+            	runningindex += MiniBlockSize;
+                in += MiniBlockSize / 32 * Bs[i];
+            }
+        }
+
+        if (runningindex <  actuallength) {
+            const size_t howmany = (actuallength - runningindex ) / MiniBlockSize;
+            for (uint32_t i = 0; i < 4 ; ++i, ++in) {
+                Bs[0 + 4 * i] = static_cast<uint8_t>(in[0] >> 24);
+                Bs[1 + 4 * i] = static_cast<uint8_t>(in[0] >> 16);
+                Bs[2 + 4 * i] = static_cast<uint8_t>(in[0] >> 8);
+                Bs[3 + 4 * i] = static_cast<uint8_t>(in[0]);
+            }
+            for (uint32_t i = 0; i < howmany; ++i) {
+            	if(runningindex + 128 > index) {
+            		return simdselectd1(&init, in, Bs[i],
+            		                index - runningindex);
+            	}
+            	simdscand1(&init, in, Bs[i]);
+            	runningindex += MiniBlockSize;
+                in += MiniBlockSize / 32 * Bs[i];
+            }
+        }
+        return runningindex;
+    }
+
+
+    // Performs a lower bound find in the encoded array.
+    // Returns the index
+    // WARNING: THIS IMPLEMENTATION WILL ONLY PROVIDE THE CORRECT RESULT
+    // WHEN USING REGULAR (D1) DIFFERENTIAL CODING.	 TODO: Generalize the support. TODO: Should check the type.
+    size_t findLowerBound(const uint32_t *in, const size_t /*length*/, uint32_t key,
+                          uint32_t *presult) {
+        if (needPaddingTo128Bits(in)) throw
+            std::runtime_error("alignment issue: pointers should be aligned on 128-bit boundaries");
+        const uint32_t actuallength = *in++;
+        while (needPaddingTo128Bits(in)) {
+            if (in[0] != CookiePadder) throw logic_error("SIMDBinaryPacking alignment issue.");
+            ++in;
+        }
+        uint32_t Bs[HowManyMiniBlocks];
+        __m128i init = _mm_set1_epi32(0);
+        size_t runningindex = 0;
+        for (; runningindex  < actuallength / (HowManyMiniBlocks * MiniBlockSize) *HowManyMiniBlocks * MiniBlockSize ;) {
+            for (uint32_t i = 0; i < 4 ; ++i, ++in) {
+                Bs[0 + 4 * i] = static_cast<uint8_t>(in[0] >> 24);
+                Bs[1 + 4 * i] = static_cast<uint8_t>(in[0] >> 16);
+                Bs[2 + 4 * i] = static_cast<uint8_t>(in[0] >> 8);
+                Bs[3 + 4 * i] = static_cast<uint8_t>(in[0]);
+            }
+            for (uint32_t i = 0; i < HowManyMiniBlocks; ++i) {
+            	int index = simdsearchd1(&init, in, Bs[i],
+            	                 key, presult);
+            	runningindex += index;
+            	if(index < MiniBlockSize) return runningindex;
+                in += MiniBlockSize / 32 * Bs[i];
+            }
+        }
+
+        if (runningindex  <  actuallength) {
+            const size_t howmany = (actuallength - runningindex ) / MiniBlockSize;
+            for (uint32_t i = 0; i < 4 ; ++i, ++in) {
+                Bs[0 + 4 * i] = static_cast<uint8_t>(in[0] >> 24);
+                Bs[1 + 4 * i] = static_cast<uint8_t>(in[0] >> 16);
+                Bs[2 + 4 * i] = static_cast<uint8_t>(in[0] >> 8);
+                Bs[3 + 4 * i] = static_cast<uint8_t>(in[0]);
+            }
+            for (uint32_t i = 0; i < howmany; ++i) {
+            	int index = simdsearchd1(&init, in, Bs[i],
+            	            	                 key, presult);
+            	runningindex += index;
+            	if(index < MiniBlockSize) return runningindex;
+                in += MiniBlockSize / 32 * Bs[i];
+            }
+        }
+        return runningindex;
     }
 
     string name() const {

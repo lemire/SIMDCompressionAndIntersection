@@ -51,6 +51,13 @@ likwidintersection: intersection.o src/benchintersection.cpp include/synthetic.h
 integratedbitpacking.o: include/integratedbitpacking.h src/integratedbitpacking.cpp 
 	$(CXX) $(CXXFLAGS) -c src/integratedbitpacking.cpp -Iinclude
 
+simdpackedsearch.o:  src/simdpackedsearch.c
+	$(CC) $(CCFLAGS) -c src/simdpackedsearch.c
+
+simdpackedselect.o:  src/simdpackedselect.c
+	$(CC) $(CCFLAGS) -c src/simdpackedselect.c
+
+
 
 streamvbyte.o:  src/streamvbyte.c
 	$(CC) $(CCFLAGS) -c src/streamvbyte.c
@@ -72,7 +79,7 @@ simdintegratedbitpacking.o: include/simdintegratedbitpacking.h include/delta.h s
 UNAME := $(shell uname)
 
 
-OBJECTS= bitpacking.o integratedbitpacking.o simdbitpacking.o usimdbitpacking.o    simdintegratedbitpacking.o   intersection.o  varintdecode.o streamvbyte.o 
+OBJECTS= bitpacking.o integratedbitpacking.o simdbitpacking.o usimdbitpacking.o    simdintegratedbitpacking.o   intersection.o  varintdecode.o streamvbyte.o simdpackedsearch.o simdpackedselect.o 
 
 benchsearch: $(HEADERS) src/benchsearch.cpp  $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o benchsearch src/benchsearch.cpp  $(OBJECTS) -Iinclude

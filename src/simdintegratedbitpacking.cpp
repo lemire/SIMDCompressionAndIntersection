@@ -24622,8 +24622,6 @@ __m128i iunpack32(__m128i  , const  __m128i   *in, uint32_t     *_out) {
         _mm_store_si128(mout++, invec);
     }
     return invec;
-    //memcpy(_out,in,128*4);
-    //return _mm_load_si128(in+31);
 }
 
 
