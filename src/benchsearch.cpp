@@ -30,7 +30,7 @@ typedef clock_t time_snap_t;
 template<typename T>
 int benchmarkSelect() {
 	T codec;
-	static const size_t N = 128;
+	static const size_t N = 256;
     uint32_t buffer[N];
     uint32_t backbuffer[N];
     uint32_t b;
@@ -64,12 +64,14 @@ int benchmarkSelect() {
 
         /* delta-encode to 'i' bits */
         size_t nvalue = 2 * N;
+
         codec.encodeArray(buffer, N,out,nvalue);
 
         S1 = time_snap();
         for (i = 0; i < N * 10; i++) {
         	uint32_t valretrieved =  codec.select(out, i % N);
             if(valretrieved != buffer[i%N]) {
+                printf("# Bug\n");
             	return -1;
             }
         }
@@ -78,6 +80,7 @@ int benchmarkSelect() {
         	size_t recovlength = N;
         	codec.decodeArray(out,nvalue,backbuffer,recovlength);
             if(backbuffer[i % N] != buffer[i % N]) {
+            	printf("# Bug\n");
             	return -1;
             }
         }
@@ -141,7 +144,7 @@ int lower_bound(uint32_t * A, uint32_t key, int imin, int imax)
 
 template<typename T>
 int benchmarkSearch() {
-	static const size_t N = 128;
+	static const size_t N = 256;
 	T codec;
 	uint32_t buffer[N];
     uint32_t backbuffer[N];

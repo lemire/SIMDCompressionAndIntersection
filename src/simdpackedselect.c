@@ -7705,7 +7705,7 @@ simdselectd1(__m128i * initOffset, const __m128i *in, uint32_t bit, int slot)
 {
    slot &= 127; /* to avoid problems */
    switch (bit) {
-    case 0:  break;
+    case 0: return _mm_extract_epi32(*initOffset,3); break;
 
     case 1: return iunpackselect1(initOffset, in, slot); break;
 
