@@ -45,7 +45,6 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
 
 
     schemes["copy"] = shared_ptr<IntegerCODEC> (new JustCopy());
-
     schemes["varint"] = shared_ptr<IntegerCODEC> (new VariableByte<true> ());
     schemes["vbyte"] = shared_ptr<IntegerCODEC> (new VByte<true> ());
     schemes["maskedvbyte"] = shared_ptr<IntegerCODEC> (
@@ -56,7 +55,6 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
 
     schemes["s4-fastpfor-d4"] = shared_ptr<IntegerCODEC> (
                                    new CompositeCodec<SIMDFastPFor<8,CoarseDelta4SIMD> , leftovercodec> ());
-
     schemes["s4-fastpfor-dm"]
         = shared_ptr<IntegerCODEC> (
               new CompositeCodec<SIMDFastPFor<8,Max4DeltaSIMD> ,
@@ -98,7 +96,6 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     schemes["s4-bp128-dm"] = shared_ptr<IntegerCODEC> (
                                 new CompositeCodec <SIMDBinaryPacking<SIMDIntegratedBlockPacker<
                                 Max4DeltaSIMD, true>>, leftovercodec> ());
-
     return schemes;
 }
 

@@ -29,6 +29,20 @@ public:
                      size_t &nvalue) {
         uint8_t *bout = reinterpret_cast<uint8_t *>(out);
         const uint8_t * const initbout = reinterpret_cast<uint8_t *>(out);
+        size_t bytenvalue = nvalue * sizeof(uint32_t);
+        encodeToByteArray(in, length, bout,bytenvalue);
+        bout += bytenvalue;
+        while (needPaddingTo32Bits(bout)) {
+            *bout++ = 0;
+        }
+        const size_t storageinbytes = bout - initbout;
+        assert((storageinbytes % 4) == 0);
+        nvalue = storageinbytes / 4;
+    }
+
+    void encodeToByteArray(uint32_t *in, const size_t length, uint8_t *bout,
+                     size_t &nvalue) {
+        const uint8_t * const initbout = bout;
         uint32_t prev = 0;
         for (size_t k = 0; k < length; ++k) {
             const uint32_t val = delta ? in[k] - prev : in[k];
@@ -75,24 +89,23 @@ public:
                 ++bout;
             }
         }
-        while (needPaddingTo32Bits(bout)) {
-            *bout++ = 0;
-        }
-        const size_t storageinbytes = bout - initbout;
-        assert((storageinbytes % 4) == 0);
-        nvalue = storageinbytes / 4;
+        nvalue =  bout - initbout;
     }
 
     const uint32_t *decodeArray(const uint32_t *in, const size_t length,
                                 uint32_t *out, size_t &nvalue) {
+    	const uint32_t * finalin =  (const uint32_t *) decodeFromByteArray((const uint8_t *)in, length * sizeof(uint32_t),out,nvalue);
+    	return finalin;
+    }
+
+    const uint8_t *decodeFromByteArray(const uint8_t *inbyte, const size_t length,
+                                uint32_t *out, size_t &nvalue) {
         uint32_t prev = 0;
         if (length == 0) {
             nvalue = 0;
-            return in; //abort
+            return inbyte; //abort
         }
-        const uint8_t *inbyte = reinterpret_cast<const uint8_t *>(in);
-        const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(in
-                                        + length);
+        const uint8_t * const endbyte = inbyte + length;
         const uint32_t * const initout(out);
         // this assumes that there is a value to be read
 
@@ -191,8 +204,9 @@ public:
             }
         }
         nvalue = out - initout;
-        return in + length;
+        return inbyte ;
     }
+
 
     // Performs a lower bound find in the encoded array.
     // Returns the index
@@ -445,9 +459,24 @@ class VByte: public IntegerCODEC {
 public:
     void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
                      size_t &nvalue) {
+        uint8_t *bout = reinterpret_cast<uint8_t *>(out);
         const uint8_t * const initbout = reinterpret_cast<uint8_t *>(out);
-        uint8_t * bout = reinterpret_cast<uint8_t *>(out);
+        size_t bytenvalue = nvalue * sizeof(uint32_t);
+        encodeToByteArray(in, length, bout,bytenvalue);
+        bout += bytenvalue;
+        while (needPaddingTo32Bits(bout)) {
+            *bout++ = 0xFF;
+        }
+        const size_t storageinbytes = bout - initbout;
+        assert((storageinbytes % 4) == 0);
+        nvalue = storageinbytes / 4;
+    }
+
+
+    void encodeToByteArray(uint32_t *in, const size_t length, uint8_t *bout,
+                     size_t &nvalue) {
         uint32_t prev = 0;
+        const uint8_t * const initbout = bout;
         for (size_t k = 0; k < length; ++k) {
             const uint32_t val = delta ? (in[k] - prev) : in[k];
             if (delta)
@@ -493,24 +522,24 @@ public:
                 ++bout;
             }
         }
-        while (needPaddingTo32Bits(bout)) {
-            *bout++ = 0xFFU;
-            ;
-        }
-        const size_t storageinbytes = bout - initbout;
-        nvalue = storageinbytes / 4;
+        nvalue =  bout - initbout;
+
     }
 
     const uint32_t *decodeArray(const uint32_t *in, const size_t length,
                                 uint32_t *out, size_t &nvalue) {
+    	const uint32_t * finalin =   (const uint32_t *) decodeFromByteArray((const uint8_t *)in, length * sizeof(uint32_t),out,nvalue);
+        return finalin;
+    }
+
+    const uint8_t *decodeFromByteArray(const uint8_t *inbyte, const size_t length,
+                                uint32_t *out, size_t &nvalue) {
         uint32_t prev = 0;
         if (length == 0) {
             nvalue = 0;
-            return in; //abort
+            return inbyte; //abort
         }
-        const uint8_t *inbyte = reinterpret_cast<const uint8_t *>(in);
-        const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(in
-                                        + length);
+        const uint8_t * const endbyte = inbyte + length;
         const uint32_t * const initout(out);
         // this assumes that there is a value to be read
 
@@ -609,11 +638,12 @@ public:
             }
         }
         nvalue = out - initout;
-        return in + length;
+        return inbyte;
     }
 
+
     // Performs a lower bound find in the encoded array.
-    // Returns the index
+    // Returns the index and the value found (presult)
     size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
                           uint32_t *presult) {
         uint32_t prev = 0;
