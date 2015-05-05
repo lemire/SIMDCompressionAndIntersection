@@ -225,7 +225,6 @@ public:
             }
             assert(false);// we should never get here
         }// else
-
         // we finish with the uncommon case
         while (i + 3 < index) { // a single branch will do for this case (bulk of the computation)
             inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
@@ -241,7 +240,7 @@ public:
                 return (out[index - (i - 4)]);
         }
         {
-            nvalue = nvalue - 1 - i;
+        	nvalue = nvalue - i;
             inbyte = decodeCarefully(inbyte, &initial, out, &nvalue);
             if (index == i)
                 return (out[0]);

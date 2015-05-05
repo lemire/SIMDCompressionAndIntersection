@@ -354,6 +354,35 @@ void testSelectSimple() {
     vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
     size_t nvalue  = compressedbuffer.size();
     codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+    compressedbuffer.resize(nvalue);
+    compressedbuffer.shrink_to_fit();
+
+    for (int i = 0; i < max; i++) {
+        uint32_t k = codec.select(compressedbuffer.data(), i);
+        if (k != (uint32_t)i) {
+            cout << codec.name() << "::select failed with " << i << endl;
+            throw std::logic_error("bug");
+        }
+    }
+
+    cout << codec.name() << "::select ok" << endl;
+}
+
+
+template<typename T>
+void testSelectSimpleOdd() {
+	T codec;
+    const int max = 259;
+    uint32_t ints[max];
+    for (int i = 0; i < max; i++)
+        ints[i] = i;
+
+    // encode in a buffer
+    vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
+    size_t nvalue  = compressedbuffer.size();
+    codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+    compressedbuffer.resize(nvalue);
+    compressedbuffer.shrink_to_fit();
 
     for (int i = 0; i < max; i++) {
         uint32_t k = codec.select(compressedbuffer.data(), i);
@@ -415,6 +444,12 @@ int main() {
     testSelectSimple<VByte<true>>();
     testSelectSimple<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
                                     RegularDeltaSIMD, true>>>();
+
+    testSelectSimpleOdd<VarIntGB<true>>();
+    testSelectSimpleOdd<MaskedVByte<true>>();
+    testSelectSimpleOdd<VariableByte<true>>();
+    testSelectSimpleOdd<VByte<true>>();
+
 
     testSelectAdvanced<VarIntGB<true>>();
     testSelectAdvanced<MaskedVByte<true>>();
