@@ -40,6 +40,49 @@ public:
         nvalue = storageinbytes / 4;
     }
 
+    // write one compressed integer (without differential coding)
+	// returns the number of bytes written
+	size_t encodeOneIntegerToByteArray(uint32_t val, uint8_t *bout) {
+		const uint8_t * const initbout = bout;
+		if (val < (1U << 7)) {
+			*bout = static_cast<uint8_t>(val | (1U << 7));
+			++bout;
+		} else if (val < (1U << 14)) {
+			*bout = extract7bits < 0 > (val);
+			++bout;
+			*bout = extract7bitsmaskless < 1 > (val) | (1U << 7);
+			++bout;
+		} else if (val < (1U << 21)) {
+			*bout = extract7bits < 0 > (val);
+			++bout;
+			*bout = extract7bits < 1 > (val);
+			++bout;
+			*bout = extract7bitsmaskless < 2 > (val) | (1U << 7);
+			++bout;
+		} else if (val < (1U << 28)) {
+			*bout = extract7bits < 0 > (val);
+			++bout;
+			*bout = extract7bits < 1 > (val);
+			++bout;
+			*bout = extract7bits < 2 > (val);
+			++bout;
+			*bout = extract7bitsmaskless < 3 > (val) | (1U << 7);
+			++bout;
+		} else {
+			*bout = extract7bits < 0 > (val);
+			++bout;
+			*bout = extract7bits < 1 > (val);
+			++bout;
+			*bout = extract7bits < 2 > (val);
+			++bout;
+			*bout = extract7bits < 3 > (val);
+			++bout;
+			*bout = extract7bitsmaskless < 4 > (val) | (1U << 7);
+			++bout;
+		}
+		return bout - initbout;
+	}
+
     void encodeToByteArray(uint32_t *in, const size_t length, uint8_t *bout,
                      size_t &nvalue) {
         const uint8_t * const initbout = bout;
@@ -97,6 +140,37 @@ public:
     	decodeFromByteArray((const uint8_t *)in, length * sizeof(uint32_t),out,nvalue);
     	return in + length;
     }
+
+    // determine how many padding bytes were used
+    int paddingBytes(const  uint32_t *in, const size_t length) {
+    	if(length == 0) return 0;
+    	uint32_t lastword = in[length - 1];
+        if (lastword < (1U << 8)) {
+        	return 3;
+        } else if (lastword < (1U << 16)) {
+        	return 2;
+        } else if (lastword < (1U << 24)) {
+        	return 1;
+        }
+        return 0;
+    }
+
+
+    // how many bytes are required to store this integer?
+    int storageCost(uint32_t val) {
+        if (val < (1U << 7)) {
+        	return 1;
+        } else if (val < (1U << 14)) {
+        	return 2;
+        } else if (val < (1U << 21)) {
+        	return 3;
+        } else if (val < (1U << 28)) {
+        	return 4;
+        } else {
+        	return 5;
+        }
+    }
+
 
     const uint8_t *decodeFromByteArray(const uint8_t *inbyte, const size_t length,
                                 uint32_t *out, size_t &nvalue) {
@@ -376,6 +450,109 @@ public:
         return i;
     }
 
+    // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
+    size_t insert(uint32_t *in, const size_t length, uint32_t key) {
+    	size_t bytesize = length * 4;
+    	bytesize -= paddingBytes(in,length);
+    	uint8_t * bytein = (uint8_t *) in;
+    	uint8_t * byteininit = bytein;
+    	size_t bl = insert(bytein, bytesize,  key);
+		bytein += bl;
+
+        while (needPaddingTo32Bits(bytein)) {
+        	*bytein++ = 0;
+        }
+        size_t storageinbytes = bytein - byteininit;
+        assert((storageinbytes % 4) == 0);
+        return storageinbytes / 4;
+    }
+
+
+    // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
+    // the new size is returned
+    size_t insert(uint8_t *inbyte, const size_t length, uint32_t key) {
+        uint32_t prev = 0;
+        assert(delta);
+        const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(inbyte
+                                        + length);
+        // this assumes that there is a value to be read
+
+        while (endbyte > inbyte + 5) {
+                uint8_t c;
+                uint32_t v;
+
+                c = inbyte[0];
+                v = c & 0x7F;
+                if (c >= 128) {
+                    inbyte += 1;
+                    prev = v + prev;
+                    if (prev >= key) {
+                    	return length + __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+                    }
+                    continue;
+                }
+
+                c = inbyte[1];
+                v |= (c & 0x7F) << 7;
+                if (c >= 128) {
+                    inbyte += 2;
+                    prev = v + prev;
+                    if (prev >= key) {
+                    	return length + __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+                    }
+                    continue;
+                }
+
+                c = inbyte[2];
+                v |= (c & 0x7F) << 14;
+                if (c >= 128) {
+                    inbyte += 3;
+                    prev = v + prev;
+                    if (prev >= key) {
+                    	return length + __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+                    }
+                    continue;
+                }
+
+                c = inbyte[3];
+                v |= (c & 0x7F) << 21;
+                if (c >= 128) {
+                    inbyte += 4;
+                    prev = v + prev;
+                    if (prev >= key) {
+                    	return length + __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+                    }
+                    continue;
+                }
+
+                c = inbyte[4];
+                inbyte += 5;
+                v |= (c & 0x0F) << 28;
+                prev = v + prev;
+                if (prev >= key) {
+                	return length + __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+                }
+        }
+        while (endbyte > inbyte) {
+            unsigned int shift = 0;
+            for (uint32_t v = 0; endbyte > inbyte; shift += 7) {
+                uint8_t c = *inbyte++;
+                v += ((c & 127) << shift);
+                if ((c & 128)) {
+                        prev = v + prev;
+                        if (prev >= key) {
+                        	return length + __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+                        }
+                    break;
+                }
+            }
+        }
+        // if we make it here, then we need to append
+        assert(key >= prev);
+        return length + encodeOneIntegerToByteArray(key - prev,inbyte);
+    }
+
+
     // Returns a decompressed value in an encoded array
     // could be greatly optimized in the non-differential coding case: currently just for delta coding
     uint32_t select(uint32_t *in, size_t index) {
@@ -443,6 +620,23 @@ public:
             return "VariableByte";
     }
 private:
+
+    // convenience function used by insert, writes key and newvalue to compressed stream, and return
+    // extra storage used, pointer should be right after where nextvalue is right now
+    size_t __insert(uint8_t *in, uint32_t previous, uint32_t key, uint32_t nextvalue, size_t followingbytes) {
+    	assert(nextvalue >= key);
+    	assert(key >= previous);
+    	size_t oldstorage = storageCost(nextvalue - previous);
+    	size_t newstorage = storageCost(nextvalue - key) + storageCost(key - previous);
+    	assert(newstorage > oldstorage);
+    	std::memmove(in + newstorage - oldstorage, in,followingbytes);
+    	uint8_t *newin = in - oldstorage;
+    	newin += encodeOneIntegerToByteArray(key - previous, newin);
+    	newin += encodeOneIntegerToByteArray(nextvalue - key, newin);
+    	assert(newin == in + newstorage - oldstorage);
+    	return newstorage - oldstorage;
+    }
+
     template<uint32_t i>
     uint8_t extract7bits(const uint32_t val) {
         return static_cast<uint8_t>((val >> (7 * i)) & ((1U << 7) - 1));
@@ -526,11 +720,87 @@ public:
 
     }
 
+	// write one compressed integer (without differential coding)
+	// returns the number of bytes written
+	size_t encodeOneIntegerToByteArray(uint32_t val, uint8_t *bout) {
+		const uint8_t * const initbout = bout;
+		if (val < (1U << 7)) {
+			*bout = val & 0x7F;
+			++bout;
+		} else if (val < (1U << 14)) {
+			*bout = static_cast<uint8_t>((val & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(val >> 7);
+			++bout;
+		} else if (val < (1U << 21)) {
+			*bout = static_cast<uint8_t>((val & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(((val >> 7) & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(val >> 14);
+			++bout;
+		} else if (val < (1U << 28)) {
+			*bout = static_cast<uint8_t>((val & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(((val >> 7) & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(((val >> 14) & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(val >> 21);
+			++bout;
+		} else {
+			*bout = static_cast<uint8_t>((val & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(((val >> 7) & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(((val >> 14) & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(((val >> 21) & 0x7F) | (1U << 7));
+			++bout;
+			*bout = static_cast<uint8_t>(val >> 28);
+			++bout;
+		}
+		return bout - initbout;
+	}
+
+
+    // determine how many padding bytes were used
+    int paddingBytes(const  uint32_t *in, const size_t length) {
+    	if(length == 0) return 0;
+    	uint32_t lastword = in[length - 1];
+    	lastword = ~lastword;
+        if (lastword < (1U << 8)) {
+        	return 3;
+        } else if (lastword < (1U << 16)) {
+        	return 2;
+        } else if (lastword < (1U << 24)) {
+        	return 1;
+        }
+        return 0;
+    }
+
     const uint32_t *decodeArray(const uint32_t *in, const size_t length,
                                 uint32_t *out, size_t &nvalue) {
     	decodeFromByteArray((const uint8_t *)in, length * sizeof(uint32_t),out,nvalue);
         return in + length;
     }
+
+
+    // how many bytes are required to store this integer?
+    int storageCost(uint32_t val) {
+        if (val < (1U << 7)) {
+        	return 1;
+        } else if (val < (1U << 14)) {
+        	return 2;
+        } else if (val < (1U << 21)) {
+        	return 3;
+        } else if (val < (1U << 28)) {
+        	return 4;
+        } else {
+        	return 5;
+        }
+    }
+
 
     const uint8_t *decodeFromByteArray(const uint8_t *inbyte, const size_t length,
                                 uint32_t *out, size_t &nvalue) {
@@ -811,6 +1081,115 @@ public:
     }
 
 
+    // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
+    size_t insert(uint32_t *in, const size_t length, uint32_t key) {
+    	size_t bytesize = length * 4;
+    	bytesize -= paddingBytes(in,length);
+    	uint8_t * bytein = (uint8_t *) in;
+    	uint8_t * byteininit = bytein;
+    	bytein += insert(bytein, bytesize,  key);
+
+        while (needPaddingTo32Bits(bytein)) {
+            *bytein++ = 0xFF;
+        }
+        size_t storageinbytes = bytein - byteininit;
+        assert((storageinbytes % 4) == 0);
+        return storageinbytes / 4;
+    }
+
+    // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
+    // the new size is returned
+    size_t insert(uint8_t *inbyte, const size_t length, uint32_t key) {
+        uint32_t prev = 0;
+        assert(delta);
+        const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(inbyte
+                                        + length);
+        // this assumes that there is a value to be read
+
+		while (endbyte > inbyte + 5) {
+			uint8_t c;
+			uint32_t v;
+
+			c = inbyte[0];
+			v = c & 0x7F;
+			if (c < 128) {
+				inbyte += 1;
+				prev = v + prev;
+				if (prev >= key) {
+					return length
+							+ __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+				}
+				continue;
+			}
+
+			c = inbyte[1];
+			v |= (c & 0x7F) << 7;
+			if (c < 128) {
+				inbyte += 2;
+				prev = v + prev;
+				if (prev >= key) {
+					return length
+							+ __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+				}
+				continue;
+			}
+
+			c = inbyte[2];
+			v |= (c & 0x7F) << 14;
+			if (c < 128) {
+				inbyte += 3;
+				prev = v + prev;
+				if (prev >= key) {
+					return length
+							+ __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+				}
+				continue;
+			}
+
+			c = inbyte[3];
+			v |= (c & 0x7F) << 21;
+			if (c < 128) {
+				inbyte += 4;
+				prev = v + prev;
+				if (prev >= key) {
+					return length
+							+ __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+				}
+				continue;
+			}
+
+			c = inbyte[4];
+			inbyte += 5;
+			v |= (c & 0x0F) << 28;
+			prev = v + prev;
+			if (prev >= key) {
+				return length + __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+			}
+		}
+		while (endbyte > inbyte) {
+			unsigned int shift = 0;
+			for (uint32_t v = 0; endbyte > inbyte; shift += 7) {
+				uint8_t c = *inbyte++;
+				v += ((c & 127) << shift);
+				if ((c < 128)) {
+					prev = v + prev;
+					if (prev >= key) {
+						return length
+								+ __insert(inbyte, prev - v, key, prev,
+										endbyte - inbyte);
+
+					}
+					break;
+				}
+			}
+		}
+		// if we make it here, then we need to append
+		assert(key >= prev);
+		return length + encodeOneIntegerToByteArray(key - prev, inbyte);
+    }
+
+
+
     // Returns a decompressed value in an encoded array
     // could be greatly optimized in the non-differential coding case: currently just for delta coding
     uint32_t select(uint32_t *in, size_t index) {
@@ -878,6 +1257,24 @@ public:
     }
 
 private:
+
+    // convenience function used by insert, writes key and newvalue to compressed stream, and return
+    // extra storage used, pointer should be right after where nextvalue is right now
+    size_t __insert(uint8_t *in, uint32_t previous, uint32_t key, uint32_t nextvalue, size_t followingbytes) {
+    	assert(nextvalue >= key);
+    	assert(key >= previous);
+    	size_t oldstorage = storageCost(nextvalue - previous);
+    	size_t newstorage = storageCost(nextvalue - key) + storageCost(key - previous);
+    	assert(newstorage > oldstorage);
+    	std::memmove(in + newstorage - oldstorage, in,followingbytes);
+    	uint8_t *newin = in - oldstorage;
+    	newin += encodeOneIntegerToByteArray(key - previous, newin);
+    	newin += encodeOneIntegerToByteArray(nextvalue - key, newin);
+    	assert(newin == in + newstorage - oldstorage);
+    	return newstorage - oldstorage;
+    }
+
+
     template<uint32_t i>
     uint8_t extract7bits(const uint32_t val) {
         return static_cast<uint8_t>((val >> (7 * i)) & ((1U << 7) - 1));

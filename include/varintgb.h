@@ -99,6 +99,19 @@ public:
         nvalue = storageinbytes / 4;
     }
 
+    // determine how many padding bytes were used
+        int paddingBytes(const  uint32_t *in, const size_t length) {
+        	uint32_t lastword = in[length - 1];
+            if (lastword < (1U << 8)) {
+            	return 3;
+            } else if (lastword < (1U << 16)) {
+            	return 2;
+            } else if (lastword < (1U << 24)) {
+            	return 1;
+            }
+            return 0;
+        }
+
     const uint32_t * decodeArray(const uint32_t *in, const size_t length,
                                  uint32_t *out, size_t & nvalue) {
         uint32_t prev = 0; // for delta

@@ -342,6 +342,49 @@ void testFindAdvanced() {
     cout << codec.name() << "::findLowerBoundDelta ok" << endl;
 }
 
+
+
+template<typename T>
+void testInsert() {
+	T codec;
+	const int max = 256;
+	srand(0);
+	uint32_t ints[max];
+	for (int i = 0; i < max; i++)
+		ints[i] = rand();
+	// encode in a buffer
+	vector < uint32_t > compressedbuffer(max * sizeof(uint32_t) + 1024);
+	vector < uint32_t > decomp(max);
+	vector < uint32_t > sofar;
+
+	size_t currentsize = 0;
+	for (int i = 0; i < max; i++) {
+		currentsize = codec.insert(compressedbuffer.data(), currentsize, ints[i]);
+		size_t howmany = decomp.size();
+		codec.decodeArray(compressedbuffer.data(),currentsize,decomp.data(),howmany);
+		sofar.push_back(ints[i]);
+		std::sort(sofar.begin(),sofar.end());
+		assert(howmany == sofar.size());
+		for(size_t j = 0; j < howmany; ++j) {
+			if(decomp[j] != sofar[j]) {
+				cout << codec.name() << "::insert failed with i = " << i << ", j = " << j << endl;
+				for(size_t j = 0; j < howmany; ++j) {
+					cout << j << " -->  stored: " << decomp[j] << " correct: " << sofar[j] << endl;
+				}
+				for(size_t j = 0; j < currentsize * 4; ++j) {
+					cout << (uint32_t)(((uint8_t *) compressedbuffer.data()) [j]) << " ";
+				}
+				cout << endl;
+
+				throw std::logic_error("bug");
+			}
+		}
+	}
+
+	cout << codec.name() << "::insert ok" << endl;
+}
+
+
 template<typename T>
 void testSelectSimple() {
 	T codec;
@@ -438,6 +481,12 @@ void testSelectAdvanced() {
 }
 
 int main() {
+
+
+    testInsert<VariableByte<true>>();
+    testInsert<VByte<true>>();
+
+
     testSelectSimple<VarIntGB<true>>();
     testSelectSimple<MaskedVByte<true>>();
     testSelectSimple<VariableByte<true>>();
