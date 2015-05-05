@@ -495,11 +495,13 @@ int main() {
     testSelectSimple<VByte<true>>();
     testSelectSimple<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
                                     RegularDeltaSIMD, true>>>();
+    testSelectSimple<StreamVByteD1>();
 
     testSelectSimpleOdd<VarIntGB<true>>();
     testSelectSimpleOdd<MaskedVByte<true>>();
     testSelectSimpleOdd<VariableByte<true>>();
     testSelectSimpleOdd<VByte<true>>();
+    testSelectSimpleOdd<StreamVByteD1>();
 
 
     testSelectAdvanced<VarIntGB<true>>();
@@ -508,6 +510,7 @@ int main() {
     testSelectAdvanced<VByte<true>>();
     testSelectAdvanced<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
                                     RegularDeltaSIMD, true>>>();
+    testSelectAdvanced<StreamVByteD1>();
 
     testFindSimple<VarIntGB<true>>();
     testFindSimple<MaskedVByte<true>>();
@@ -515,6 +518,7 @@ int main() {
     testFindSimple<VByte<true>>();
     testFindSimple<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
                                     RegularDeltaSIMD, true>>>();
+    testFindSimple<StreamVByteD1>();
 
     testFindAdvanced<VarIntGB<true>>();
     testFindAdvanced<MaskedVByte<true>>();
@@ -522,6 +526,7 @@ int main() {
     testFindAdvanced<VByte<true>>();
     testFindAdvanced<SIMDBinaryPacking<SIMDIntegratedBlockPacker<
                                     RegularDeltaSIMD, true>>>();
+    testFindAdvanced<StreamVByteD1>();
 
     for (string n : IntersectionFactory::allNames()) {
         int error = 0;

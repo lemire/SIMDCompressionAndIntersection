@@ -795,8 +795,8 @@ static inline int find_lower_bound(uint32_t *out, uint32_t length, uint32_t key)
   return (lower_bound(out, key, 0, length));
 }
 
-int svb_find_avx_d1_init(uint8_t *restrict keyPtr,
-                         uint8_t *restrict dataPtr, uint64_t count,
+int svb_find_avx_d1_init(uint8_t *keyPtr,
+                         uint8_t *dataPtr, uint64_t count,
                          uint32_t prev, uint32_t key, uint32_t *presult) {
     uint32_t out[32];
 	uint64_t keybytes = count / 4; // number of key bytes
@@ -1013,7 +1013,7 @@ int svb_find_avx_d1_init(uint8_t *restrict keyPtr,
     return (count);
 }
 
-int svb_find_scalar_d1_init(uint8_t *restrict keyPtr,
+int svb_find_scalar_d1_init(uint8_t *keyPtr,
                          uint8_t *dataPtr, uint64_t count,
                          uint32_t prev, uint32_t searchkey, uint32_t *presult) {
     uint8_t shift = 0;
@@ -1038,7 +1038,7 @@ int svb_find_scalar_d1_init(uint8_t *restrict keyPtr,
 }
 
 
-uint32_t svb_select_scalar_d1_init(uint8_t *restrict keyPtr, uint8_t *dataPtr,
+uint32_t svb_select_scalar_d1_init(uint8_t *keyPtr, uint8_t *dataPtr,
                           uint64_t count, uint32_t prev, int slot) {
     uint8_t shift = 0;
     uint32_t key = *keyPtr++;
@@ -1058,8 +1058,8 @@ uint32_t svb_select_scalar_d1_init(uint8_t *restrict keyPtr, uint8_t *dataPtr,
     return prev;
 }
 
-uint32_t svb_select_avx_d1_init(uint8_t *restrict keyPtr,
-                         uint8_t *restrict dataPtr, uint64_t count,
+uint32_t svb_select_avx_d1_init(uint8_t *keyPtr,
+                         uint8_t *dataPtr, uint64_t count,
                          uint32_t prev, int slot) {
     uint32_t out[32];
 	uint64_t keybytes = count / 4; // number of key bytes

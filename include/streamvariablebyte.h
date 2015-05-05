@@ -18,7 +18,10 @@ uint64_t svb_encode(uint8_t *out, const uint32_t *in, uint32_t count,
                     int delta, int type);
 uint8_t *svb_decode_avx_simple(uint32_t *out, uint8_t * keyPtr, uint8_t * dataPtr, uint64_t count);
 uint8_t *svb_decode_avx_d1_simple(uint32_t *out, uint8_t * keyPtr, uint8_t * dataPtr, uint64_t count);
-
+uint32_t svb_select_avx_d1_init(uint8_t *keyPtr, uint8_t *dataPtr,
+                         uint64_t count, uint32_t prev, int slot);
+int svb_find_avx_d1_init(uint8_t *keyPtr, uint8_t *dataPtr, uint64_t count,
+                         uint32_t prev, uint32_t key, uint32_t *presult);
 }
 
 
@@ -80,6 +83,25 @@ public:
         return reinterpret_cast<const uint32_t *>((reinterpret_cast<uintptr_t>(
         		svb_decode_avx_d1_simple(out, keyPtr, dataPtr, count))
                 + 3) & ~3);
+    }
+
+    uint32_t select(const uint32_t *in, int slot) {
+        uint32_t count = *(uint32_t *)in;  // first 4 bytes is number of ints
+        assert(slot < (int)count);
+        uint8_t *keyPtr = (uint8_t *)in + 4; // full list of keys is next
+        uint32_t keyLen = ((count + 3) / 4);   // 2-bits per key (rounded up)
+        uint8_t *dataPtr = keyPtr + keyLen;    // data starts at end of keys
+        return svb_select_avx_d1_init(keyPtr, dataPtr, count, 0, slot);
+    }
+
+    uint32_t findLowerBound(const uint32_t *in, uint32_t /* count */,
+                           uint32_t key, uint32_t *presult) {
+        uint32_t count = *(uint32_t *)in;  // first 4 bytes is number of ints
+        uint8_t *keyPtr = (uint8_t *)in + 4; // full list of keys is next
+        uint32_t keyLen = ((count + 3) / 4);   // 2-bits per key (rounded up)
+        uint8_t *dataPtr = keyPtr + keyLen;    // data starts at end of keys
+        return (uint32_t)svb_find_avx_d1_init(keyPtr, dataPtr, count,
+                         0, key, presult);
     }
 
     std::string name() const {
