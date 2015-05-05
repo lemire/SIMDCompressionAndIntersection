@@ -94,8 +94,8 @@ public:
 
     const uint32_t *decodeArray(const uint32_t *in, const size_t length,
                                 uint32_t *out, size_t &nvalue) {
-    	const uint32_t * finalin =  (const uint32_t *) decodeFromByteArray((const uint8_t *)in, length * sizeof(uint32_t),out,nvalue);
-    	return finalin;
+    	decodeFromByteArray((const uint8_t *)in, length * sizeof(uint32_t),out,nvalue);
+    	return in + length;
     }
 
     const uint8_t *decodeFromByteArray(const uint8_t *inbyte, const size_t length,
@@ -528,8 +528,8 @@ public:
 
     const uint32_t *decodeArray(const uint32_t *in, const size_t length,
                                 uint32_t *out, size_t &nvalue) {
-    	const uint32_t * finalin =   (const uint32_t *) decodeFromByteArray((const uint8_t *)in, length * sizeof(uint32_t),out,nvalue);
-        return finalin;
+    	decodeFromByteArray((const uint8_t *)in, length * sizeof(uint32_t),out,nvalue);
+        return in + length;
     }
 
     const uint8_t *decodeFromByteArray(const uint8_t *inbyte, const size_t length,
