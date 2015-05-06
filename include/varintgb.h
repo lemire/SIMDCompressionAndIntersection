@@ -285,19 +285,19 @@ public:
         uint32_t nvalue = *in;
         inbyte += 4; // skip nvalue
         if(index + 3 < nvalue) {// this common case can be done with fewer branches
-            while(true) {
-                inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
-                         decodeGroupVarInt(inbyte, out); // note: delta known at compile time: this is not a branch
+            while(i + 4 <= index) {
+                inbyte = delta ? scanGroupVarIntDelta(inbyte, &initial) :
+                         scanGroupVarInt(inbyte); // note: delta known at compile time: this is not a branch
                 i += 4;
-                if (i > index)
-                    return (out[index - (i - 4)]);
             }
-            assert(false);// we should never get here
+            inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
+                     decodeGroupVarInt(inbyte, out); // note: delta known at compile time: this is not a branch
+            return (out[index - i]);
         }// else
         // we finish with the uncommon case
         while (i + 3 < index) { // a single branch will do for this case (bulk of the computation)
-            inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
-                     decodeGroupVarInt(inbyte, out);
+            inbyte = delta ? scanGroupVarIntDelta(inbyte, &initial) :
+                     scanGroupVarInt(inbyte);
             i += 4;
         }
         // lots of branching ahead...
@@ -323,7 +323,6 @@ public:
         assert(false);// we should never get here
         return (0);
     }
-
 
 
     string name() const {
@@ -420,6 +419,45 @@ private:
     }
 
 
+    const uint8_t* scanGroupVarIntDelta(const uint8_t* in, uint32_t * val) {
+		const uint32_t sel = *in++;
+		if (sel == 0) {
+			*val += static_cast<uint32_t>(in[0]);
+			*val += static_cast<uint32_t>(in[1]);
+			*val += static_cast<uint32_t>(in[2]);
+			*val += static_cast<uint32_t>(in[3]);
+			return in + 4;
+		}
+		const uint32_t sel1 = (sel & 3);
+		*val += *(reinterpret_cast<const uint32_t*>(in)) & mask[sel1];
+		in += sel1 + 1;
+		const uint32_t sel2 = ((sel >> 2) & 3);
+		*val += *(reinterpret_cast<const uint32_t*>(in)) & mask[sel2];
+		in += sel2 + 1;
+		const uint32_t sel3 = ((sel >> 4) & 3);
+		*val += *(reinterpret_cast<const uint32_t*>(in)) & mask[sel3];
+		in += sel3 + 1;
+		const uint32_t sel4 = (sel >> 6);
+		*val += *(reinterpret_cast<const uint32_t*>(in)) & mask[sel4];
+		in += sel4 + 1;
+		return in;
+	}
+
+    const uint8_t* scanGroupVarInt(const uint8_t* in) {
+		const uint32_t sel = *in++;
+		if (sel == 0) {
+			return in + 4;
+		}
+		const uint32_t sel1 = (sel & 3);
+		in += sel1 + 1;
+		const uint32_t sel2 = ((sel >> 2) & 3);
+		in += sel2 + 1;
+		const uint32_t sel3 = ((sel >> 4) & 3);
+		in += sel3 + 1;
+		const uint32_t sel4 = (sel >> 6);
+		in += sel4 + 1;
+		return in;
+	}
 
 };
 
