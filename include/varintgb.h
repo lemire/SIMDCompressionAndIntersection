@@ -210,70 +210,101 @@ public:
     }
 
 
-
     // Performs a lower bound find in the encoded array.
     // Returns the index
-    size_t findLowerBound(const uint32_t *in, const size_t length,
-                          uint32_t key, uint32_t *presult) {
-        const uint8_t *inbyte = reinterpret_cast<const uint8_t *> (in);
-        uint32_t out[4] = {0};
-        size_t i = 0;
-        uint32_t initial = 0;
-        uint32_t nvalue = *in;
+    // assumes delta coding was used
+	size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
+			uint32_t *presult) {
+		const uint8_t *inbyte = reinterpret_cast<const uint8_t *>(in);
+		uint32_t out[4] = { 0 };
+		assert(delta);
+		size_t i = 0;
+		uint32_t initial = 0;
+		uint32_t nvalue = *in;
 
-        inbyte += 4; // skip nvalue
+		inbyte += 4; // skip nvalue
 
-        const uint8_t *const endbyte = reinterpret_cast<const uint8_t *> (in
-                                       + length);
+		const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(in
+				+ length);
+		while (i + 3 < nvalue) {
+			uint32_t gap1, gap2, gap3, gap4;
+			uint32_t gap12, gap34;
 
-        while (i + 3 < nvalue) {
-            inbyte = delta ? decodeGroupVarIntDelta(inbyte, &initial, out) :
-                     decodeGroupVarInt(inbyte, out);
+			const uint32_t sel = *inbyte++;
+			if (sel == 0) {
+				gap1 = static_cast<uint32_t>(inbyte[0]);
+				gap2 = static_cast<uint32_t>(inbyte[1]);
+				gap12 = gap1 + gap2;
+				gap3 = static_cast<uint32_t>(inbyte[2]);
+				gap4 = static_cast<uint32_t>(inbyte[3]);
+				gap34 = gap3 + gap4;
+				inbyte += 4;
+			} else {
+				const uint32_t sel1 = (sel & 3);
+				gap1 = *(reinterpret_cast<const uint32_t*>(inbyte))
+						& mask[sel1];
+				inbyte += sel1 + 1;
+				const uint32_t sel2 = ((sel >> 2) & 3);
+				gap2 = *(reinterpret_cast<const uint32_t*>(inbyte))
+						& mask[sel2];
+				gap12 = gap1 + gap2;
+				inbyte += sel2 + 1;
+				const uint32_t sel3 = ((sel >> 4) & 3);
+				gap3 = *(reinterpret_cast<const uint32_t*>(inbyte))
+						& mask[sel3];
+				inbyte += sel3 + 1;
+				const uint32_t sel4 = (sel >> 6);
+				gap4 = *(reinterpret_cast<const uint32_t*>(inbyte))
+						& mask[sel4];
+				gap34 = gap3 + gap4;
+				inbyte += sel4 + 1;
+			}
+			initial += gap12 + gap34;
+			if (key <= initial) {
+				if (key <= initial - gap34 - gap2) {
+					*presult = initial - gap34 - gap2;
+					return (i + 0);
+				}
+				if (key <= initial - gap34) {
+					*presult = initial - gap34;
+					return (i + 1);
+				}
+				if (key <= initial - gap4) {
+					*presult = initial - gap4;
+					return (i + 2);
+				}
+				*presult = initial;
+				return (i + 3);
+			}
+			i += 4;
+		}
+		if (endbyte > inbyte && nvalue > i) {
+			uint32_t tnvalue = nvalue - 1 - i;
+			inbyte = decodeCarefully(inbyte, &initial, out, tnvalue);
+			assert(inbyte <= endbyte);
+			if (key <= out[0]) {
+				*presult = out[0];
+				return (i + 0);
+			}
+			if (tnvalue > 0 && key <= out[1]) {
+				*presult = out[1];
+				return (i + 1);
+			}
+			if (tnvalue > 1 && key <= out[2]) {
+				*presult = out[2];
+				return (i + 2);
+			}
+			if (tnvalue > 2 && key <= out[3]) {
+				*presult = out[3];
+				return (i + 3);
+			}
 
-            if (key <= out[3]) {
-                if (key <= out[0]) {
-                    *presult = out[0];
-                    return (i + 0);
-                }
-                if (key <= out[1]) {
-                    *presult = out[1];
-                    return (i + 1);
-                }
-                if (key <= out[2]) {
-                    *presult = out[2];
-                    return (i + 2);
-                }
-                *presult = out[3];
-                return (i + 3);
-            }
-            i += 4;
-        }
-        if (endbyte > inbyte && nvalue > i) {
-            uint32_t tnvalue = nvalue - 1 - i;
-            inbyte = decodeCarefully(inbyte, &initial, out, tnvalue);
-            assert(inbyte <= endbyte);
-            if (key <= out[0]) {
-                *presult = out[0];
-                return (i + 0);
-            }
-            if (tnvalue > 0 && key <= out[1]) {
-                *presult = out[1];
-                return (i + 1);
-            }
-            if (tnvalue > 1 && key <= out[2]) {
-                *presult = out[2];
-                return (i + 2);
-            }
-            if (tnvalue > 2 && key <= out[3]) {
-                *presult = out[3];
-                return (i + 3);
-            }
+		}
+		assert(false);
+		*presult = key + 1;
+		return (i);
+	}
 
-        }
-        assert(false);
-        *presult = key + 1;
-        return (i);
-    }
 
     // Returns a decompressed value in an encoded array
     // This code has been optimized for delta-encoded arrays (TODO: optimize for the regular case).
@@ -443,6 +474,7 @@ private:
 		return in;
 	}
 
+
     const uint8_t* scanGroupVarInt(const uint8_t* in) {
 		const uint32_t sel = *in++;
 		if (sel == 0) {
@@ -458,6 +490,8 @@ private:
 		in += sel4 + 1;
 		return in;
 	}
+
+
 
 };
 
