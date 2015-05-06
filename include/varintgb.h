@@ -40,10 +40,10 @@ public:
         bout += 4;
 
         size_t k = 0;
-        for (; k + 3 < length;) {
+        for (; k + 3 < length; k+= 4) {
             uint8_t * keyp = bout++;
             *keyp = 0;
-            for (int j = 0; j < 8; j += 2, ++k) {
+            {
                 const uint32_t val = delta ? in[k] - prev : in[k];
                 if (delta)
                     prev = in[k];
@@ -52,17 +52,83 @@ public:
                 } else if (val < (1U << 16)) {
                     *bout++ = static_cast<uint8_t> (val);
                     *bout++ = static_cast<uint8_t> (val >> 8);
-                    *keyp |= static_cast<uint8_t>(1 << j);
+                    *keyp = static_cast<uint8_t>(1);
                 } else if (val < (1U << 24)) {
                     *bout++ = static_cast<uint8_t> (val);
                     *bout++ = static_cast<uint8_t> (val >> 8);
                     *bout++ = static_cast<uint8_t> (val >> 16);
-                    *keyp |= static_cast<uint8_t>(2 << j);
+                    *keyp = static_cast<uint8_t>(2);
                 } else {
                     // the compiler will do the right thing
                     *reinterpret_cast<uint32_t *> (bout) = val;
                     bout += 4;
-                    *keyp |= static_cast<uint8_t>(3 << j);
+                    *keyp = static_cast<uint8_t>(3);
+                }
+            }
+            {
+                const uint32_t val = delta ? in[k+1] - prev : in[k+1];
+                if (delta)
+                    prev = in[k+1];
+                if (val < (1U << 8)) {
+                    *bout++ = static_cast<uint8_t> (val);
+                } else if (val < (1U << 16)) {
+                    *bout++ = static_cast<uint8_t> (val);
+                    *bout++ = static_cast<uint8_t> (val >> 8);
+                    *keyp |= static_cast<uint8_t>(1 << 2);
+                } else if (val < (1U << 24)) {
+                    *bout++ = static_cast<uint8_t> (val);
+                    *bout++ = static_cast<uint8_t> (val >> 8);
+                    *bout++ = static_cast<uint8_t> (val >> 16);
+                    *keyp |= static_cast<uint8_t>(2 << 2);
+                } else {
+                    // the compiler will do the right thing
+                    *reinterpret_cast<uint32_t *> (bout) = val;
+                    bout += 4;
+                    *keyp |= static_cast<uint8_t>(3 << 2);
+                }
+            }
+            {
+                const uint32_t val = delta ? in[k+2] - prev : in[k+2];
+                if (delta)
+                    prev = in[k+2];
+                if (val < (1U << 8)) {
+                    *bout++ = static_cast<uint8_t> (val);
+                } else if (val < (1U << 16)) {
+                    *bout++ = static_cast<uint8_t> (val);
+                    *bout++ = static_cast<uint8_t> (val >> 8);
+                    *keyp |= static_cast<uint8_t>(1 << 4);
+                } else if (val < (1U << 24)) {
+                    *bout++ = static_cast<uint8_t> (val);
+                    *bout++ = static_cast<uint8_t> (val >> 8);
+                    *bout++ = static_cast<uint8_t> (val >> 16);
+                    *keyp |= static_cast<uint8_t>(2 << 4);
+                } else {
+                    // the compiler will do the right thing
+                    *reinterpret_cast<uint32_t *> (bout) = val;
+                    bout += 4;
+                    *keyp |= static_cast<uint8_t>(3 << 4);
+                }
+            }
+            {
+                const uint32_t val = delta ? in[k+3] - prev : in[k+3];
+                if (delta)
+                    prev = in[k+3];
+                if (val < (1U << 8)) {
+                    *bout++ = static_cast<uint8_t> (val);
+                } else if (val < (1U << 16)) {
+                    *bout++ = static_cast<uint8_t> (val);
+                    *bout++ = static_cast<uint8_t> (val >> 8);
+                    *keyp |= static_cast<uint8_t>(1 << 6);
+                } else if (val < (1U << 24)) {
+                    *bout++ = static_cast<uint8_t> (val);
+                    *bout++ = static_cast<uint8_t> (val >> 8);
+                    *bout++ = static_cast<uint8_t> (val >> 16);
+                    *keyp |= static_cast<uint8_t>(2 << 6);
+                } else {
+                    // the compiler will do the right thing
+                    *reinterpret_cast<uint32_t *> (bout) = val;
+                    bout += 4;
+                    *keyp |= static_cast<uint8_t>(3 << 6);
                 }
             }
         }
@@ -99,18 +165,7 @@ public:
         nvalue = storageinbytes / 4;
     }
 
-    // determine how many padding bytes were used
-        int paddingBytes(const  uint32_t *in, const size_t length) {
-        	uint32_t lastword = in[length - 1];
-            if (lastword < (1U << 8)) {
-            	return 3;
-            } else if (lastword < (1U << 16)) {
-            	return 2;
-            } else if (lastword < (1U << 24)) {
-            	return 1;
-            }
-            return 0;
-        }
+
 
     const uint32_t * decodeArray(const uint32_t *in, const size_t length,
                                  uint32_t *out, size_t & nvalue) {
@@ -154,6 +209,8 @@ public:
         return reinterpret_cast<const uint32_t *> (inbyte);
     }
 
+
+
     // Performs a lower bound find in the encoded array.
     // Returns the index
     size_t findLowerBound(const uint32_t *in, const size_t length,
@@ -193,7 +250,7 @@ public:
         }
         if (endbyte > inbyte && nvalue > i) {
             uint32_t tnvalue = nvalue - 1 - i;
-            inbyte = decodeCarefully(inbyte, &initial, out, &tnvalue);
+            inbyte = decodeCarefully(inbyte, &initial, out, tnvalue);
             assert(inbyte <= endbyte);
             if (key <= out[0]) {
                 *presult = out[0];
@@ -211,7 +268,6 @@ public:
                 *presult = out[3];
                 return (i + 3);
             }
-            i += tnvalue;
 
         }
         assert(false);
@@ -254,7 +310,7 @@ public:
         }
         {
         	nvalue = nvalue - i;
-            inbyte = decodeCarefully(inbyte, &initial, out, &nvalue);
+            inbyte = decodeCarefully(inbyte, &initial, out, nvalue);
             if (index == i)
                 return (out[0]);
             if (nvalue > 1 && index == i + 1)
@@ -263,13 +319,25 @@ public:
                 return (out[2]);
             if (nvalue > 3 && index == i + 3)
                 return (out[3]);
-            i += nvalue;
         }
         assert(false);// we should never get here
         return (0);
     }
 
+
+
+    string name() const {
+        if(delta)
+            return "varintgbdelta";
+        else
+            return "varintgb";
+    }
+
+private:
+
     const uint32_t mask[4] = { 0xFF, 0xFFFF, 0xFFFFFF, 0xFFFFFFFF };
+
+
 
     const uint8_t* decodeGroupVarInt(const uint8_t* in, uint32_t* out) {
         const uint32_t sel = *in++;
@@ -324,10 +392,10 @@ public:
     }
 
     const uint8_t *decodeCarefully(const uint8_t *inbyte,
-                                   uint32_t *initial, uint32_t *out, uint32_t *count) {
+                                   uint32_t *initial, uint32_t *out, uint32_t count) {
         uint32_t val;
         uint32_t k, key = *inbyte++;
-        for (k = 0; k < *count && k < 4; k++) {
+        for (k = 0; k < count && k < 4; k++) {
             const uint32_t howmanybyte = key & 3;
             key = static_cast<uint8_t>(key>>2);
             val = static_cast<uint32_t> (*inbyte++);
@@ -348,17 +416,10 @@ public:
             }
             out++;
         }
-        *count = k;
         return (inbyte);
     }
 
 
-    string name() const {
-        if(delta)
-            return "varintgbdelta";
-        else
-            return "varintgb";
-    }
 
 };
 
