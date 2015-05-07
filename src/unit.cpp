@@ -364,6 +364,8 @@ void testInsert() {
 		codec.decodeArray(compressedbuffer.data(),currentsize,decomp.data(),howmany);
 		sofar.push_back(ints[i]);
 		std::sort(sofar.begin(),sofar.end());
+		if(howmany != sofar.size())
+			cout << howmany << " " <<sofar.size() << " " << i <<endl;
 		assert(howmany == sofar.size());
 		for(size_t j = 0; j < howmany; ++j) {
 			if(decomp[j] != sofar[j]) {
@@ -482,7 +484,7 @@ void testSelectAdvanced() {
 
 int main() {
 
-
+	testInsert<VarIntGB<true>>();
     testInsert<VariableByte<true>>();
     testInsert<VByte<true>>();
 

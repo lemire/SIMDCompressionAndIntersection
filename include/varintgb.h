@@ -36,7 +36,7 @@ public:
         const uint8_t * const initbout = reinterpret_cast<uint8_t *> (out);
         *out = static_cast<uint32_t>(length);
         bout += 4;
-        bout = headlessEncode(in,length,bout);
+        bout = headlessEncode(in,length,0,bout);
 
 
         while (needPaddingTo32Bits(bout)) {
@@ -53,11 +53,71 @@ public:
         nvalue = *in;
         inbyte += 4;
         int padding = paddingBytes(in, length);
-        inbyte = headlessDecode(inbyte, length * sizeof(uint32_t) - padding,out);
-        inbyte = padTo32bits(inbyte);
-        return reinterpret_cast<const uint32_t *> (inbyte);
+        size_t decoded  = headlessDecode(inbyte, length * sizeof(uint32_t) - padding,0,out,nvalue);
+        assert(decoded == nvalue);
+        return in + length;
     }
 
+
+
+    // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
+    size_t insert(uint32_t *in, const size_t length, uint32_t key) {
+    	size_t bytesize = length * 4;
+    	bytesize -= paddingBytes(in,length);
+    	uint8_t * bytein = (uint8_t *) in;
+    	uint8_t * byteininit = bytein;
+    	size_t bl = insert(bytein, bytesize,  key);
+		bytein += bl;
+
+        while (needPaddingTo32Bits(bytein)) {
+        	*bytein++ = 0;
+        }
+        size_t storageinbytes = bytein - byteininit;
+        assert((storageinbytes % 4) == 0);
+        return storageinbytes / 4;
+    }
+
+    // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
+    // the new size is returned
+	size_t insert(uint8_t *inbyte, const size_t length, uint32_t key) {
+		const uint8_t * const finalinbyte = inbyte + length;
+		const uint8_t * const initinbyte = inbyte;
+		uint32_t nvalue = *((uint32_t *) inbyte);
+		*((uint32_t *) inbyte) =  nvalue + 1; // incrementing
+		inbyte += 4; // skip nvalue
+		assert(delta);
+		uint32_t initial = 0;
+		size_t i = 0;
+		while (i + 3 < nvalue) {
+			uint32_t copyinitial = initial;
+			const uint8_t * const newinbyte = scanGroupVarIntDelta(inbyte, &copyinitial);
+			if (copyinitial >= key) {
+				goto finish;
+			}
+			inbyte = (uint8_t *) newinbyte;
+			initial = copyinitial;
+			i += 4;
+		}
+		finish:
+		vector < uint32_t > tmpbuffer(nvalue - i + 1);
+		tmpbuffer[0] = key;
+		if (nvalue != i) {
+			size_t decoded = headlessDecode(inbyte, finalinbyte - inbyte,initial,
+					tmpbuffer.data() + 1,tmpbuffer.size() - 1);
+			assert(decoded == nvalue - i);
+			int top = (nvalue - i) < 4 ? nvalue - i : 4;
+			for (int j = 0; j < top; ++j) {
+				if (tmpbuffer[j] > tmpbuffer[j + 1]) {
+					uint32_t t = tmpbuffer[j + 1];
+					tmpbuffer[j + 1] = tmpbuffer[j];
+					tmpbuffer[j] = t;
+				}
+			}
+		}
+		const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer.data(),
+				tmpbuffer.size(), initial, inbyte);
+		return newfinalinbyte - initinbyte;
+	}
 
     // Performs a lower bound find in the encoded array.
     // Returns the index
@@ -212,9 +272,8 @@ public:
             return "varintgb";
     }
 
-	uint8_t * headlessEncode(uint32_t *in, const size_t length,
+	uint8_t * headlessEncode(uint32_t *in, const size_t length,uint32_t prev,
 			uint8_t * bout) {
-		uint32_t prev = 0;
 		size_t k = 0;
 		for (; k + 3 < length; k += 4) {
 			uint8_t * keyp = bout++;
@@ -336,9 +395,13 @@ public:
 		}
 		return bout;
 	}
-    const uint8_t * headlessDecode(const uint8_t * inbyte, const size_t length,
-                                 uint32_t *out) {
-        uint32_t prev = 0; // for delta
+
+	// returns how many values were decoded to out
+    size_t headlessDecode(const uint8_t * inbyte, const size_t length, uint32_t prev,
+                                 uint32_t *out, const size_t capacity) {
+
+        uint32_t * initout = out;
+        const uint32_t * const endout = out + capacity;
 
         const uint8_t * const endbyte = inbyte + length;
         uint32_t val;
@@ -348,9 +411,9 @@ public:
                      decodeGroupVarInt(inbyte, out);
             out+=4;
         }
-        while (endbyte > inbyte + 4) {
+        while (endbyte > inbyte + 1) {
             uint8_t key = *inbyte++;
-            for (int k = 0; k < 4; k++) {
+            for (int k = 0; (k < 4) && (out < endout); k++) {
                 const uint32_t howmanybyte = key & 3;
                 key=static_cast<uint8_t>(key>>2);
                 val = static_cast<uint32_t> (*inbyte++);
@@ -368,9 +431,8 @@ public:
             }
             assert(inbyte <= endbyte);
         }
-        return inbyte;
+        return out - initout;
     }
-
 
     // determine how many padding bytes were used
     int paddingBytes(const  uint32_t *in, const size_t length) {
