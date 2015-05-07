@@ -49,11 +49,14 @@ public:
 
     const uint32_t * decodeArray(const uint32_t *in, const size_t length,
                                  uint32_t *out, size_t & nvalue) {
+		if(length == 0) {
+			nvalue = 0;
+			return in;
+		}
         const uint8_t * inbyte = reinterpret_cast<const uint8_t *> (in);
         nvalue = *in;
         inbyte += 4;
-        int padding = paddingBytes(in, length);
-        size_t decoded  = headlessDecode(inbyte, length * sizeof(uint32_t) - padding,0,out,nvalue);
+        size_t decoded  = headlessDecode(inbyte, (length - 1 )* sizeof(uint32_t),0,out,nvalue);
         assert(decoded == nvalue);
         return in + length;
     }
@@ -63,7 +66,6 @@ public:
     // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
     size_t insert(uint32_t *in, const size_t length, uint32_t key) {
     	size_t bytesize = length * 4;
-    	bytesize -= paddingBytes(in,length);
     	uint8_t * bytein = (uint8_t *) in;
     	uint8_t * byteininit = bytein;
     	size_t bl = insert(bytein, bytesize,  key);
@@ -79,8 +81,12 @@ public:
 
     // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
     // the new size is returned
-	size_t insert(uint8_t *inbyte, const size_t length, uint32_t key) {
-		const uint8_t * const finalinbyte = inbyte + length;
+	size_t insert(uint8_t *inbyte, size_t length, uint32_t key) {
+		if(length == 0) {
+			*((uint32_t *) inbyte) =  0;
+			length = 4;
+		}
+		uint8_t * finalinbyte = inbyte + length;
 		const uint8_t * const initinbyte = inbyte;
 		uint32_t nvalue = *((uint32_t *) inbyte);
 		*((uint32_t *) inbyte) =  nvalue + 1; // incrementing
@@ -99,11 +105,15 @@ public:
 			i += 4;
 		}
 		finish:
-		vector < uint32_t > tmpbuffer(nvalue - i + 1);
+		assert(finalinbyte >= inbyte);
+		assert(i<=nvalue);
+		// we are using brute force here, by decoding everything to a buffer and then reencoding.
+		uint32_t * tmpbuffer = new uint32_t[nvalue - i + 1];
+		assert(tmpbuffer);
 		tmpbuffer[0] = key;
 		if (nvalue != i) {
 			size_t decoded = headlessDecode(inbyte, finalinbyte - inbyte,initial,
-					tmpbuffer.data() + 1,tmpbuffer.size() - 1);
+					tmpbuffer + 1,nvalue - i);
 			assert(decoded == nvalue - i);
 			int top = (nvalue - i) < 4 ? nvalue - i : 4;
 			for (int j = 0; j < top; ++j) {
@@ -114,12 +124,14 @@ public:
 				}
 			}
 		}
-		const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer.data(),
-				tmpbuffer.size(), initial, inbyte);
+		const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer,
+				nvalue - i + 1, initial, inbyte);
+		delete[] tmpbuffer;
 		return newfinalinbyte - initinbyte;
 	}
 
-    // Performs a lower bound find in the encoded array.
+
+	// Performs a lower bound find in the encoded array.
     // Returns the index
     // assumes delta coding was used
 	size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
@@ -396,24 +408,23 @@ public:
 		return bout;
 	}
 
-	// returns how many values were decoded to out
+	// returns how many values were decoded to out, will try to decode desirednumber
+	// if input allows.
     size_t headlessDecode(const uint8_t * inbyte, const size_t length, uint32_t prev,
-                                 uint32_t *out, const size_t capacity) {
+                                 uint32_t *out, const size_t desirednumber) {
 
         uint32_t * initout = out;
-        const uint32_t * const endout = out + capacity;
-
+        const uint32_t * const endout = out + desirednumber;
         const uint8_t * const endbyte = inbyte + length;
         uint32_t val;
-
-        while (endbyte > inbyte + 1 + 4 * 4) {
+        while ((endbyte > inbyte + 4 * 4 ) ) {//&& (endout > out + 3)
             inbyte = delta ? decodeGroupVarIntDelta(inbyte, &prev, out) :
                      decodeGroupVarInt(inbyte, out);
             out+=4;
         }
         while (endbyte > inbyte + 1) {
             uint8_t key = *inbyte++;
-            for (int k = 0; (k < 4) && (out < endout); k++) {
+            for (int k = 0; (k < 4) && (endout > out); k++) {
                 const uint32_t howmanybyte = key & 3;
                 key=static_cast<uint8_t>(key>>2);
                 val = static_cast<uint32_t> (*inbyte++);
@@ -434,26 +445,23 @@ public:
         return out - initout;
     }
 
-    // determine how many padding bytes were used
-    int paddingBytes(const  uint32_t *in, const size_t length) {
-    	if(length == 0) return 0;
-    	uint32_t lastword = in[length - 1];
-        if (lastword < (1U << 8)) {
-        	return 3;
-        } else if (lastword < (1U << 16)) {
-        	return 2;
-        } else if (lastword < (1U << 24)) {
-        	return 1;
-        }
-        return 0;
-    }
-
 
 private:
+
 
     const uint32_t mask[4] = { 0xFF, 0xFFFF, 0xFFFFFF, 0xFFFFFFFF };
 
 
+    void sortinfirstvalue(uint32_t * tmpbuffer, size_t length) {
+    	int top = length < 4 ? length : 4;
+    	for (int j = 0; j < top; ++j) {
+    		if (tmpbuffer[j] > tmpbuffer[j + 1]) {
+    			uint32_t t = tmpbuffer[j + 1];
+    			tmpbuffer[j + 1] = tmpbuffer[j];
+    			tmpbuffer[j] = t;
+    		}
+    	}
+    }
 
     const uint8_t* decodeGroupVarInt(const uint8_t* in, uint32_t* out) {
         const uint32_t sel = *in++;

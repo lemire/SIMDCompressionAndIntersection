@@ -628,8 +628,8 @@ private:
     	assert(key >= previous);
     	size_t oldstorage = storageCost(nextvalue - previous);
     	size_t newstorage = storageCost(nextvalue - key) + storageCost(key - previous);
-    	assert(newstorage > oldstorage);
-    	std::memmove(in + newstorage - oldstorage, in,followingbytes);
+    	assert(newstorage >= oldstorage);
+    	if(newstorage > oldstorage) std::memmove(in + newstorage - oldstorage, in,followingbytes);
     	uint8_t *newin = in - oldstorage;
     	newin += encodeOneIntegerToByteArray(key - previous, newin);
     	newin += encodeOneIntegerToByteArray(nextvalue - key, newin);
@@ -1265,8 +1265,8 @@ private:
     	assert(key >= previous);
     	size_t oldstorage = storageCost(nextvalue - previous);
     	size_t newstorage = storageCost(nextvalue - key) + storageCost(key - previous);
-    	assert(newstorage > oldstorage);
-    	std::memmove(in + newstorage - oldstorage, in,followingbytes);
+    	assert(newstorage >= oldstorage);
+    	if(newstorage > oldstorage) std::memmove(in + newstorage - oldstorage, in,followingbytes);
     	uint8_t *newin = in - oldstorage;
     	newin += encodeOneIntegerToByteArray(key - previous, newin);
     	newin += encodeOneIntegerToByteArray(nextvalue - key, newin);

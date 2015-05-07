@@ -229,12 +229,88 @@ int benchmarkSearch() {
     printf("\n\n");
     return 0;
 }
+
+
+template<typename T>
+int benchmarkInsert() {
+	T codec;
+	const int max = 256;
+	srand(0);
+    time_snap_t S1, S2, S3;
+    printf("# benchmarking insert %s \n",codec.name().c_str());
+	// encode in a buffer
+	std::vector < uint32_t > compressedbuffer1(max * sizeof(uint32_t) + 1024);
+	std::vector < uint32_t > compressedbuffer2(max * sizeof(uint32_t) + 1024);
+
+	std::vector < uint32_t > buffer(max);
+	std::vector < uint32_t > backbuffer(max);
+
+	for (int b = 0; b <= 32; b++) {
+		compressedbuffer1.resize(compressedbuffer1.capacity());
+		compressedbuffer2.resize(compressedbuffer2.capacity());
+
+		/* initialize the buffer */
+		for (int i = 0; i < max; i++) {
+			buffer[i] = ((uint32_t) rand());
+			if (b < 32)
+				buffer[i] %= (1 << b);
+		}
+        S1 = time_snap();
+
+		size_t currentsize1 = 0;
+		for (int i = 0; i < max; i++) {
+			currentsize1 = codec.insert(compressedbuffer1.data(), currentsize1,
+					buffer[i]);
+		}
+        S2 = time_snap();
+
+		size_t currentsize2 = 0;
+		for (int i = 0; i < max; i++) {
+        	size_t recovlength = backbuffer.size();
+        	codec.decodeArray(compressedbuffer2.data(),currentsize2,backbuffer.data(),recovlength);
+        	auto it = lower_bound(backbuffer.begin(), backbuffer.begin() + recovlength, buffer[i]);
+        	backbuffer.insert(it, buffer[i]);
+        	currentsize2 = compressedbuffer2.size();
+            codec.encodeArray(backbuffer.data(), recovlength+1,compressedbuffer2.data(),currentsize2);
+		}
+        S3 = time_snap();
+
+        printf("# bit width = %d, fast insert function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  " \n", b, (S2-S1), (S3-S2) );
+        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
+		if(currentsize1 != currentsize2) {
+			printf("bug A\n");
+			return -1;
+		}
+		compressedbuffer1.resize(currentsize1);
+		compressedbuffer2.resize(currentsize2);
+		if(compressedbuffer1 != compressedbuffer2) {
+			printf("bug B\n");
+			return -1;
+		}
+
+	}
+
+    printf("\n\n");
+    return 0;
+
+}
+
+
+
 using namespace SIMDCompressionLib;
 int main() {
 	int r = 0;
 #ifdef _MSC_VER
     QueryPerformanceFrequency((LARGE_INTEGER *)&freq);
 #endif
+
+    r = benchmarkInsert<SIMDCompressionLib::VarIntGB<true>>();
+    if(r < 0) return r;
+    r = benchmarkInsert<SIMDCompressionLib::VariableByte<true>>();
+    if(r < 0) return r;
+    r = benchmarkInsert<SIMDCompressionLib::VByte<true>>();
+    if(r < 0) return r;
+
 
     r = benchmarkSearch<SIMDCompressionLib::VarIntGB<true>>();
     if(r < 0) return r;
