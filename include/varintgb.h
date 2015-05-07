@@ -115,14 +115,7 @@ public:
 			size_t decoded = headlessDecode(inbyte, finalinbyte - inbyte,initial,
 					tmpbuffer + 1,nvalue - i);
 			assert(decoded == nvalue - i);
-			int top = (nvalue - i) < 4 ? nvalue - i : 4;
-			for (int j = 0; j < top; ++j) {
-				if (tmpbuffer[j] > tmpbuffer[j + 1]) {
-					uint32_t t = tmpbuffer[j + 1];
-					tmpbuffer[j + 1] = tmpbuffer[j];
-					tmpbuffer[j] = t;
-				}
-			}
+			sortinfirstvalue(tmpbuffer,nvalue - i);
 		}
 		const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer,
 				nvalue - i + 1, initial, inbyte);
