@@ -107,101 +107,105 @@ public:
 		finish:
 		assert(finalinbyte >= inbyte);
 		assert(i<=nvalue);
-if(false) {
-		if(nvalue == i) {// straight append
-			const uint8_t * const newfinalinbyte = headlessEncode(&key,
-					 1, initial, inbyte);
-			return newfinalinbyte - initinbyte;
-		}
-		if(nvalue - i <= 4) {
-			// easy case
+		static const int REASONABLEBUFFER = 256;
+		if (nvalue - i + 1 > REASONABLEBUFFER) {
+			if (nvalue == i) { // straight append
+				const uint8_t * const newfinalinbyte = headlessEncode(&key, 1,
+						initial, inbyte);
+				return newfinalinbyte - initinbyte;
+			}
+			if (nvalue - i <= 4) {
+				// easy case
+				uint32_t tmpbuffer[5];
+				tmpbuffer[0] = key;
+				size_t decoded = headlessDecode(inbyte, finalinbyte - inbyte,
+						initial, tmpbuffer + 1, nvalue - i);
+				assert(decoded == nvalue - i);
+				sortinfirstvalue(tmpbuffer, nvalue - i);
+				const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer,
+						nvalue - i + 1, initial, inbyte);
+				return newfinalinbyte - initinbyte;
+			}
+			// harder case
+			// this part is a bit complicated since we need to merge in the key
+			uint32_t readinitial = initial;
 			uint32_t tmpbuffer[5];
 			tmpbuffer[0] = key;
-			size_t decoded = headlessDecode(inbyte, finalinbyte - inbyte,initial,
-					tmpbuffer + 1,nvalue - i);
-			assert(decoded == nvalue - i);
-			sortinfirstvalue(tmpbuffer,nvalue - i);
+			const uint8_t * readinginbyte = decodeGroupVarIntDelta(inbyte,
+					&readinitial, tmpbuffer + 1);
+			assert(tmpbuffer[4] >= key);
+			assert(readinginbyte > inbyte);
+
+			sortinfirstvalue(tmpbuffer, nvalue - i);
+			i += 4;
+
+			// initialize blocks
+
+			Block b1, b2;
+
+			Block * block1 = &b1;
+			Block * block2 = &b2;
+			Block * blocktmp;
+
+			// load block1
+
+			uint8_t * fb = encodeGroupVarIntDelta(block1->data, initial,
+					tmpbuffer);
+
+			block1->length = fb - block1->data;
+			uint32_t nextval = tmpbuffer[4] - tmpbuffer[3];
+			uint32_t newsel = getByteLength(nextval) - 1;
+			// everything after that is just going to be shifting
+			while (nvalue - i >= 4) {
+
+				// load block 2
+				assert(readinginbyte >= inbyte);
+				readinginbyte = loadblock(block2, readinginbyte);
+				i += 4;
+				// shift in block 1
+				shiftin(block2, &nextval, &newsel);
+				// write block1
+				memcpy(inbyte, block1->data, block1->length);
+				inbyte += block1->length;
+				// block1 = block2
+				blocktmp = block1;
+				block1 = block2;
+				block2 = blocktmp;
+			}
+			if (nvalue != i) {
+				readinginbyte = loadblockcarefully(block2, readinginbyte,
+						nvalue - i);
+				finalshiftin(block2, nextval, newsel, nvalue - i + 1);// nextval is useless here
+				memcpy(inbyte, block1->data, block1->length);
+				inbyte += block1->length;
+				memcpy(inbyte, block2->data, block2->length);
+				inbyte += block2->length;
+				return inbyte - initinbyte;
+			} else {
+				memcpy(inbyte, block1->data, block1->length);
+				inbyte += block1->length;
+				inbyte[0] = newsel;
+				inbyte++;
+				memcpy(inbyte, &nextval, newsel + 1);
+				inbyte += newsel + 1;
+				return inbyte - initinbyte;
+			}
+			// we are using brute force here, by decoding everything to a buffer and then reencoding.
+		} else {
+			uint32_t tmpbuffer[REASONABLEBUFFER];
+			assert(tmpbuffer);
+			tmpbuffer[0] = key;
+			if (nvalue != i) {
+				size_t decoded = headlessDecode(inbyte, finalinbyte - inbyte,
+						initial, tmpbuffer + 1, nvalue - i);
+				assert(decoded == nvalue - i);
+				sortinfirstvalue(tmpbuffer, nvalue - i);
+			}
 			const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer,
 					nvalue - i + 1, initial, inbyte);
 			return newfinalinbyte - initinbyte;
 		}
-		// harder case
-		// this part is a bit complicated since we need to merge in the key
-		uint32_t readinitial = initial;
-		uint32_t tmpbuffer[5];
-		tmpbuffer[0] = key;
-		const uint8_t * readinginbyte = decodeGroupVarIntDelta(inbyte, &readinitial, tmpbuffer + 1);
-		assert(tmpbuffer[4]>=key);
-		assert(readinginbyte > inbyte);
-
-		sortinfirstvalue(tmpbuffer,nvalue - i);
-		i += 4;
-
-		// initialize blocks
-
-		Block b1, b2;
-
-		Block * block1 = &b1;
-		Block * block2 = &b2;
-		Block * blocktmp;
-
-		// load block1
-
-		uint8_t * fb =  encodeGroupVarIntDelta(block1->data, initial,tmpbuffer);
-
-		block1->length = fb - block1->data;
-		uint32_t nextval = tmpbuffer[4] - tmpbuffer[3];
-		uint32_t newsel = getByteLength(nextval) - 1;
-		// everything after that is just going to be shifting
-		while(nvalue - i >= 4) {
-
-			// load block 2
-			assert(readinginbyte >= inbyte);
-			readinginbyte = loadblock(block2,readinginbyte);
-			i += 4;
-			// shift in block 1
-			shiftin(block2,&nextval,&newsel);
-			// write block1
-            		memcpy(inbyte,block1->data,block1->length);
-			inbyte += block1->length;
-			// block1 = block2
-			blocktmp = block1;
-			block1 = block2;
-			block2 = blocktmp;
-		}
-		if (nvalue != i) {
-			readinginbyte = loadblockcarefully(block2, readinginbyte,
-					nvalue - i);
-			finalshiftin(block2, nextval, newsel,nvalue - i+1);// nextval is useless here
-			memcpy(inbyte, block1->data, block1->length);
-			inbyte += block1->length;
-			memcpy(inbyte, block2->data, block2->length);
-			inbyte += block2->length;
-			return inbyte - initinbyte;
-		} else {
-		memcpy(inbyte, block1->data, block1->length);
-		inbyte += block1->length;
-		inbyte[0] =  newsel;
-		inbyte++;
-		memcpy(inbyte,&nextval,newsel + 1);
-		inbyte += newsel + 1;
-		return inbyte - initinbyte;
-		}
-		// we are using brute force here, by decoding everything to a buffer and then reencoding.
-} else {		uint32_t * tmpbuffer = new uint32_t[nvalue - i + 1];
-		assert(tmpbuffer);
-		tmpbuffer[0] = key;
-		if (nvalue != i) {
-			size_t decoded = headlessDecode(inbyte, finalinbyte - inbyte,initial,
-					tmpbuffer + 1,nvalue - i);
-			assert(decoded == nvalue - i);
-			sortinfirstvalue(tmpbuffer,nvalue - i);
-		}
-		const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer,
-				nvalue - i + 1, initial, inbyte);
-		delete[] tmpbuffer;
-		return newfinalinbyte - initinbyte;
-}	}
+	}
 
 
 	// Performs a lower bound find in the encoded array.
