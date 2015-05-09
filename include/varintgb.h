@@ -309,6 +309,7 @@ public:
     uint32_t select(uint32_t *in, size_t index) {
         const uint8_t *inbyte = reinterpret_cast<const uint8_t *> (in);
         uint32_t out[4];
+        out[0] = 0; out[1] = 0; out[2] = 0; out[3] = 0;
         size_t i = 0;
         uint32_t initial = 0;
         uint32_t nvalue = *in;
@@ -797,7 +798,10 @@ private:
 	void shiftin(Block * b, uint32_t * nextval, uint32_t * newsel) {
 		uint32_t offsettolastval = lengths[b->data[0] & 63 ] - 1;
 		uint32_t newnextsel = b->data[0] >> 6;
-		uint32_t newnextval =  *(reinterpret_cast<const uint32_t*>(b->data + offsettolastval)) & mask[newnextsel];
+		uint32_t newnextval;
+		memcpy(&newnextval,b->data + offsettolastval,4);
+		newnextval &= mask[newnextsel];
+		//uint32_t newnextval =  *(reinterpret_cast<const uint32_t*>(b->data + offsettolastval)) & mask[newnextsel];
 		b->data[0] = (b->data[0]<<2) | *newsel;
 		std::memmove(b->data + 2 + *newsel,b->data + 1,b->length - 1 - 1 - newnextsel);
 		b->length = offsettolastval + 1 + *newsel;
