@@ -107,6 +107,7 @@ public:
 		finish:
 		assert(finalinbyte >= inbyte);
 		assert(i<=nvalue);
+if(false) {
 		if(nvalue == i) {// straight append
 			const uint8_t * const newfinalinbyte = headlessEncode(&key,
 					 1, initial, inbyte);
@@ -161,7 +162,7 @@ public:
 			// shift in block 1
 			shiftin(block2,&nextval,&newsel);
 			// write block1
-            memcpy(inbyte,block1->data,block1->length);
+            		memcpy(inbyte,block1->data,block1->length);
 			inbyte += block1->length;
 			// block1 = block2
 			blocktmp = block1;
@@ -187,7 +188,7 @@ public:
 		return inbyte - initinbyte;
 		}
 		// we are using brute force here, by decoding everything to a buffer and then reencoding.
-/*		uint32_t * tmpbuffer = new uint32_t[nvalue - i + 1];
+} else {		uint32_t * tmpbuffer = new uint32_t[nvalue - i + 1];
 		assert(tmpbuffer);
 		tmpbuffer[0] = key;
 		if (nvalue != i) {
@@ -199,8 +200,8 @@ public:
 		const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer,
 				nvalue - i + 1, initial, inbyte);
 		delete[] tmpbuffer;
-		return newfinalinbyte - initinbyte;*/
-	}
+		return newfinalinbyte - initinbyte;
+}	}
 
 
 	// Performs a lower bound find in the encoded array.
