@@ -107,8 +107,87 @@ public:
 		finish:
 		assert(finalinbyte >= inbyte);
 		assert(i<=nvalue);
+		if(nvalue == i) {// straight append
+			const uint8_t * const newfinalinbyte = headlessEncode(&key,
+					 1, initial, inbyte);
+			return newfinalinbyte - initinbyte;
+		}
+		if(nvalue - i <= 4) {
+			// easy case
+			uint32_t tmpbuffer[5];
+			tmpbuffer[0] = key;
+			size_t decoded = headlessDecode(inbyte, finalinbyte - inbyte,initial,
+					tmpbuffer + 1,nvalue - i);
+			assert(decoded == nvalue - i);
+			sortinfirstvalue(tmpbuffer,nvalue - i);
+			const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer,
+					nvalue - i + 1, initial, inbyte);
+			return newfinalinbyte - initinbyte;
+		}
+		// harder case
+		// this part is a bit complicated since we need to merge in the key
+		uint32_t readinitial = initial;
+		uint32_t tmpbuffer[5];
+		tmpbuffer[0] = key;
+		const uint8_t * readinginbyte = decodeGroupVarIntDelta(inbyte, &readinitial, tmpbuffer + 1);
+		assert(tmpbuffer[4]>=key);
+		assert(readinginbyte > inbyte);
+
+		sortinfirstvalue(tmpbuffer,nvalue - i);
+		i += 4;
+
+		// initialize blocks
+
+		Block b1, b2;
+
+		Block * block1 = &b1;
+		Block * block2 = &b2;
+		Block * blocktmp;
+
+		// load block1
+
+		uint8_t * fb =  encodeGroupVarIntDelta(block1->data, initial,tmpbuffer);
+
+		block1->length = fb - block1->data;
+		uint32_t nextval = tmpbuffer[4] - tmpbuffer[3];
+		uint32_t newsel = getByteLength(nextval) - 1;
+		// everything after that is just going to be shifting
+		while(nvalue - i >= 4) {
+
+			// load block 2
+			assert(readinginbyte >= inbyte);
+			readinginbyte = loadblock(block2,readinginbyte);
+			i += 4;
+			// shift in block 1
+			shiftin(block2,&nextval,&newsel);
+			// write block1
+            memcpy(inbyte,block1->data,block1->length);
+			inbyte += block1->length;
+			// block1 = block2
+			blocktmp = block1;
+			block1 = block2;
+			block2 = blocktmp;
+		}
+		if (nvalue != i) {
+			readinginbyte = loadblockcarefully(block2, readinginbyte,
+					nvalue - i);
+			finalshiftin(block2, nextval, newsel,nvalue - i+1);// nextval is useless here
+			memcpy(inbyte, block1->data, block1->length);
+			inbyte += block1->length;
+			memcpy(inbyte, block2->data, block2->length);
+			inbyte += block2->length;
+			return inbyte - initinbyte;
+		} else {
+		memcpy(inbyte, block1->data, block1->length);
+		inbyte += block1->length;
+		inbyte[0] =  newsel;
+		inbyte++;
+		memcpy(inbyte,&nextval,newsel + 1);
+		inbyte += newsel + 1;
+		return inbyte - initinbyte;
+		}
 		// we are using brute force here, by decoding everything to a buffer and then reencoding.
-		uint32_t * tmpbuffer = new uint32_t[nvalue - i + 1];
+/*		uint32_t * tmpbuffer = new uint32_t[nvalue - i + 1];
 		assert(tmpbuffer);
 		tmpbuffer[0] = key;
 		if (nvalue != i) {
@@ -120,7 +199,7 @@ public:
 		const uint8_t * const newfinalinbyte = headlessEncode(tmpbuffer,
 				nvalue - i + 1, initial, inbyte);
 		delete[] tmpbuffer;
-		return newfinalinbyte - initinbyte;
+		return newfinalinbyte - initinbyte;*/
 	}
 
 
@@ -417,8 +496,11 @@ public:
         }
         while (endbyte > inbyte + 1) {
             uint8_t key = *inbyte++;
+            //printf("last key is %u \n",key);
             for (int k = 0; (k < 4) && (endout > out); k++) {
                 const uint32_t howmanybyte = key & 3;
+                //printf("last key is %u howmanybyte = %u \n",key, howmanybyte+1);
+
                 key=static_cast<uint8_t>(key>>2);
                 val = static_cast<uint32_t> (*inbyte++);
                 if (howmanybyte >= 1) {
@@ -430,7 +512,10 @@ public:
                         }
                     }
                 }
+                //printf("decoded %u\n",val);
                 prev = (delta ? prev : 0) + val;
+                //printf("writing %u\n",prev);
+
                 *out++ = prev;
             }
             assert(inbyte <= endbyte);
@@ -447,6 +532,7 @@ private:
 
     void sortinfirstvalue(uint32_t * tmpbuffer, size_t length) {
     	int top = length < 4 ? length : 4;
+
     	for (int j = 0; j < top; ++j) {
     		if (tmpbuffer[j] > tmpbuffer[j + 1]) {
     			uint32_t t = tmpbuffer[j + 1];
@@ -577,6 +663,153 @@ private:
 		in += sel4 + 1;
 		return in;
 	}
+
+	// encode 4 integers
+	uint8_t * encodeGroupVarIntDelta(uint8_t *bout, uint32_t prev,
+			uint32_t * in) {
+		uint8_t * keyp = bout++;
+		*keyp = 0;
+		{
+			const uint32_t val = in[0] - prev;
+			prev = in[0];
+			if (val < (1U << 8)) {
+				*bout++ = static_cast<uint8_t>(val);
+			} else if (val < (1U << 16)) {
+				*bout++ = static_cast<uint8_t>(val);
+				*bout++ = static_cast<uint8_t>(val >> 8);
+				*keyp = static_cast<uint8_t>(1);
+			} else if (val < (1U << 24)) {
+				*bout++ = static_cast<uint8_t>(val);
+				*bout++ = static_cast<uint8_t>(val >> 8);
+				*bout++ = static_cast<uint8_t>(val >> 16);
+				*keyp = static_cast<uint8_t>(2);
+			} else {
+				// the compiler will do the right thing
+				*reinterpret_cast<uint32_t *>(bout) = val;
+				bout += 4;
+				*keyp = static_cast<uint8_t>(3);
+			}
+		}
+		{
+			const uint32_t val = in[1] - prev;
+			prev = in[1];
+			if (val < (1U << 8)) {
+				*bout++ = static_cast<uint8_t>(val);
+			} else if (val < (1U << 16)) {
+				*bout++ = static_cast<uint8_t>(val);
+				*bout++ = static_cast<uint8_t>(val >> 8);
+				*keyp |= static_cast<uint8_t>(1 << 2);
+			} else if (val < (1U << 24)) {
+				*bout++ = static_cast<uint8_t>(val);
+				*bout++ = static_cast<uint8_t>(val >> 8);
+				*bout++ = static_cast<uint8_t>(val >> 16);
+				*keyp |= static_cast<uint8_t>(2 << 2);
+			} else {
+				// the compiler will do the right thing
+				*reinterpret_cast<uint32_t *>(bout) = val;
+				bout += 4;
+				*keyp |= static_cast<uint8_t>(3 << 2);
+			}
+		}
+		{
+			const uint32_t val = in[2] - prev;
+			prev = in[2];
+			if (val < (1U << 8)) {
+				*bout++ = static_cast<uint8_t>(val);
+			} else if (val < (1U << 16)) {
+				*bout++ = static_cast<uint8_t>(val);
+				*bout++ = static_cast<uint8_t>(val >> 8);
+				*keyp |= static_cast<uint8_t>(1 << 4);
+			} else if (val < (1U << 24)) {
+				*bout++ = static_cast<uint8_t>(val);
+				*bout++ = static_cast<uint8_t>(val >> 8);
+				*bout++ = static_cast<uint8_t>(val >> 16);
+				*keyp |= static_cast<uint8_t>(2 << 4);
+			} else {
+				// the compiler will do the right thing
+				*reinterpret_cast<uint32_t *>(bout) = val;
+				bout += 4;
+				*keyp |= static_cast<uint8_t>(3 << 4);
+			}
+		}
+		{
+			const uint32_t val = in[3] - prev;
+			prev = in[3];
+			if (val < (1U << 8)) {
+				*bout++ = static_cast<uint8_t>(val);
+			} else if (val < (1U << 16)) {
+				*bout++ = static_cast<uint8_t>(val);
+				*bout++ = static_cast<uint8_t>(val >> 8);
+				*keyp |= static_cast<uint8_t>(1 << 6);
+			} else if (val < (1U << 24)) {
+				*bout++ = static_cast<uint8_t>(val);
+				*bout++ = static_cast<uint8_t>(val >> 8);
+				*bout++ = static_cast<uint8_t>(val >> 16);
+				*keyp |= static_cast<uint8_t>(2 << 6);
+			} else {
+				// the compiler will do the right thing
+				*reinterpret_cast<uint32_t *>(bout) = val;
+				bout += 4;
+				*keyp |= static_cast<uint8_t>(3 << 6);
+			}
+		}
+		return bout;
+	}
+
+	uint32_t getByteLength(uint32_t val) {
+        if (val < (1U << 8)) {
+        	return 1;
+        } else if (val < (1U << 16)) {
+        	return 2;
+        } else if (val < (1U << 24)) {
+        	return 3;
+        } else {
+        	return 4;
+        }
+	}
+
+	struct Block {// should fit in two cache lines.
+		uint8_t data[4*4+1 + 3];// the final +3 is a safety buffer
+		uint32_t length;
+	};
+
+	uint8_t lengths[256] = {5,6,7,8,6,7,8,9,7,8,9,10,8,9,10,11,6,7,8,9,7,8,9,10,8,9,10,11,9,10,11,12,7,8,9,10,8,9,10,11,9,10,11,12,10,11,12,13,8,9,10,11,9,10,11,12,10,11,12,13,11,12,13,14,6,7,8,9,7,8,9,10,8,9,10,11,9,10,11,12,7,8,9,10,8,9,10,11,9,10,11,12,10,11,12,13,8,9,10,11,9,10,11,12,10,11,12,13,11,12,13,14,9,10,11,12,10,11,12,13,11,12,13,14,12,13,14,15,7,8,9,10,8,9,10,11,9,10,11,12,10,11,12,13,8,9,10,11,9,10,11,12,10,11,12,13,11,12,13,14,9,10,11,12,10,11,12,13,11,12,13,14,12,13,14,15,10,11,12,13,11,12,13,14,12,13,14,15,13,14,15,16,8,9,10,11,9,10,11,12,10,11,12,13,11,12,13,14,9,10,11,12,10,11,12,13,11,12,13,14,12,13,14,15,10,11,12,13,11,12,13,14,12,13,14,15,13,14,15,16,11,12,13,14,12,13,14,15,13,14,15,16,14,15,16,17};
+
+	const uint8_t * loadblock(Block * b, const uint8_t * readinginbyte) {
+		b->length = lengths[readinginbyte[0]];
+		memcpy(b->data,readinginbyte,b->length);
+		return readinginbyte+b->length;
+	}
+
+	const uint8_t * loadblockcarefully(Block * b, const uint8_t * readinginbyte, int howmanyvals) {
+		b->length = 1;
+		for(int k = 0; k < howmanyvals; ++k)
+			b->length += 1 + ((readinginbyte[0]>>(2*k)) & 3);
+		memcpy(b->data,readinginbyte,b->length);
+		return readinginbyte+b->length;
+	}
+
+	void shiftin(Block * b, uint32_t * nextval, uint32_t * newsel) {
+		uint32_t offsettolastval = lengths[b->data[0] & 63 ] - 1;
+		uint32_t newnextsel = b->data[0] >> 6;
+		uint32_t newnextval =  *(reinterpret_cast<const uint32_t*>(b->data + offsettolastval)) & mask[newnextsel];
+		b->data[0] = (b->data[0]<<2) | *newsel;
+		std::memmove(b->data + 2 + *newsel,b->data + 1,b->length - 1 - 1 - newnextsel);
+		b->length = offsettolastval + 1 + *newsel;
+		std::memcpy(b->data + 1, nextval,*newsel + 1);
+		*nextval = newnextval;
+		*newsel = newnextsel;
+	}
+
+	void finalshiftin(Block * b, uint32_t nextval, uint32_t newsel, int howmany) {
+		b->data[0] = (b->data[0]<<2) | newsel;
+		std::memmove(b->data + 2 + newsel,b->data + 1,b->length - 1 );
+		b->length = 1;
+		for(int k = 0; k < howmany; ++k)
+			b->length += 1 + ((b->data[0]>>(2*k)) & 3);
+		std::memcpy(b->data + 1, &nextval,newsel + 1);
+	}
+
 
 
 };
