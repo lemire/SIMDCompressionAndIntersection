@@ -26,6 +26,7 @@
 #include "varintgb.h"
 #include "streamvariablebyte.h"
 #include "VarIntG8IU.h" // warning: patented scheme
+#include "frameofreference.h"
 
 namespace SIMDCompressionLib {
 
@@ -51,6 +52,9 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
                               new MaskedVByte<true> ());
     schemes["streamvbyte"] = shared_ptr<IntegerCODEC> (
                               new StreamVByteD1 ());
+    schemes["frameofreference"] = shared_ptr<IntegerCODEC> (
+                                  new FrameOfReference ());
+
     schemes["varintgb"] = std::shared_ptr<IntegerCODEC> (new VarIntGB<>());
 
     schemes["s4-fastpfor-d4"] = shared_ptr<IntegerCODEC> (

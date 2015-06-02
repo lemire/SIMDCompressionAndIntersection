@@ -489,6 +489,7 @@ int main() {
     testInsert<VByte<true>>();
 
 
+    testSelectSimple<FrameOfReference>();
     testSelectSimple<VarIntGB<true>>();
     testSelectSimple<MaskedVByte<true>>();
     testSelectSimple<VariableByte<true>>();
@@ -497,6 +498,7 @@ int main() {
                                     RegularDeltaSIMD, true>>>();
     testSelectSimple<StreamVByteD1>();
 
+    testSelectSimpleOdd<FrameOfReference>();
     testSelectSimpleOdd<VarIntGB<true>>();
     testSelectSimpleOdd<MaskedVByte<true>>();
     testSelectSimpleOdd<VariableByte<true>>();
@@ -504,6 +506,7 @@ int main() {
     testSelectSimpleOdd<StreamVByteD1>();
 
 
+    testSelectAdvanced<FrameOfReference>();
     testSelectAdvanced<VarIntGB<true>>();
     testSelectAdvanced<MaskedVByte<true>>();
     testSelectAdvanced<VariableByte<true>>();
