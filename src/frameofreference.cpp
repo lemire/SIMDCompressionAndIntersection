@@ -3149,7 +3149,7 @@
 
 
 
-    static uint32_t * pack32_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+    static uint32_t * pack32_32( uint32_t ,  const uint32_t *   in, uint32_t *    out) {
     	memcpy(out,in,32*sizeof(uint32_t));
         return out + 32;
       }
@@ -7324,7 +7324,7 @@
 
 
 
- static const uint32_t * unpack32_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+ static const uint32_t * unpack32_32( uint32_t ,  const uint32_t *   in, uint32_t *    out) {
 	 memcpy(out,in,32*sizeof(uint32_t));
     return in + 32;
  }
@@ -7337,7 +7337,10 @@ static uint32_t * nullpacker( uint32_t,  const uint32_t *   , uint32_t *    out)
    return out;
  }
 
-static const uint32_t * nullunpacker( uint32_t,  const uint32_t *  in , uint32_t * ) {
+static const uint32_t * nullunpacker( uint32_t base,  const uint32_t *  in , uint32_t * out) {
+   for(int k = 0; k < 32; ++k) {
+	 out[k] = base;
+   }
    return in;
  }
 
@@ -7421,6 +7424,7 @@ static uint32_t bits(const uint32_t v) {
          if(in[i]<m) m=in[i];
      }
      int b = bits(static_cast<uint32_t>(M-m));
+
      out[0] = m;
      ++out;
      out[0] = M;
@@ -7458,22 +7462,73 @@ const uint32_t * SIMDCompressionLib::FrameOfReference::uncompress_length(const u
 
 
 
-// Performs a lower bound find in the encoded array.
-// Returns the index
-size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
-                      uint32_t *presult) {
-	return 0;// TODO : implement
-}
-
 
 
 struct selectmetadata {
 	uint32_t m;
-	uint32_t *in;
+	const uint32_t *in;
 	uint32_t b;
     uint32_t length;
 };
 
+static uint32_t fastselect(selectmetadata * s, size_t index) {
+	    if(s->b == 32) {
+	    	return s->in[index];
+	    }
+	    uint32_t packedlength = s->length / 32 * 32;
+	    if(index > packedlength) {
+	        uint32_t packedsizeinwords = packedlength * s->b / 32;
+	    	return s->in[packedsizeinwords +  index - packedlength];
+	    }
+		const int bitoffset = index * s->b; /* how many bits  */
+		const int firstword = bitoffset / 32;
+		const int secondword = (bitoffset + s->b - 1) / 32;
+		const uint32_t firstpart = s->in[firstword]
+				>> (bitoffset % 32);
+		const uint32_t mask = (1 << s->b) - 1;
+		if (firstword == secondword) {
+			/* easy common case*/
+			return s->m + (firstpart & mask);
+		} else {
+			/* harder case where we need to combine two words */
+			const uint32_t secondpart = s->in[firstword + 1];
+			const int usablebitsinfirstword = 32 - (bitoffset % 32);
+			return s->m
+					+ ((firstpart | (secondpart << usablebitsinfirstword))
+							& mask);
+		}
+}
+
+// Performs a lower bound find in the encoded array.
+// Returns the index
+size_t SIMDCompressionLib::FrameOfReference::findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
+                      uint32_t *presult) {
+	selectmetadata s;
+	s.length = *in;
+	if(length < s.length)
+		s.length = length;
+	in ++;
+	s.m = *in;
+	++in;
+	uint32_t M = *in;
+	++in;
+	s.b = bits(M-s.m);
+	s.in = in;
+
+	int count = s.length;
+	int begin = 0;
+	uint32_t val;
+	while (count > 0) {
+		int step = count / 2;
+		val = fastselect(&s, begin+step);
+	    if (val < key) {
+	    	begin += step + 1;
+	    	count -= step + 1;
+	    } else count = step;
+	}
+	*presult = fastselect(&s, begin);
+	return begin;
+}
 
 
 // Returns a decompressed value in an encoded array

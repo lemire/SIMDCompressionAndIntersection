@@ -515,6 +515,7 @@ int main() {
                                     RegularDeltaSIMD, true>>>();
     testSelectAdvanced<StreamVByteD1>();
 
+    testFindSimple<FrameOfReference>();
     testFindSimple<VarIntGB<true>>();
     testFindSimple<MaskedVByte<true>>();
     testFindSimple<VariableByte<true>>();
@@ -523,6 +524,7 @@ int main() {
                                     RegularDeltaSIMD, true>>>();
     testFindSimple<StreamVByteD1>();
 
+    testFindAdvanced<FrameOfReference>();
     testFindAdvanced<VarIntGB<true>>();
     testFindAdvanced<MaskedVByte<true>>();
     testFindAdvanced<VariableByte<true>>();

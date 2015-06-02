@@ -311,7 +311,8 @@ int main() {
     r = benchmarkInsert<SIMDCompressionLib::VByte<true>>();
     if(r < 0) return r;
 
-
+//    r = benchmarkSearch<SIMDCompressionLib::FrameOfReference>();
+  //  if(r < 0) return r;
     r = benchmarkSearch<SIMDCompressionLib::VarIntGB<true>>();
     if(r < 0) return r;
     r = benchmarkSearch<SIMDCompressionLib::MaskedVByte<true>>();
@@ -326,7 +327,8 @@ int main() {
     r = benchmarkSearch<SIMDCompressionLib::StreamVByteD1>();
     if(r < 0) return r;
 
-
+    r = benchmarkSelect<SIMDCompressionLib::FrameOfReference>();
+    if(r < 0) return r;
     r = benchmarkSelect<SIMDCompressionLib::VarIntGB<true>>();
     if(r < 0) return r;
     r = benchmarkSelect<SIMDCompressionLib::MaskedVByte<true>>();

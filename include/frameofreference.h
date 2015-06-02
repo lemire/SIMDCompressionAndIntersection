@@ -27,7 +27,7 @@ public:
     const uint32_t * uncompress_length(const uint32_t * in, uint32_t * out, uint32_t  nvalue);
     uint32_t * compress_length(const uint32_t * in, uint32_t length, uint32_t * out);
 
-    const uint32_t *decodeArray(const uint32_t *in, const size_t length,
+    const uint32_t *decodeArray(const uint32_t *in, const size_t ,
                                 uint32_t *out, size_t &nvalue) {
     	nvalue = *in;
     	in++;
@@ -39,9 +39,7 @@ public:
     // Performs a lower bound find in the encoded array.
     // Returns the index
     size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
-                          uint32_t *presult) {
-    	return 0;// TODO : implement
-    }
+                          uint32_t *presult);
 
 
 
