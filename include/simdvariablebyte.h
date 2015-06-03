@@ -134,6 +134,7 @@ public:
 
     // Performs a lower bound find in the delta-encoded array.
     // Returns the index
+    // length is the size of the compressed input
     // only supported for delta encoded data (TODO)
     size_t findLowerBound(const uint32_t *in, const size_t /*length*/,
                     uint32_t key, uint32_t *presult) {

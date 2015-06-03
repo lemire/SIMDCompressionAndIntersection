@@ -283,6 +283,7 @@ public:
 
 
     // Performs a lower bound find in the encoded array.
+    // length is the size of the compressed input
     // Returns the index
     size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
                           uint32_t *presult) {
@@ -913,6 +914,7 @@ public:
 
 
     // Performs a lower bound find in the encoded array.
+    // length is the size of the compressed input
     // Returns the index and the value found (presult)
     size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
                           uint32_t *presult) {

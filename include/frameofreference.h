@@ -57,7 +57,7 @@ public:
 
 
     // Returns a decompressed value in an encoded array
-    uint32_t select(uint32_t *in, size_t index);
+    uint32_t select(const uint32_t *in, size_t index);
 
 
     string name() const {
@@ -111,7 +111,7 @@ public:
 
 
     // Returns a decompressed value in an encoded array
-    uint32_t select(uint32_t *in, size_t index);
+    uint32_t select(const uint32_t *in, size_t index);
 
 
     string name() const {
