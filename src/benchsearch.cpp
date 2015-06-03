@@ -27,6 +27,18 @@ static time_snap_t time_snap(void)
 typedef clock_t time_snap_t;
 #endif
 
+int uint32_cmp(const void *a, const void *b)
+{
+    const uint32_t *ia = (const uint32_t *)a;
+    const uint32_t *ib = (const uint32_t *)b;
+    if(*ia < *ib)
+        return -1;
+    else if (*ia > *ib)
+        return 1;
+    return 0;
+}
+
+
 template<typename T>
 int benchmarkSelect() {
 	T codec;
@@ -37,6 +49,7 @@ int benchmarkSelect() {
     time_snap_t S1, S2, S3;
     size_t i;
     printf("# benchmarking select %s \n",codec.name().c_str());
+    srand(0);
 
     /* this test creates delta encoded buffers with different bits, then
      * performs lower bound searches for each key */
@@ -45,18 +58,14 @@ int benchmarkSelect() {
         uint32_t prev = 0;
         /* initialize the buffer */
         for (i = 0; i < N; i++) {
-            buffer[i] =  ((uint32_t)(1655765 * i )) ;
+            buffer[i] =  ((uint32_t)rand()) ;
             if(b < 32) buffer[i] %= (1<<b);
         }
         for (i = 0; i < N; i++) {
             buffer[i] = buffer[i] + prev;
             prev = buffer[i];
         }
-
-        for (i = 1; i < N; i++) {
-            if(buffer[i] < buffer[i-1] )
-                buffer[i] = buffer[i-1];
-        }
+        qsort(buffer,N, sizeof(uint32_t), uint32_cmp);
 
         for (i = 0; i < N; i++) {
             out[i] = 0; /* memset would do too */
@@ -86,22 +95,12 @@ int benchmarkSelect() {
         }
         S3 = time_snap();
         printf("# bit width = %d, fast select function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT "  \n", b, (S2-S1), (S3-S2));
-        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
+        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " %f \n",b, (S2-S1), (S3-S2),nvalue*32.0/N);
     }
     printf("\n\n");
     return 0;
 }
 
-int uint32_cmp(const void *a, const void *b)
-{
-    const uint32_t *ia = (const uint32_t *)a;
-    const uint32_t *ib = (const uint32_t *)b;
-    if(*ia < *ib)
-        return -1;
-    else if (*ia > *ib)
-        return 1;
-    return 0;
-}
 
 /* adapted from wikipedia */
 int binary_search(uint32_t * A, uint32_t key, int imin, int imax)
@@ -153,6 +152,7 @@ int benchmarkSearch() {
     uint32_t b, i;
     time_snap_t S1, S2, S3;
     printf("# benchmarking search %s \n",codec.name().c_str());
+    srand(0);
 
     /* this test creates delta encoded buffers with different bits, then
      * performs lower bound searches for each key */
@@ -163,17 +163,13 @@ int benchmarkSearch() {
             buffer[i] =  ((uint32_t)rand()) ;
             if(b < 32) buffer[i] %= (1<<b);
         }
-
-        qsort(buffer,N, sizeof(uint32_t), uint32_cmp);
-
         for (i = 0; i < N; i++) {
             buffer[i] = buffer[i] + prev;
             prev = buffer[i];
         }
-        for (i = 1; i < N; i++) {
-            if(buffer[i] < buffer[i-1] )
-                buffer[i] = buffer[i-1];
-        }
+
+        qsort(buffer,N, sizeof(uint32_t), uint32_cmp);
+
         for (i = 0; i < N; i++) {
             out[i] = 0; /* memset would do too */
         }
@@ -224,7 +220,7 @@ int benchmarkSearch() {
         }
         S3 = time_snap();
         printf("# bit width = %d, fast search function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  " \n", b, (S2-S1), (S3-S2) );
-        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
+        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " %f \n",b, (S2-S1), (S3-S2),nvalue*32.0/N);
     }
     printf("\n\n");
     return 0;
