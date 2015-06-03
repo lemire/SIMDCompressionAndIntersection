@@ -55,6 +55,9 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     schemes["frameofreference"] = shared_ptr<IntegerCODEC> (
                                   new FrameOfReference ());
 
+    schemes["simdframeofreference"] = shared_ptr<IntegerCODEC> (
+                                  new SIMDFrameOfReference ());
+
     schemes["varintgb"] = std::shared_ptr<IntegerCODEC> (new VarIntGB<>());
 
     schemes["s4-fastpfor-d4"] = shared_ptr<IntegerCODEC> (
