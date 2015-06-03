@@ -21944,8 +21944,8 @@ uint32_t SIMDCompressionLib::SIMDFrameOfReference::select(uint32_t *in, size_t i
         uint32_t packedsizeinwords = packedlength * b / 32;
     	return in[packedsizeinwords +  index - packedlength];
     }
-    in += length / 128 * 4 * b;
-    return simdselectFOR(m, (const __m128i *)in, b, length % 128);
+    in += index / 128 * 4 * b;
+    return simdselectFOR(m, (const __m128i *)in, b, index % 128);
 }
 
 
@@ -21959,7 +21959,7 @@ static uint32_t simdfastselect(selectmetadata * s, size_t index) {
 	        uint32_t packedsizeinwords = packedlength * s->b * 4 / 128;
 	    	return s->in[packedsizeinwords +  index - packedlength];
 	    }
-	    return simdselectFOR(s->m, (const __m128i *)(s->in + s->length / 128 * 4 * s->b), s->b, s->length % 128);
+	    return simdselectFOR(s->m, (const __m128i *)(s->in + index / 128 * 4 * s->b), s->b, index % 128);
 }
 
 

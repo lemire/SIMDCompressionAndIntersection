@@ -489,6 +489,7 @@ int main() {
     testInsert<VByte<true>>();
 
 
+    testSelectSimple<SIMDFrameOfReference>();
     testSelectSimple<FrameOfReference>();
     testSelectSimple<VarIntGB<true>>();
     testSelectSimple<MaskedVByte<true>>();
@@ -498,6 +499,7 @@ int main() {
                                     RegularDeltaSIMD, true>>>();
     testSelectSimple<StreamVByteD1>();
 
+    testSelectSimpleOdd<SIMDFrameOfReference>();
     testSelectSimpleOdd<FrameOfReference>();
     testSelectSimpleOdd<VarIntGB<true>>();
     testSelectSimpleOdd<MaskedVByte<true>>();
@@ -505,7 +507,7 @@ int main() {
     testSelectSimpleOdd<VByte<true>>();
     testSelectSimpleOdd<StreamVByteD1>();
 
-
+    testSelectAdvanced<SIMDFrameOfReference>();
     testSelectAdvanced<FrameOfReference>();
     testSelectAdvanced<VarIntGB<true>>();
     testSelectAdvanced<MaskedVByte<true>>();
@@ -515,6 +517,7 @@ int main() {
                                     RegularDeltaSIMD, true>>>();
     testSelectAdvanced<StreamVByteD1>();
 
+    testFindSimple<SIMDFrameOfReference>();
     testFindSimple<FrameOfReference>();
     testFindSimple<VarIntGB<true>>();
     testFindSimple<MaskedVByte<true>>();
@@ -524,6 +527,7 @@ int main() {
                                     RegularDeltaSIMD, true>>>();
     testFindSimple<StreamVByteD1>();
 
+    testFindAdvanced<SIMDFrameOfReference>();
     testFindAdvanced<FrameOfReference>();
     testFindAdvanced<VarIntGB<true>>();
     testFindAdvanced<MaskedVByte<true>>();
