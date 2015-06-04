@@ -94,8 +94,8 @@ int benchmarkSelect() {
             }
         }
         S3 = time_snap();
-        printf("# bit width = %d, fast select function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT "  \n", b, (S2-S1), (S3-S2));
-        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " %f \n",b, (S2-S1), (S3-S2),nvalue*32.0/N);
+        printf("# bit width = %d, fast select function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT ", following line is in millions of operation per second, last line is decompression speed  \n", b, (S2-S1), (S3-S2));
+        printf("%d %f %f %f %f \n",b, N * 10.0 / (S2 - S1), N * 10.0 / (S3 - S2),nvalue*32.0/N,N * 10.0 *N  / (S3 - S2));
     }
     printf("\n\n");
     return 0;
@@ -219,8 +219,8 @@ int benchmarkSearch() {
             }
         }
         S3 = time_snap();
-        printf("# bit width = %d, fast search function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  " \n", b, (S2-S1), (S3-S2) );
-        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " %f \n",b, (S2-S1), (S3-S2),nvalue*32.0/N);
+        printf("# bit width = %d, fast search function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  ", following line is in millions of operation per second \n", b, (S2-S1), (S3-S2) );
+        printf("%d %f %f %f \n",b, N * 10.0 / (S2 - S1), N * 10.0 / (S3 - S2),nvalue*32.0/N);
     }
     printf("\n\n");
     return 0;
