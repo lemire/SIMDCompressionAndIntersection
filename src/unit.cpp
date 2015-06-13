@@ -394,15 +394,15 @@ void testSelectSimple() {
     uint32_t ints[max];
     for (int i = 0; i < max; i++)
         ints[i] = i;
-
-    // encode in a buffer
+     // encode in a buffer
     vector<uint32_t> compressedbuffer(max * sizeof(uint32_t) + 1024);
     size_t nvalue  = compressedbuffer.size();
     codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
+
     compressedbuffer.resize(nvalue);
     compressedbuffer.shrink_to_fit();
-
     for (int i = 0; i < max; i++) {
+
         uint32_t k = codec.select(compressedbuffer.data(), i);
         if (k != (uint32_t)i) {
             cout << codec.name() << "::select failed with " << i << endl;
@@ -428,11 +428,15 @@ void testSelectSimpleOdd() {
     codec.encodeArray(ints, max, compressedbuffer.data(), nvalue);
     compressedbuffer.resize(nvalue);
     compressedbuffer.shrink_to_fit();
-
     for (int i = 0; i < max; i++) {
+        cout << i << " = " << codec.select(compressedbuffer.data(), i) << endl;
+
+    }
+    for (int i = 0; i < max; i++) {
+    	cout<<"hell select "<<i<<endl;
         uint32_t k = codec.select(compressedbuffer.data(), i);
         if (k != (uint32_t)i) {
-            cout << codec.name() << "::select failed with " << i << endl;
+            cout << codec.name() << "::odd select failed with " << i << " got back "<< k << endl;
             throw std::logic_error("bug");
         }
     }

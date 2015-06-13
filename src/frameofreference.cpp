@@ -1,6 +1,116 @@
 #include "frameofreference.h"
 
 
+static __m128i *  simdpackFOR_length(uint32_t initvalue, const uint32_t *   in, int length, __m128i *    out, const uint32_t bit) {
+	int k;
+	int inwordpointer;
+	__m128i P;
+	uint32_t firstpass;
+    __m128i offset;
+	if(bit == 0) return out;/* nothing to do */
+    if(bit == 32) {
+        memcpy(out,in,length*sizeof(uint32_t));
+        return (__m128i *) ((uint32_t *) out + length) ;
+    }
+    offset = _mm_set1_epi32(initvalue);
+    inwordpointer = 0;
+    P = _mm_setzero_si128();
+    for(k = 0; k < length / 4 ; ++k) {
+        __m128i value = _mm_sub_epi32(_mm_loadu_si128(((const __m128i * ) in + k)),offset);
+        P = _mm_or_si128(P,_mm_slli_epi32(value, inwordpointer));
+        firstpass = sizeof(uint32_t) * 8 - inwordpointer;
+        if(bit<firstpass) {
+            inwordpointer+=bit;
+        } else {
+            _mm_storeu_si128(out++, P);
+            P = _mm_srli_epi32(value, firstpass);
+            inwordpointer=bit-firstpass;
+        }
+    }
+    if(length % 4 != 0) {
+        uint32_t buffer[4];
+        __m128i value;
+        for(k = 0; k < (length % 4); ++k) {
+            buffer[k] = in[length/4*4+k];
+        }
+        for(k = (length % 4); k < 4 ; ++k) {
+            buffer[k] = 0;
+        }
+        value = _mm_sub_epi32(_mm_loadu_si128((__m128i * ) buffer),offset);
+        P = _mm_or_si128(P,_mm_slli_epi32(value, inwordpointer));
+        firstpass = sizeof(uint32_t) * 8 - inwordpointer;
+        if(bit<firstpass) {
+            inwordpointer+=bit;
+        } else {
+            _mm_storeu_si128(out++, P);
+            P = _mm_srli_epi32(value, firstpass);
+            inwordpointer=bit-firstpass;
+        }
+    }
+    if(inwordpointer != 0) {
+        _mm_storeu_si128(out++, P);
+    }
+    return out;
+}
+
+
+static void simdunpackFOR_length(uint32_t initvalue, const __m128i *   in, int length, uint32_t * out, const uint32_t bit) {
+    int k;
+    __m128i maskbits;
+    int inwordpointer;
+    __m128i P;
+    __m128i offset;
+    if(length == 0) return;
+    if(bit == 0) {
+        for(k = 0; k < length; ++k) {
+            out[k] = initvalue;
+        }
+    }
+    if(bit == 32) {
+        memcpy(out,in,length*sizeof(uint32_t));
+        return;
+    }
+    offset = _mm_set1_epi32(initvalue);
+    maskbits = _mm_set1_epi32((1<<bit)-1);
+    inwordpointer = 0;
+    P = _mm_loadu_si128((__m128i * ) in);
+    ++in;
+    for(k = 0; k < length  / 4; ++k) {
+        __m128i answer = _mm_srli_epi32(P, inwordpointer);
+        const uint32_t firstpass = sizeof(uint32_t) * 8 - inwordpointer;
+        if(bit < firstpass) {
+            inwordpointer += bit;
+        } else {
+            P = _mm_loadu_si128((__m128i * ) in);
+            ++in;
+            answer = _mm_or_si128(_mm_slli_epi32(P, firstpass),answer);
+            inwordpointer = bit - firstpass;
+        }
+        answer = _mm_and_si128(maskbits,answer);
+        _mm_storeu_si128((__m128i *)out, _mm_add_epi32(answer,offset));
+        out += 4;
+    }
+    if(length % 4 != 0) {
+        uint32_t buffer[4];
+    	__m128i answer = _mm_srli_epi32(P, inwordpointer);
+        const uint32_t firstpass = sizeof(uint32_t) * 8 - inwordpointer;
+        if(bit < firstpass) {
+            inwordpointer += bit;
+        } else {
+            P = _mm_loadu_si128((__m128i * ) in);
+            ++in;
+            answer = _mm_or_si128(_mm_slli_epi32(P, firstpass),answer);
+            inwordpointer = bit - firstpass;
+        }
+        answer = _mm_and_si128(maskbits,answer);
+        _mm_storeu_si128((__m128i *)buffer, _mm_add_epi32(answer,offset));
+        for(k = 0; k < (length % 4); ++k) {
+            *out = buffer[k];
+            ++out;
+        }
+    }
+}
+
 
 
 
@@ -21938,10 +22048,6 @@ uint32_t SIMDCompressionLib::SIMDFrameOfReference::select(const uint32_t *in, si
     	return in[index];
     }
     uint32_t packedlength = length / 128 * 128;
-    if(index > packedlength) {
-        uint32_t packedsizeinwords = packedlength * b / 32;
-    	return in[packedsizeinwords +  index - packedlength];
-    }
     in += index / 128 * 4 * b;
     return simdselectFOR(m, (const __m128i *)in, b, index % 128);
 }
@@ -21953,11 +22059,11 @@ static uint32_t simdfastselect(selectmetadata * s, size_t index) {
 	if (s->b == 32) {
 		return s->in[index];
 	}
-	uint32_t packedlength = s->length / 128 * 128;
-	if (index > packedlength) {
-		uint32_t packedsizeinwords = packedlength * s->b * 4 / 128;
-		return s->in[packedsizeinwords + index - packedlength];
-	}
+	//uint32_t packedlength = s->length / 128 * 128;
+	//if (index > packedlength) {
+	//	uint32_t packedsizeinwords = packedlength * s->b * 4 / 128;
+	//	return s->in[packedsizeinwords + index - packedlength];
+	//}
 	const int lane = index % 4; /* we have 4 interleaved lanes */
 	const int bitsinlane = (index / 4) * s->b; /* how many bits in lane */
     const int firstwordinlane = bitsinlane / 32;
@@ -22065,10 +22171,13 @@ uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_compress_length(const 
     	simdpackFOR(m,  in, (__m128i *)    out, b);
     	out += b * 4;
     }
+    if(length != k) out = (uint32_t *) simdpackFOR_length(m, in, length - k , (__m128i *) out,b);
+    in += length - k;
+
     // we could pack the rest, but we don't  bother
-    for(;k<length;++k,in++,out++) {
-        out[0] = in [0];
-    }
+    //for(;k<length;++k,in++,out++) {
+    //    out[0] = in [0];
+    //}
     return out;
 }
 
@@ -22084,9 +22193,12 @@ const uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_uncompress_lengt
     }
     out = out + nvalue/128*128;
     in = in + nvalue/128*4*b;
+    if((nvalue %128)!=0) simdunpackFOR_length(m, (__m128i *)in, nvalue - nvalue/128*128, out, b);
+    in += nvalue - nvalue/128*128;
+
     // we could pack the rest, but we don't  bother
-    for(uint32_t k=nvalue/128*128;k<nvalue;++k,in++,out++) {
-        out[0] = in [0];
-    }
+    //for(uint32_t k=nvalue/128*128;k<nvalue;++k,in++,out++) {
+    //    out[0] = in [0];
+    //}
     return in;
 }

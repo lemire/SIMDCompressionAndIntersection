@@ -70,11 +70,8 @@ private:
 
 /**
  * Accelerated implementation of FOR compression using blocks of
- * 128 integers. If you specify a length that is not a multiple
- * of 128, the leftover integers are not compressed.
+ * 128 integers. .
  *
- * It might be worthwhile to pad your input up to 128 integers
- * before compression or to otherwise adapt this class to your needs.
  *
  * FOR does not compress particularly well but it supports
  * fast random access.
