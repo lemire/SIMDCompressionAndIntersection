@@ -54,21 +54,22 @@ static __m128i *  simdpackFOR_length(uint32_t initvalue, const uint32_t *   in, 
 }
 
 
-static void simdunpackFOR_length(uint32_t initvalue, const __m128i *   in, int length, uint32_t * out, const uint32_t bit) {
+static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i *   in, int length, uint32_t * out, const uint32_t bit) {
     int k;
     __m128i maskbits;
     int inwordpointer;
     __m128i P;
     __m128i offset;
-    if(length == 0) return;
+    if(length == 0) return in;
     if(bit == 0) {
         for(k = 0; k < length; ++k) {
             out[k] = initvalue;
         }
+        return in;
     }
     if(bit == 32) {
         memcpy(out,in,length*sizeof(uint32_t));
-        return;
+        return (const __m128i *)((const uint32_t *) in + length);
     }
     offset = _mm_set1_epi32(initvalue);
     maskbits = _mm_set1_epi32((1<<bit)-1);
@@ -109,6 +110,7 @@ static void simdunpackFOR_length(uint32_t initvalue, const __m128i *   in, int l
             ++out;
         }
     }
+    return in;
 }
 
 
@@ -22037,7 +22039,7 @@ static uint32_t simdselectFOR(uint32_t initvalue, const __m128i *in, uint32_t bi
 
 // Returns a decompressed value in an encoded array
 uint32_t SIMDCompressionLib::SIMDFrameOfReference::select(const uint32_t *in, size_t index) {
-	uint32_t length = *in;
+	//uint32_t length = *in;
 	in ++;
     uint32_t m = *in;
     ++in;
@@ -22047,7 +22049,6 @@ uint32_t SIMDCompressionLib::SIMDFrameOfReference::select(const uint32_t *in, si
     if(b == 32) {
     	return in[index];
     }
-    uint32_t packedlength = length / 128 * 128;
     in += index / 128 * 4 * b;
     return simdselectFOR(m, (const __m128i *)in, b, index % 128);
 }
@@ -22174,10 +22175,6 @@ uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_compress_length(const 
     if(length != k) out = (uint32_t *) simdpackFOR_length(m, in, length - k , (__m128i *) out,b);
     in += length - k;
 
-    // we could pack the rest, but we don't  bother
-    //for(;k<length;++k,in++,out++) {
-    //    out[0] = in [0];
-    //}
     return out;
 }
 
@@ -22193,12 +22190,7 @@ const uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_uncompress_lengt
     }
     out = out + nvalue/128*128;
     in = in + nvalue/128*4*b;
-    if((nvalue %128)!=0) simdunpackFOR_length(m, (__m128i *)in, nvalue - nvalue/128*128, out, b);
-    in += nvalue - nvalue/128*128;
+    if((nvalue %128)!=0) in = (const uint32_t *) simdunpackFOR_length(m, (__m128i *)in, nvalue - nvalue/128*128, out, b);
 
-    // we could pack the rest, but we don't  bother
-    //for(uint32_t k=nvalue/128*128;k<nvalue;++k,in++,out++) {
-    //    out[0] = in [0];
-    //}
     return in;
 }
