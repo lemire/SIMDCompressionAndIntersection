@@ -1,0 +1,14 @@
+benchintersection
+benchsearch
+bitpacking.o
+budgetedtest
+compflatstat
+compress
+entropy
+*.o
+simplesynth
+testcodecs
+testintegration
+uncompress
+unit
+*.a
