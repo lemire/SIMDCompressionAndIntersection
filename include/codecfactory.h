@@ -27,6 +27,7 @@
 #include "streamvariablebyte.h"
 #include "VarIntG8IU.h" // warning: patented scheme
 #include "frameofreference.h"
+#include "forcodec.h"
 
 namespace SIMDCompressionLib {
 
@@ -103,6 +104,8 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     schemes["s4-bp128-dm"] = shared_ptr<IntegerCODEC> (
                                 new CompositeCodec <SIMDBinaryPacking<SIMDIntegratedBlockPacker<
                                 Max4DeltaSIMD, true>>, leftovercodec> ());
+    schemes["for"] = shared_ptr<IntegerCODEC> (
+                                  new ForCODEC ());
     return schemes;
 }
 
