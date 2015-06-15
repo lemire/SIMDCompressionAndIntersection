@@ -39,24 +39,29 @@ class ForCODEC : public IntegerCODEC {
   public:
     void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
                         size_t &nvalue) {
-      nvalue = for_compress_sorted((const uint32_t *)in, (uint8_t *)out,
+      *(uint32_t *)out = length;
+      out++;
+      nvalue = 4 + for_compress_sorted((const uint32_t *)in, (uint8_t *)out,
                         length);
     }
 
-    const uint32_t *decodeArray(const uint32_t *in, const size_t length,
+    const uint32_t *decodeArray(const uint32_t *in, const size_t,
                         uint32_t *out, size_t &nvalue) {
-      nvalue = length;
-      return in + for_uncompress((const uint8_t *)in, out, length);
-
+      nvalue = *in;
+      in++;
+      return in + for_uncompress((const uint8_t *)in, out, nvalue);
     }
 
-    size_t findLowerBound(const uint32_t *in, const size_t length,
+    size_t findLowerBound(const uint32_t *in, const size_t,
                         uint32_t key, uint32_t *presult) {
+      uint32_t length = *in;
+      in++;
       return (size_t)for_lower_bound_search((const uint8_t *)in, length,
                         key, presult);
     }
 
     uint32_t select(const uint32_t *in, size_t index) {
+      in++; // Skip length
       return for_select((const uint8_t *)in, index);
     }
 
