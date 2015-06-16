@@ -295,7 +295,7 @@ for_select_bits(const uint8_t *in, uint32_t base, uint32_t bits,
     uint32_t mask2 = (1 << (bits - (32 - start))) - 1;
     uint32_t v1 = (*(in32 + 0) >> start) & mask1;
     uint32_t v2 =  *(in32 + 1) & mask2;
-    return base + ((v2 << start) | v1);
+    return base + ((v2 << (32 - start)) | v1);
   }
 }
 

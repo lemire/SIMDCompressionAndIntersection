@@ -41,7 +41,9 @@ class ForCODEC : public IntegerCODEC {
                         size_t &nvalue) {
       *(uint32_t *)out = length;
       out++;
-      nvalue = 4 + for_compress_sorted((const uint32_t *)in, (uint8_t *)out,
+      // for_compress_sorted() would be a bit faster, but requires
+      // sorted input
+      nvalue = 4 + for_compress_unsorted((const uint32_t *)in, (uint8_t *)out,
                         length);
     }
 
