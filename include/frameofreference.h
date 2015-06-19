@@ -87,6 +87,7 @@ public:
 
     const uint32_t * simd_uncompress_length(const uint32_t * in, uint32_t * out, uint32_t  nvalue);
     uint32_t * simd_compress_length(const uint32_t * in, uint32_t length, uint32_t * out);
+    uint32_t * simd_compress_length_sorted(const uint32_t * in, uint32_t length, uint32_t * out);
 
     const uint32_t *decodeArray(const uint32_t *in, const size_t ,
                                 uint32_t *out, size_t &nvalue) {
