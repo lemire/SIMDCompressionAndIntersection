@@ -74,6 +74,9 @@ usimdbitpacking.o: include/usimdbitpacking.h src/usimdbitpacking.cpp
 frameofreference.o: src/frameofreference.cpp $(HEADERS)
 	$(CXX) $(CXXFLAGS) -c src/frameofreference.cpp -Iinclude
 
+for.o: src/for.c $(HEADERS)
+	$(CC) $(CCFLAGS) -c src/for.c -Iinclude
+
 
 simdintegratedbitpacking.o: include/simdintegratedbitpacking.h include/delta.h src/simdintegratedbitpacking.cpp
 	$(CXX) $(CXXFLAGS) -c src/simdintegratedbitpacking.cpp -Iinclude
@@ -83,7 +86,7 @@ simdintegratedbitpacking.o: include/simdintegratedbitpacking.h include/delta.h s
 UNAME := $(shell uname)
 
 
-OBJECTS= bitpacking.o integratedbitpacking.o simdbitpacking.o usimdbitpacking.o    simdintegratedbitpacking.o   intersection.o  varintdecode.o streamvbyte.o simdpackedsearch.o simdpackedselect.o frameofreference.o 
+OBJECTS= bitpacking.o integratedbitpacking.o simdbitpacking.o usimdbitpacking.o    simdintegratedbitpacking.o   intersection.o  varintdecode.o streamvbyte.o simdpackedsearch.o simdpackedselect.o frameofreference.o for.o
 
 benchsearch: $(HEADERS) src/benchsearch.cpp  $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o benchsearch src/benchsearch.cpp  $(OBJECTS) -Iinclude

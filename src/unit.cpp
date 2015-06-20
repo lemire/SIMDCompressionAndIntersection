@@ -493,6 +493,7 @@ int main() {
     testInsert<VByte<true>>();
 
 
+    testSelectSimple<ForCODEC>();
     testSelectSimple<SIMDFrameOfReference>();
     testSelectSimple<FrameOfReference>();
     testSelectSimple<VarIntGB<true>>();
@@ -505,6 +506,7 @@ int main() {
 
     testSelectSimpleOdd<SIMDFrameOfReference>();
     testSelectSimpleOdd<FrameOfReference>();
+    testSelectSimpleOdd<ForCODEC>();
     testSelectSimpleOdd<VarIntGB<true>>();
     testSelectSimpleOdd<MaskedVByte<true>>();
     testSelectSimpleOdd<VariableByte<true>>();
@@ -513,6 +515,7 @@ int main() {
 
     testSelectAdvanced<SIMDFrameOfReference>();
     testSelectAdvanced<FrameOfReference>();
+    testSelectAdvanced<ForCODEC>();
     testSelectAdvanced<VarIntGB<true>>();
     testSelectAdvanced<MaskedVByte<true>>();
     testSelectAdvanced<VariableByte<true>>();
@@ -523,6 +526,7 @@ int main() {
 
     testFindSimple<SIMDFrameOfReference>();
     testFindSimple<FrameOfReference>();
+    testFindSimple<ForCODEC>();
     testFindSimple<VarIntGB<true>>();
     testFindSimple<MaskedVByte<true>>();
     testFindSimple<VariableByte<true>>();
@@ -533,6 +537,7 @@ int main() {
 
     testFindAdvanced<SIMDFrameOfReference>();
     testFindAdvanced<FrameOfReference>();
+    testFindAdvanced<ForCODEC>();
     testFindAdvanced<VarIntGB<true>>();
     testFindAdvanced<MaskedVByte<true>>();
     testFindAdvanced<VariableByte<true>>();
