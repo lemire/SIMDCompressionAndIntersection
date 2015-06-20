@@ -15,12 +15,10 @@ namespace SIMDCompressionLib {
 
 /**
  * Simple implementation of FOR compression using blocks of
- * 32 integers. If you specify a length that is not a multiple
- * of 32, the leftover integers are not compressed.
+ * 32 integers.
  *
- *
- * It might be worthwhile to pad your input up to 32 integers
- * before compression or to otherwise adapt this class to your needs.
+ * This implementation is inferior to ForCODEC. Please use
+ * ForCODEC instead.
  *
  * FOR does not compress particularly well but it supports
  * fast random access.

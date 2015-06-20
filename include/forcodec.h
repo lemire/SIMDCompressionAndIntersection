@@ -33,7 +33,7 @@
 namespace SIMDCompressionLib {
 
 /*
- * This class expects sorted input.
+ * Optimized scalar implementation of FOR (frame-of-reference) compression
  */
 class ForCODEC : public IntegerCODEC {
   public:
@@ -43,8 +43,8 @@ class ForCODEC : public IntegerCODEC {
       out++;
       // for_compress_sorted() would be a bit faster, but requires
       // sorted input
-      nvalue = 4 + for_compress_unsorted((const uint32_t *)in, (uint8_t *)out,
-                        length);
+      nvalue = (4 + for_compress_unsorted((const uint32_t *)in, (uint8_t *)out,
+                        length) + 3) / 4;
     }
 
     const uint32_t *decodeArray(const uint32_t *in, const size_t,
