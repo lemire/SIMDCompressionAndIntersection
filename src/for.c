@@ -299,6 +299,8 @@ for_select_bits(const uint8_t *in, uint32_t base, uint32_t bits,
   }
 }
 
+
+
 uint32_t
 for_select(const uint8_t *in, uint32_t index)
 {

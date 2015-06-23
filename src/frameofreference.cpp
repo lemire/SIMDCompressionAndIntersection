@@ -2,12 +2,12 @@
 
 
 static __m128i *  simdpackFOR_length(uint32_t initvalue, const uint32_t *   in, int length, __m128i *    out, const uint32_t bit) {
-	int k;
-	int inwordpointer;
-	__m128i P;
-	uint32_t firstpass;
+    int k;
+    int inwordpointer;
+    __m128i P;
+    uint32_t firstpass;
     __m128i offset;
-	if(bit == 0) return out;/* nothing to do */
+    if(bit == 0) return out;/* nothing to do */
     if(bit == 32) {
         memcpy(out,in,length*sizeof(uint32_t));
         return (__m128i *) ((uint32_t *) out + length) ;
@@ -93,7 +93,7 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     }
     if(length % 4 != 0) {
         uint32_t buffer[4];
-    	__m128i answer = _mm_srli_epi32(P, inwordpointer);
+        __m128i answer = _mm_srli_epi32(P, inwordpointer);
         const uint32_t firstpass = sizeof(uint32_t) * 8 - inwordpointer;
         if(bit < firstpass) {
             inwordpointer += bit;
@@ -117,7 +117,7 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
 
 
 
-    static uint32_t * pack1_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack1_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -185,12 +185,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack2_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack2_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -259,12 +259,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack3_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack3_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -336,12 +336,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack4_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack4_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -412,12 +412,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack5_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack5_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -493,12 +493,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack6_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack6_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -575,12 +575,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack7_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack7_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -660,12 +660,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack8_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack8_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -740,12 +740,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack9_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack9_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -829,12 +829,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack10_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack10_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -919,12 +919,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack11_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack11_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1012,12 +1012,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack12_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack12_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1104,12 +1104,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack13_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack13_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1201,12 +1201,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack14_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack14_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1299,12 +1299,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack15_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack15_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1400,12 +1400,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack16_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack16_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1488,12 +1488,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack17_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack17_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1593,12 +1593,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack18_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack18_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1699,12 +1699,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack19_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack19_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1808,12 +1808,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack20_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack20_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -1916,12 +1916,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack21_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack21_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -2029,12 +2029,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack22_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack22_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -2143,12 +2143,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack23_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack23_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -2260,12 +2260,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack24_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack24_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -2372,12 +2372,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack25_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack25_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -2493,12 +2493,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack26_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack26_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -2615,12 +2615,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack27_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack27_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -2740,12 +2740,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack28_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack28_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -2864,12 +2864,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack29_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack29_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -2993,12 +2993,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack30_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack30_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -3123,12 +3123,12 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack31_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static uint32_t * pack31_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out =  static_cast<uint32_t>((*in) -base)  ;
     ++in;
@@ -3256,20 +3256,20 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     ++out;
     ++in;
 
-        return out;
-      }
+    return out;
+}
 
 
 
-    static uint32_t * pack32_32( uint32_t ,  const uint32_t *   in, uint32_t *    out) {
-    	memcpy(out,in,32*sizeof(uint32_t));
-        return out + 32;
-      }
+static uint32_t * pack32_32( uint32_t ,  const uint32_t *   in, uint32_t *    out) {
+    memcpy(out,in,32*sizeof(uint32_t));
+    return out + 32;
+}
 
 
 
 
- static const uint32_t * unpack1_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack1_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   & 1  ;
     *out += base;
@@ -3369,13 +3369,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack2_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack2_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 2 )  ;
     *out += base;
@@ -3476,13 +3476,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack3_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack3_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 3 )  ;
     *out += base;
@@ -3586,13 +3586,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack4_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack4_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 4 )  ;
     *out += base;
@@ -3695,13 +3695,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack5_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack5_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 5 )  ;
     *out += base;
@@ -3809,13 +3809,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack6_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack6_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 6 )  ;
     *out += base;
@@ -3924,13 +3924,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack7_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack7_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 7 )  ;
     *out += base;
@@ -4042,13 +4042,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack8_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack8_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 8 )  ;
     *out += base;
@@ -4155,13 +4155,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack9_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack9_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 9 )  ;
     *out += base;
@@ -4277,13 +4277,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack10_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack10_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 10 )  ;
     *out += base;
@@ -4400,13 +4400,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack11_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack11_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 11 )  ;
     *out += base;
@@ -4526,13 +4526,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack12_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack12_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 12 )  ;
     *out += base;
@@ -4651,13 +4651,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack13_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack13_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 13 )  ;
     *out += base;
@@ -4781,13 +4781,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack14_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack14_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 14 )  ;
     *out += base;
@@ -4912,13 +4912,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack15_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack15_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 15 )  ;
     *out += base;
@@ -5046,13 +5046,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack16_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack16_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 16 )  ;
     *out += base;
@@ -5167,13 +5167,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack17_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack17_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 17 )  ;
     *out += base;
@@ -5305,13 +5305,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack18_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack18_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 18 )  ;
     *out += base;
@@ -5444,13 +5444,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack19_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack19_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 19 )  ;
     *out += base;
@@ -5586,13 +5586,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack20_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack20_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 20 )  ;
     *out += base;
@@ -5727,13 +5727,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack21_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack21_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 21 )  ;
     *out += base;
@@ -5873,13 +5873,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack22_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack22_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 22 )  ;
     *out += base;
@@ -6020,13 +6020,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack23_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack23_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 23 )  ;
     *out += base;
@@ -6170,13 +6170,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack24_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack24_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 24 )  ;
     *out += base;
@@ -6315,13 +6315,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack25_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack25_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 25 )  ;
     *out += base;
@@ -6469,13 +6469,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack26_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack26_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 26 )  ;
     *out += base;
@@ -6624,13 +6624,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack27_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack27_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 27 )  ;
     *out += base;
@@ -6782,13 +6782,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack28_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack28_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 28 )  ;
     *out += base;
@@ -6939,13 +6939,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack29_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack29_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 29 )  ;
     *out += base;
@@ -7101,13 +7101,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack30_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack30_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 30 )  ;
     *out += base;
@@ -7264,13 +7264,13 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack31_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
+static const uint32_t * unpack31_32( uint32_t base,  const uint32_t *   in, uint32_t *    out) {
 
     *out = ( (*in) >>  0  )   % (1U << 31 )  ;
     *out += base;
@@ -7430,146 +7430,148 @@ static const __m128i * simdunpackFOR_length(uint32_t initvalue, const __m128i * 
     *out += base;
     out++;
 
-        return in;
-      }
+    return in;
+}
 
 
 
 
- static const uint32_t * unpack32_32( uint32_t ,  const uint32_t *   in, uint32_t *    out) {
-	 memcpy(out,in,32*sizeof(uint32_t));
+static const uint32_t * unpack32_32( uint32_t ,  const uint32_t *   in, uint32_t *    out) {
+    memcpy(out,in,32*sizeof(uint32_t));
     return in + 32;
- }
+}
 
- typedef const uint32_t * (*unpackfnc)( uint32_t,  const uint32_t * , uint32_t * );
+typedef const uint32_t * (*unpackfnc)( uint32_t,  const uint32_t * , uint32_t * );
 
- typedef uint32_t * (*packfnc)( uint32_t,  const uint32_t * , uint32_t * );
+typedef uint32_t * (*packfnc)( uint32_t,  const uint32_t * , uint32_t * );
 
 static uint32_t * nullpacker( uint32_t,  const uint32_t *   , uint32_t *    out) {
-   return out;
- }
+    return out;
+}
 
 static const uint32_t * nullunpacker( uint32_t base,  const uint32_t *  in , uint32_t * out) {
-   for(int k = 0; k < 32; ++k) {
-	 out[k] = base;
-   }
-   return in;
- }
+    for(int k = 0; k < 32; ++k) {
+        out[k] = base;
+    }
+    return in;
+}
 
 
-static unpackfnc unpack32[33]={nullunpacker,unpack1_32,
-         unpack2_32,
-         unpack3_32,
-         unpack4_32,
-         unpack5_32,
-         unpack6_32,
-         unpack7_32,
-         unpack8_32,
-         unpack9_32,
-         unpack10_32,
-         unpack11_32,
-         unpack12_32,
-         unpack13_32,
-         unpack14_32,
-         unpack15_32,
-         unpack16_32,
-         unpack17_32,
-         unpack18_32,
-         unpack19_32,
-         unpack20_32,
-         unpack21_32,
-         unpack22_32,
-         unpack23_32,
-         unpack24_32,
-         unpack25_32,
-         unpack26_32,
-         unpack27_32,
-         unpack28_32,
-         unpack29_32,
-         unpack30_32,
-         unpack31_32,
-         unpack32_32};
+static unpackfnc unpack32[33]= {nullunpacker,unpack1_32,
+                                unpack2_32,
+                                unpack3_32,
+                                unpack4_32,
+                                unpack5_32,
+                                unpack6_32,
+                                unpack7_32,
+                                unpack8_32,
+                                unpack9_32,
+                                unpack10_32,
+                                unpack11_32,
+                                unpack12_32,
+                                unpack13_32,
+                                unpack14_32,
+                                unpack15_32,
+                                unpack16_32,
+                                unpack17_32,
+                                unpack18_32,
+                                unpack19_32,
+                                unpack20_32,
+                                unpack21_32,
+                                unpack22_32,
+                                unpack23_32,
+                                unpack24_32,
+                                unpack25_32,
+                                unpack26_32,
+                                unpack27_32,
+                                unpack28_32,
+                                unpack29_32,
+                                unpack30_32,
+                                unpack31_32,
+                                unpack32_32
+                               };
 
-static packfnc pack32[33]={nullpacker,pack1_32,
-         pack2_32,
-         pack3_32,
-         pack4_32,
-         pack5_32,
-         pack6_32,
-         pack7_32,
-         pack8_32,
-         pack9_32,
-         pack10_32,
-         pack11_32,
-         pack12_32,
-         pack13_32,
-         pack14_32,
-         pack15_32,
-         pack16_32,
-         pack17_32,
-         pack18_32,
-         pack19_32,
-         pack20_32,
-         pack21_32,
-         pack22_32,
-         pack23_32,
-         pack24_32,
-         pack25_32,
-         pack26_32,
-         pack27_32,
-         pack28_32,
-         pack29_32,
-         pack30_32,
-         pack31_32,
-         pack32_32};
+static packfnc pack32[33]= {nullpacker,pack1_32,
+                            pack2_32,
+                            pack3_32,
+                            pack4_32,
+                            pack5_32,
+                            pack6_32,
+                            pack7_32,
+                            pack8_32,
+                            pack9_32,
+                            pack10_32,
+                            pack11_32,
+                            pack12_32,
+                            pack13_32,
+                            pack14_32,
+                            pack15_32,
+                            pack16_32,
+                            pack17_32,
+                            pack18_32,
+                            pack19_32,
+                            pack20_32,
+                            pack21_32,
+                            pack22_32,
+                            pack23_32,
+                            pack24_32,
+                            pack25_32,
+                            pack26_32,
+                            pack27_32,
+                            pack28_32,
+                            pack29_32,
+                            pack30_32,
+                            pack31_32,
+                            pack32_32
+                           };
 
 static uint32_t bits(const uint32_t v) {
-     return v == 0 ? 0 : 32 - __builtin_clz(v);
- }
+    return v == 0 ? 0 : 32 - __builtin_clz(v);
+}
 
- uint32_t * SIMDCompressionLib::FrameOfReference::compress_length(const uint32_t * in, uint32_t length, uint32_t * out) {
-     if(length == 0) return out;
-     uint32_t m = in[0];
-     uint32_t M = in[0];
-     for(uint32_t i = 1; i < length; ++i) {
-         if(in[i]>M) M=in[i];
-         if(in[i]<m) m=in[i];
-     }
-     int b = bits(static_cast<uint32_t>(M-m));
+uint32_t * SIMDCompressionLib::FrameOfReference::compress_length(const uint32_t * in, uint32_t length, uint32_t * out) {
+    if(length == 0) return out;
+    uint32_t m = in[0];
+    uint32_t M = in[0];
+    for(uint32_t i = 1; i < length; ++i) {
+        if(in[i]>M) M=in[i];
+        if(in[i]<m) m=in[i];
+    }
+    int b = bits(static_cast<uint32_t>(M-m));
 
-     out[0] = m;
-     ++out;
-     out[0] = M;
-     ++out;
-     uint32_t k = 0;
-     for(; k+32<=length; k+=32,in+=32) {
-         out = pack32[b](m,in,out);
-     }
-     // we could pack the rest, but we don't  bother
-     for(;k<length;++k,in++,out++) {
-         out[0] = in [0];
-     }
-     return out;
- }
+    out[0] = m;
+    ++out;
+    out[0] = M;
+    ++out;
+    uint32_t k = 0;
+    for(; k+32<=length; k+=32,in+=32) {
+        out = pack32[b](m,in,out);
+    }
+    // we could pack the rest, but we don't  bother
+    for(; k<length; ++k,in++,out++) {
+        out[0] = in [0];
+    }
+    return out;
+}
 
 const uint32_t * SIMDCompressionLib::FrameOfReference::uncompress_length(const uint32_t * in, uint32_t * out, uint32_t  nvalue) {
-     if(nvalue == 0) return out;
-     uint32_t m = in[0];
-     ++in;
-     uint32_t M = in[0];
-     ++in;
-     int b = bits(static_cast<uint32_t>(M-m));
-     for(uint32_t k = 0; k<nvalue/32; ++k) {
-         unpack32[b](m,in+b*k,out+32*k);
-     }
-     out = out + nvalue/32*32;
-     in = in + nvalue/32*b;
-     // we could pack the rest, but we don't  bother
-     for(uint32_t k=nvalue/32*32;k<nvalue;++k,in++,out++) {
-         out[0] = in [0];
-     }
-     return in;
- }
+    if(nvalue == 0) return out;
+    uint32_t m = in[0];
+    ++in;
+    uint32_t M = in[0];
+    ++in;
+    int b = bits(static_cast<uint32_t>(M-m));
+    for(uint32_t k = 0; k<nvalue/32; ++k) {
+        unpack32[b](m,in+b*k,out+32*k);
+    }
+    out = out + nvalue/32*32;
+    in = in + nvalue/32*b;
+    // we could pack the rest, but we don't  bother
+    for(uint32_t k=nvalue/32*32; k<nvalue; ++k,in++,out++) {
+        out[0] = in [0];
+    }
+    return in;
+}
 
 
 
@@ -7577,104 +7579,104 @@ const uint32_t * SIMDCompressionLib::FrameOfReference::uncompress_length(const u
 
 
 struct selectmetadata {
-	uint32_t m;
-	const uint32_t *in;
-	uint32_t b;
+    uint32_t m;
+    const uint32_t *in;
+    uint32_t b;
     uint32_t length;
 };
 
 static uint32_t fastselect(selectmetadata * s, size_t index) {
-	    if(s->b == 32) {
-	    	return s->in[index];
-	    }
-	    uint32_t packedlength = s->length / 32 * 32;
-	    if(index > packedlength) {
-	        uint32_t packedsizeinwords = packedlength * s->b / 32;
-	    	return s->in[packedsizeinwords +  index - packedlength];
-	    }
-		const int bitoffset = index * s->b; /* how many bits  */
-		const int firstword = bitoffset / 32;
-		const int secondword = (bitoffset + s->b - 1) / 32;
-		const uint32_t firstpart = s->in[firstword]
-				>> (bitoffset % 32);
-		const uint32_t mask = (1 << s->b) - 1;
-		if (firstword == secondword) {
-			/* easy common case*/
-			return s->m + (firstpart & mask);
-		} else {
-			/* harder case where we need to combine two words */
-			const uint32_t secondpart = s->in[firstword + 1];
-			const int usablebitsinfirstword = 32 - (bitoffset % 32);
-			return s->m
-					+ ((firstpart | (secondpart << usablebitsinfirstword))
-							& mask);
-		}
+    if(s->b == 32) {
+        return s->in[index];
+    }
+    uint32_t packedlength = s->length / 32 * 32;
+    if(index > packedlength) {
+        uint32_t packedsizeinwords = packedlength * s->b / 32;
+        return s->in[packedsizeinwords +  index - packedlength];
+    }
+    const int bitoffset = index * s->b; /* how many bits  */
+    const int firstword = bitoffset / 32;
+    const int secondword = (bitoffset + s->b - 1) / 32;
+    const uint32_t firstpart = s->in[firstword]
+                               >> (bitoffset % 32);
+    const uint32_t mask = (1 << s->b) - 1;
+    if (firstword == secondword) {
+        /* easy common case*/
+        return s->m + (firstpart & mask);
+    } else {
+        /* harder case where we need to combine two words */
+        const uint32_t secondpart = s->in[firstword + 1];
+        const int usablebitsinfirstword = 32 - (bitoffset % 32);
+        return s->m
+               + ((firstpart | (secondpart << usablebitsinfirstword))
+                  & mask);
+    }
 }
 
 // Performs a lower bound find in the encoded array.
 // Returns the index
 size_t SIMDCompressionLib::FrameOfReference::findLowerBound(const uint32_t *in, const size_t , uint32_t key,
-                      uint32_t *presult) {
-	selectmetadata s;
-	s.length = *in;
-	in ++;
-	s.m = *in;
-	++in;
-	uint32_t M = *in;
-	++in;
-	s.b = bits(M-s.m);
-	s.in = in;
+        uint32_t *presult) {
+    selectmetadata s;
+    s.length = *in;
+    in ++;
+    s.m = *in;
+    ++in;
+    uint32_t M = *in;
+    ++in;
+    s.b = bits(M-s.m);
+    s.in = in;
 
-	int count = s.length;
-	int begin = 0;
-	uint32_t val;
-	while (count > 0) {
-		int step = count / 2;
-		val = fastselect(&s, begin+step);
-	    if (val < key) {
-	    	begin += step + 1;
-	    	count -= step + 1;
-	    } else count = step;
-	}
-	*presult = fastselect(&s, begin);
-	return begin;
+    int count = s.length;
+    int begin = 0;
+    uint32_t val;
+    while (count > 0) {
+        int step = count / 2;
+        val = fastselect(&s, begin+step);
+        if (val < key) {
+            begin += step + 1;
+            count -= step + 1;
+        } else count = step;
+    }
+    *presult = fastselect(&s, begin);
+    return begin;
 }
 
 
 // Returns a decompressed value in an encoded array
 uint32_t SIMDCompressionLib::FrameOfReference::select(const uint32_t *in, size_t index) {
-	uint32_t length = *in;
-	in ++;
+    uint32_t length = *in;
+    in ++;
     uint32_t m = *in;
     ++in;
     uint32_t M = *in;
     ++in;
     uint32_t b = bits(M-m);
     if(b == 32) {
-    	return in[index];
+        return in[index];
     }
     uint32_t packedlength = length / 32 * 32;
     if(index > packedlength) {
         uint32_t packedsizeinwords = packedlength * b / 32;
-    	return in[packedsizeinwords +  index - packedlength];
+        return in[packedsizeinwords +  index - packedlength];
     }
-	const int bitoffset = index * b; /* how many bits  */
-	const int firstword = bitoffset / 32;
-	const int secondword = (bitoffset + b - 1) / 32;
-	const uint32_t firstpart = in[firstword]
-			>> (bitoffset % 32);
-	const uint32_t mask = (1 << b) - 1;
-	if (firstword == secondword) {
-		/* easy common case*/
-		return m + (firstpart & mask);
-	} else {
-		/* harder case where we need to combine two words */
-		const uint32_t secondpart = in[firstword + 1];
-		const int usablebitsinfirstword = 32 - (bitoffset % 32);
-		return m
-				+ ((firstpart | (secondpart << usablebitsinfirstword))
-						& mask);
-	}
+    const int bitoffset = index * b; /* how many bits  */
+    const int firstword = bitoffset / 32;
+    const int secondword = (bitoffset + b - 1) / 32;
+    const uint32_t firstpart = in[firstword]
+                               >> (bitoffset % 32);
+    const uint32_t mask = (1 << b) - 1;
+    if (firstword == secondword) {
+        /* easy common case*/
+        return m + (firstpart & mask);
+    } else {
+        /* harder case where we need to combine two words */
+        const uint32_t secondpart = in[firstword + 1];
+        const int usablebitsinfirstword = 32 - (bitoffset % 32);
+        return m
+               + ((firstpart | (secondpart << usablebitsinfirstword))
+                  & mask);
+    }
 }
 
 
@@ -7695,7 +7697,7 @@ static __m128i  iunpackFOR0(__m128i initOffset, const __m128i *   _in , uint32_t
     (void) _in;
     for (i = 0; i < 8; ++i) {
         _mm_storeu_si128(out++, initOffset);
-    	_mm_storeu_si128(out++, initOffset);
+        _mm_storeu_si128(out++, initOffset);
         _mm_storeu_si128(out++, initOffset);
         _mm_storeu_si128(out++, initOffset);
     }
@@ -15292,7 +15294,8 @@ static __m128i iunpackFOR2(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -15446,7 +15449,8 @@ static __m128i iunpackFOR3(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 3-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -15504,7 +15508,8 @@ static __m128i iunpackFOR3(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 3-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -15615,7 +15620,8 @@ static __m128i iunpackFOR4(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -15656,7 +15662,8 @@ static __m128i iunpackFOR4(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -15697,7 +15704,8 @@ static __m128i iunpackFOR4(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -15791,7 +15799,8 @@ static __m128i iunpackFOR5(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 5-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -15824,7 +15833,8 @@ static __m128i iunpackFOR5(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 5-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -15862,7 +15872,8 @@ static __m128i iunpackFOR5(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 5-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -15895,7 +15906,8 @@ static __m128i iunpackFOR5(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 5-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -15976,7 +15988,8 @@ static __m128i iunpackFOR6(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 6-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16004,7 +16017,8 @@ static __m128i iunpackFOR6(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 6-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16032,7 +16046,8 @@ static __m128i iunpackFOR6(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -16063,7 +16078,8 @@ static __m128i iunpackFOR6(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 6-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16091,7 +16107,8 @@ static __m128i iunpackFOR6(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 6-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16162,7 +16179,8 @@ static __m128i iunpackFOR7(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 7-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16190,7 +16208,8 @@ static __m128i iunpackFOR7(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 7-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16213,7 +16232,8 @@ static __m128i iunpackFOR7(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 7-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16241,7 +16261,8 @@ static __m128i iunpackFOR7(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 7-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16264,7 +16285,8 @@ static __m128i iunpackFOR7(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 7-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16292,7 +16314,8 @@ static __m128i iunpackFOR7(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 7-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16353,7 +16376,8 @@ static __m128i iunpackFOR8(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -16374,7 +16398,8 @@ static __m128i iunpackFOR8(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -16395,7 +16420,8 @@ static __m128i iunpackFOR8(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -16416,7 +16442,8 @@ static __m128i iunpackFOR8(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -16437,7 +16464,8 @@ static __m128i iunpackFOR8(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -16458,7 +16486,8 @@ static __m128i iunpackFOR8(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -16479,7 +16508,8 @@ static __m128i iunpackFOR8(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -16538,7 +16568,8 @@ static __m128i iunpackFOR9(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 9-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16561,7 +16592,8 @@ static __m128i iunpackFOR9(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 9-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16579,7 +16611,8 @@ static __m128i iunpackFOR9(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 9-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16602,7 +16635,8 @@ static __m128i iunpackFOR9(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 9-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16620,7 +16654,8 @@ static __m128i iunpackFOR9(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 9-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16643,7 +16678,8 @@ static __m128i iunpackFOR9(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 9-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16661,7 +16697,8 @@ static __m128i iunpackFOR9(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 9-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16684,7 +16721,8 @@ static __m128i iunpackFOR9(__m128i  initOffset, const  __m128i*   in, uint32_t *
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 9-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16740,7 +16778,8 @@ static __m128i iunpackFOR10(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 10-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16758,7 +16797,8 @@ static __m128i iunpackFOR10(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 10-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16776,7 +16816,8 @@ static __m128i iunpackFOR10(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 10-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16794,7 +16835,8 @@ static __m128i iunpackFOR10(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 10-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16812,7 +16854,8 @@ static __m128i iunpackFOR10(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -16833,7 +16876,8 @@ static __m128i iunpackFOR10(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 10-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16851,7 +16895,8 @@ static __m128i iunpackFOR10(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 10-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16869,7 +16914,8 @@ static __m128i iunpackFOR10(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 10-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16887,7 +16933,8 @@ static __m128i iunpackFOR10(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 10-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16938,7 +16985,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16956,7 +17004,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16974,7 +17023,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -16992,7 +17042,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17010,7 +17061,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17028,7 +17080,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17046,7 +17099,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17064,7 +17118,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17082,7 +17137,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17100,7 +17156,8 @@ static __m128i iunpackFOR11(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 11-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17146,7 +17203,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 12-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17164,7 +17222,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 12-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17177,7 +17236,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -17193,7 +17253,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 12-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17211,7 +17272,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 12-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17224,7 +17286,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -17240,7 +17303,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 12-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17258,7 +17322,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 12-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17271,7 +17336,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -17287,7 +17353,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 12-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17305,7 +17372,8 @@ static __m128i iunpackFOR12(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 12-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17351,7 +17419,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17364,7 +17433,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17382,7 +17452,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17395,7 +17466,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17413,7 +17485,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17426,7 +17499,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17444,7 +17518,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17457,7 +17532,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17475,7 +17551,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17488,7 +17565,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17506,7 +17584,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17519,7 +17598,8 @@ static __m128i iunpackFOR13(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 13-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17565,7 +17645,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17578,7 +17659,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17591,7 +17673,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17609,7 +17692,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17622,7 +17706,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17635,7 +17720,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17648,7 +17734,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -17664,7 +17751,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17677,7 +17765,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17690,7 +17779,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17708,7 +17798,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17721,7 +17812,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17734,7 +17826,8 @@ static __m128i iunpackFOR14(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 14-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17780,7 +17873,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-13), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17793,7 +17887,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17806,7 +17901,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17819,7 +17915,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17832,7 +17929,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17845,7 +17943,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17858,7 +17957,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17876,7 +17976,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17889,7 +17990,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17902,7 +18004,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17915,7 +18018,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17928,7 +18032,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17941,7 +18046,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17954,7 +18060,8 @@ static __m128i iunpackFOR15(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,19);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 15-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -17995,7 +18102,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18006,7 +18114,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18017,7 +18126,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18028,7 +18138,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18039,7 +18150,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18050,7 +18162,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18061,7 +18174,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18072,7 +18186,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18083,7 +18198,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18094,7 +18210,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18105,7 +18222,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18116,7 +18234,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18127,7 +18246,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18138,7 +18258,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18149,7 +18270,8 @@ static __m128i iunpackFOR16(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18188,7 +18310,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,17);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18201,7 +18324,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,19);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18214,7 +18338,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18227,7 +18352,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18240,7 +18366,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18253,7 +18380,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18266,7 +18394,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18279,7 +18408,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18287,7 +18417,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18300,7 +18431,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18313,7 +18445,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18326,7 +18459,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18339,7 +18473,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18352,7 +18487,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18365,7 +18501,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-13), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18378,7 +18515,8 @@ static __m128i iunpackFOR17(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 17-15), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18414,7 +18552,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18427,7 +18566,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18440,7 +18580,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18453,7 +18594,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18461,7 +18603,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18474,7 +18617,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18487,7 +18631,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18500,7 +18645,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18508,7 +18654,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18519,7 +18666,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18532,7 +18680,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18545,7 +18694,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18558,7 +18708,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18566,7 +18717,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18579,7 +18731,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18592,7 +18745,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18605,7 +18759,8 @@ static __m128i iunpackFOR18(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 18-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18641,7 +18796,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,19);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18654,7 +18810,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18667,7 +18824,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18675,7 +18833,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18688,7 +18847,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18701,7 +18861,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-17), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18709,7 +18870,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,17);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18722,7 +18884,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18735,7 +18898,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18743,7 +18907,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18756,7 +18921,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18769,7 +18935,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-15), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18777,7 +18944,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,15);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18790,7 +18958,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18803,7 +18972,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18811,7 +18981,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18824,7 +18995,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18837,7 +19009,8 @@ static __m128i iunpackFOR19(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 19-13), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18873,7 +19046,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18886,7 +19060,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18894,7 +19069,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18907,7 +19083,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18915,7 +19092,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18926,7 +19104,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18939,7 +19118,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18947,7 +19127,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18960,7 +19141,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18968,7 +19150,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -18979,7 +19162,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -18992,7 +19176,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19000,7 +19185,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19013,7 +19199,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19021,7 +19208,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -19032,7 +19220,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19045,7 +19234,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19053,7 +19243,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19066,7 +19257,8 @@ static __m128i iunpackFOR20(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 20-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19102,7 +19294,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19115,7 +19308,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19123,7 +19317,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19136,7 +19331,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-19), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19144,7 +19340,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,19);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19157,7 +19354,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19165,7 +19363,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19178,7 +19377,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-17), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19186,7 +19386,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,17);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19199,7 +19400,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19207,7 +19409,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19220,7 +19423,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-15), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19228,7 +19432,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,15);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19241,7 +19446,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19249,7 +19455,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19262,7 +19469,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-13), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19270,7 +19478,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,13);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19283,7 +19492,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19291,7 +19501,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19304,7 +19515,8 @@ static __m128i iunpackFOR21(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 21-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19340,7 +19552,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19348,7 +19561,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19361,7 +19575,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19369,7 +19584,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19382,7 +19598,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19390,7 +19607,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19403,7 +19621,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19411,7 +19630,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19424,7 +19644,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19432,7 +19653,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19440,7 +19662,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -19451,7 +19674,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19459,7 +19683,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19472,7 +19697,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19480,7 +19706,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19493,7 +19720,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19501,7 +19729,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19514,7 +19743,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19522,7 +19752,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19535,7 +19766,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19543,7 +19775,8 @@ static __m128i iunpackFOR22(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 22-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19579,7 +19812,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19587,7 +19821,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19600,7 +19835,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-19), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19608,7 +19844,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,19);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19616,7 +19853,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19629,7 +19867,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-15), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19637,7 +19876,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,15);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19650,7 +19890,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19658,7 +19899,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19666,7 +19908,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,11);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19679,7 +19922,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19687,7 +19931,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19700,7 +19945,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-21), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19708,7 +19954,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19716,7 +19963,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19729,7 +19977,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-17), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19737,7 +19986,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,17);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19750,7 +20000,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-22), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19758,7 +20009,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-13), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19766,7 +20018,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,13);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19779,7 +20032,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19787,7 +20041,8 @@ static __m128i iunpackFOR23(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 23-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19823,7 +20078,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19831,7 +20087,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19839,7 +20096,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -19850,7 +20108,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19858,7 +20117,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19866,7 +20126,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -19877,7 +20138,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19885,7 +20147,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19893,7 +20156,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -19904,7 +20168,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19912,7 +20177,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19920,7 +20186,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -19931,7 +20198,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19939,7 +20207,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19947,7 +20216,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -19958,7 +20228,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19966,7 +20237,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19974,7 +20246,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -19985,7 +20258,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -19993,7 +20267,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20001,7 +20276,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -20012,7 +20288,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20020,7 +20297,8 @@ static __m128i iunpackFOR24(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 24-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20056,7 +20334,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20064,7 +20343,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20072,7 +20352,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,11);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20085,7 +20366,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-22), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20093,7 +20375,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-15), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20101,7 +20384,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,15);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20109,7 +20393,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20122,7 +20407,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-19), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20130,7 +20416,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,19);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20138,7 +20425,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20151,7 +20439,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-23), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20159,7 +20448,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20167,7 +20457,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20175,7 +20466,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,9);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20188,7 +20480,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20196,7 +20489,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-13), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20204,7 +20498,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,13);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20217,7 +20512,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20225,7 +20521,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-17), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20233,7 +20530,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,17);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20241,7 +20539,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20254,7 +20553,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-21), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20262,7 +20562,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20270,7 +20571,8 @@ static __m128i iunpackFOR25(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 25-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20306,7 +20608,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20314,7 +20617,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20322,7 +20626,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20330,7 +20635,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20343,7 +20649,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-22), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20351,7 +20658,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20359,7 +20667,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20367,7 +20676,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20380,7 +20690,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20388,7 +20699,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20396,7 +20708,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20404,7 +20717,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20412,7 +20726,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,6);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -20423,7 +20738,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20431,7 +20747,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20439,7 +20756,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20447,7 +20765,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20460,7 +20779,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-22), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20468,7 +20788,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20476,7 +20797,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20484,7 +20806,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20497,7 +20820,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20505,7 +20829,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20513,7 +20838,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20521,7 +20847,8 @@ static __m128i iunpackFOR26(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 26-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20557,7 +20884,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-22), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20565,7 +20893,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-17), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20573,7 +20902,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,17);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20581,7 +20911,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20589,7 +20920,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,7);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20602,7 +20934,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20610,7 +20943,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-19), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20618,7 +20952,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,19);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20626,7 +20961,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20634,7 +20970,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,9);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20647,7 +20984,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-26), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20655,7 +20993,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-21), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20663,7 +21002,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20671,7 +21011,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20679,7 +21020,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,11);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20687,7 +21029,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,6);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20700,7 +21043,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-23), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20708,7 +21052,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20716,7 +21061,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-13), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20724,7 +21070,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,13);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20732,7 +21079,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20745,7 +21093,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-25), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20753,7 +21102,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20761,7 +21111,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-15), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20769,7 +21120,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,15);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20777,7 +21129,8 @@ static __m128i iunpackFOR27(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 27-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20813,7 +21166,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20821,7 +21175,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20829,7 +21184,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20837,7 +21193,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20845,7 +21202,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20853,7 +21211,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20861,7 +21220,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,4);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -20872,7 +21232,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20880,7 +21241,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20888,7 +21250,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20896,7 +21259,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20904,7 +21268,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20912,7 +21277,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20920,7 +21286,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,4);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -20931,7 +21298,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20939,7 +21307,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20947,7 +21316,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20955,7 +21325,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20963,7 +21334,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20971,7 +21343,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20979,7 +21352,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,4);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -20990,7 +21364,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -20998,7 +21373,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21006,7 +21382,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21014,7 +21391,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21022,7 +21400,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21030,7 +21409,8 @@ static __m128i iunpackFOR28(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 28-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21066,7 +21446,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-26), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21074,7 +21455,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-23), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21082,7 +21464,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21090,7 +21473,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-17), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21098,7 +21482,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,17);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21106,7 +21491,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21114,7 +21500,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,11);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21122,7 +21509,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21130,7 +21518,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,5);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21143,7 +21532,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-28), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21151,7 +21541,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-25), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21159,7 +21550,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-22), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21167,7 +21559,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-19), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21175,7 +21568,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,19);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21183,7 +21577,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-13), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21191,7 +21586,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,13);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21199,7 +21595,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21207,7 +21604,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,7);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21215,7 +21613,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,4);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21228,7 +21627,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-27), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21236,7 +21636,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21244,7 +21645,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-21), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21252,7 +21654,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21260,7 +21663,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-15), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21268,7 +21672,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,15);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21276,7 +21681,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21284,7 +21690,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,9);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21292,7 +21699,8 @@ static __m128i iunpackFOR29(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,6);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 29-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21328,7 +21736,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-28), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21336,7 +21745,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-26), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21344,7 +21754,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21352,7 +21763,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-22), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21360,7 +21772,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21368,7 +21781,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21376,7 +21790,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21384,7 +21799,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21392,7 +21808,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21400,7 +21817,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21408,7 +21826,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21416,7 +21835,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21424,7 +21844,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,6);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21432,7 +21853,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,4);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21440,7 +21862,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,2);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_add_epi32(OutReg, initOffset);
     _mm_storeu_si128(out++, OutReg);
 
@@ -21451,7 +21874,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-28), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21459,7 +21883,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-26), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21467,7 +21892,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21475,7 +21901,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-22), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21483,7 +21910,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21491,7 +21919,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21499,7 +21928,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21507,7 +21937,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21515,7 +21946,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21523,7 +21955,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21531,7 +21964,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21539,7 +21973,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21547,7 +21982,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,6);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21555,7 +21991,8 @@ static __m128i iunpackFOR30(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,4);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 30-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21591,7 +22028,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,31);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-30), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21599,7 +22037,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,30);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-29), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21607,7 +22046,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,29);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-28), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21615,7 +22055,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,28);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-27), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21623,7 +22064,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,27);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-26), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21631,7 +22073,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,26);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-25), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21639,7 +22082,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,25);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-24), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21647,7 +22091,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,24);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-23), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21655,7 +22100,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,23);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-22), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21663,7 +22109,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,22);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-21), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21671,7 +22118,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,21);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-20), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21679,7 +22127,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,20);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-19), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21687,7 +22136,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,19);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-18), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21695,7 +22145,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,18);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-17), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21703,7 +22154,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,17);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-16), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21711,7 +22163,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,16);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-15), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21719,7 +22172,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,15);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-14), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21727,7 +22181,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,14);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-13), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21735,7 +22190,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,13);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-12), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21743,7 +22199,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,12);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-11), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21751,7 +22208,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,11);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-10), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21759,7 +22217,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,10);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-9), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21767,7 +22226,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,9);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-8), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21775,7 +22235,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,8);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-7), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21783,7 +22244,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,7);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-6), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21791,7 +22253,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,6);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-5), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21799,7 +22262,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,5);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-4), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21807,7 +22271,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,4);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-3), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21815,7 +22280,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,3);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-2), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21823,7 +22289,8 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
     tmp = _mm_srli_epi32(InReg,2);
     OutReg = tmp;
-    ++in;    InReg = _mm_loadu_si128(in);
+    ++in;
+    InReg = _mm_loadu_si128(in);
     OutReg = _mm_or_si128(OutReg, _mm_and_si128(_mm_slli_epi32(InReg, 31-1), mask));
 
     OutReg = _mm_add_epi32(OutReg, initOffset);
@@ -21842,15 +22309,15 @@ static __m128i iunpackFOR31(__m128i  initOffset, const  __m128i*   in, uint32_t 
 
 
 static __m128i iunpackFOR32(__m128i initvalue , const  __m128i*   in, uint32_t *    _out) {
-	__m128i * mout = (__m128i *)_out;
-	__m128i invec;
-	size_t k;
-	(void) initvalue;
-	for(k = 0; k < 128/4; ++k) {
-		invec =  _mm_loadu_si128(in++);
-	    _mm_storeu_si128(mout++, invec);
-	}
-	return invec;
+    __m128i * mout = (__m128i *)_out;
+    __m128i invec;
+    size_t k;
+    (void) initvalue;
+    for(k = 0; k < 128/4; ++k) {
+        invec =  _mm_loadu_si128(in++);
+        _mm_storeu_si128(mout++, invec);
+    }
+    return invec;
 }
 
 
@@ -21860,73 +22327,140 @@ static __m128i iunpackFOR32(__m128i initvalue , const  __m128i*   in, uint32_t *
 void simdpackFOR(uint32_t initvalue,  const uint32_t *   in, __m128i *    out, const uint32_t bit) {
     __m128i  initOffset = _mm_set1_epi32 (initvalue);
     switch(bit) {
-        case 0: ipackFOR0(initOffset,in,out); break;
+    case 0:
+        ipackFOR0(initOffset,in,out);
+        break;
 
-        case 1: ipackFOR1(initOffset,in,out); break;
+    case 1:
+        ipackFOR1(initOffset,in,out);
+        break;
 
-        case 2: ipackFOR2(initOffset,in,out); break;
+    case 2:
+        ipackFOR2(initOffset,in,out);
+        break;
 
-        case 3: ipackFOR3(initOffset,in,out); break;
+    case 3:
+        ipackFOR3(initOffset,in,out);
+        break;
 
-        case 4: ipackFOR4(initOffset,in,out); break;
+    case 4:
+        ipackFOR4(initOffset,in,out);
+        break;
 
-        case 5: ipackFOR5(initOffset,in,out); break;
+    case 5:
+        ipackFOR5(initOffset,in,out);
+        break;
 
-        case 6: ipackFOR6(initOffset,in,out); break;
+    case 6:
+        ipackFOR6(initOffset,in,out);
+        break;
 
-        case 7: ipackFOR7(initOffset,in,out); break;
+    case 7:
+        ipackFOR7(initOffset,in,out);
+        break;
 
-        case 8: ipackFOR8(initOffset,in,out); break;
+    case 8:
+        ipackFOR8(initOffset,in,out);
+        break;
 
-        case 9: ipackFOR9(initOffset,in,out); break;
+    case 9:
+        ipackFOR9(initOffset,in,out);
+        break;
 
-        case 10: ipackFOR10(initOffset,in,out); break;
+    case 10:
+        ipackFOR10(initOffset,in,out);
+        break;
 
-        case 11: ipackFOR11(initOffset,in,out); break;
+    case 11:
+        ipackFOR11(initOffset,in,out);
+        break;
 
-        case 12: ipackFOR12(initOffset,in,out); break;
+    case 12:
+        ipackFOR12(initOffset,in,out);
+        break;
 
-        case 13: ipackFOR13(initOffset,in,out); break;
+    case 13:
+        ipackFOR13(initOffset,in,out);
+        break;
 
-        case 14: ipackFOR14(initOffset,in,out); break;
+    case 14:
+        ipackFOR14(initOffset,in,out);
+        break;
 
-        case 15: ipackFOR15(initOffset,in,out); break;
+    case 15:
+        ipackFOR15(initOffset,in,out);
+        break;
 
-        case 16: ipackFOR16(initOffset,in,out); break;
+    case 16:
+        ipackFOR16(initOffset,in,out);
+        break;
 
-        case 17: ipackFOR17(initOffset,in,out); break;
+    case 17:
+        ipackFOR17(initOffset,in,out);
+        break;
 
-        case 18: ipackFOR18(initOffset,in,out); break;
+    case 18:
+        ipackFOR18(initOffset,in,out);
+        break;
 
-        case 19: ipackFOR19(initOffset,in,out); break;
+    case 19:
+        ipackFOR19(initOffset,in,out);
+        break;
 
-        case 20: ipackFOR20(initOffset,in,out); break;
+    case 20:
+        ipackFOR20(initOffset,in,out);
+        break;
 
-        case 21: ipackFOR21(initOffset,in,out); break;
+    case 21:
+        ipackFOR21(initOffset,in,out);
+        break;
 
-        case 22: ipackFOR22(initOffset,in,out); break;
+    case 22:
+        ipackFOR22(initOffset,in,out);
+        break;
 
-        case 23: ipackFOR23(initOffset,in,out); break;
+    case 23:
+        ipackFOR23(initOffset,in,out);
+        break;
 
-        case 24: ipackFOR24(initOffset,in,out); break;
+    case 24:
+        ipackFOR24(initOffset,in,out);
+        break;
 
-        case 25: ipackFOR25(initOffset,in,out); break;
+    case 25:
+        ipackFOR25(initOffset,in,out);
+        break;
 
-        case 26: ipackFOR26(initOffset,in,out); break;
+    case 26:
+        ipackFOR26(initOffset,in,out);
+        break;
 
-        case 27: ipackFOR27(initOffset,in,out); break;
+    case 27:
+        ipackFOR27(initOffset,in,out);
+        break;
 
-        case 28: ipackFOR28(initOffset,in,out); break;
+    case 28:
+        ipackFOR28(initOffset,in,out);
+        break;
 
-        case 29: ipackFOR29(initOffset,in,out); break;
+    case 29:
+        ipackFOR29(initOffset,in,out);
+        break;
 
-        case 30: ipackFOR30(initOffset,in,out); break;
+    case 30:
+        ipackFOR30(initOffset,in,out);
+        break;
 
-        case 31: ipackFOR31(initOffset,in,out); break;
+    case 31:
+        ipackFOR31(initOffset,in,out);
+        break;
 
-        case 32: ipackFOR32(initOffset,in,out); break;
+    case 32:
+        ipackFOR32(initOffset,in,out);
+        break;
 
-        default: break;
+    default:
+        break;
     }
 }
 
@@ -21936,152 +22470,206 @@ void simdpackFOR(uint32_t initvalue,  const uint32_t *   in, __m128i *    out, c
 void simdunpackFOR(uint32_t initvalue, const __m128i *   in, uint32_t * out, const uint32_t bit) {
     __m128i  initOffset = _mm_set1_epi32 (initvalue);
     switch(bit) {
-        case 0: iunpackFOR0(initOffset, in,out); break;
+    case 0:
+        iunpackFOR0(initOffset, in,out);
+        break;
 
-        case 1: iunpackFOR1(initOffset, in,out); break;
+    case 1:
+        iunpackFOR1(initOffset, in,out);
+        break;
 
-        case 2: iunpackFOR2(initOffset, in,out); break;
+    case 2:
+        iunpackFOR2(initOffset, in,out);
+        break;
 
-        case 3: iunpackFOR3(initOffset, in,out); break;
+    case 3:
+        iunpackFOR3(initOffset, in,out);
+        break;
 
-        case 4: iunpackFOR4(initOffset, in,out); break;
+    case 4:
+        iunpackFOR4(initOffset, in,out);
+        break;
 
-        case 5: iunpackFOR5(initOffset, in,out); break;
+    case 5:
+        iunpackFOR5(initOffset, in,out);
+        break;
 
-        case 6: iunpackFOR6(initOffset, in,out); break;
+    case 6:
+        iunpackFOR6(initOffset, in,out);
+        break;
 
-        case 7: iunpackFOR7(initOffset, in,out); break;
+    case 7:
+        iunpackFOR7(initOffset, in,out);
+        break;
 
-        case 8: iunpackFOR8(initOffset, in,out); break;
+    case 8:
+        iunpackFOR8(initOffset, in,out);
+        break;
 
-        case 9: iunpackFOR9(initOffset, in,out); break;
+    case 9:
+        iunpackFOR9(initOffset, in,out);
+        break;
 
-        case 10: iunpackFOR10(initOffset, in,out); break;
+    case 10:
+        iunpackFOR10(initOffset, in,out);
+        break;
 
-        case 11: iunpackFOR11(initOffset, in,out); break;
+    case 11:
+        iunpackFOR11(initOffset, in,out);
+        break;
 
-        case 12: iunpackFOR12(initOffset, in,out); break;
+    case 12:
+        iunpackFOR12(initOffset, in,out);
+        break;
 
-        case 13: iunpackFOR13(initOffset, in,out); break;
+    case 13:
+        iunpackFOR13(initOffset, in,out);
+        break;
 
-        case 14: iunpackFOR14(initOffset, in,out); break;
+    case 14:
+        iunpackFOR14(initOffset, in,out);
+        break;
 
-        case 15: iunpackFOR15(initOffset, in,out); break;
+    case 15:
+        iunpackFOR15(initOffset, in,out);
+        break;
 
-        case 16: iunpackFOR16(initOffset, in,out); break;
+    case 16:
+        iunpackFOR16(initOffset, in,out);
+        break;
 
-        case 17: iunpackFOR17(initOffset, in,out); break;
+    case 17:
+        iunpackFOR17(initOffset, in,out);
+        break;
 
-        case 18: iunpackFOR18(initOffset, in,out); break;
+    case 18:
+        iunpackFOR18(initOffset, in,out);
+        break;
 
-        case 19: iunpackFOR19(initOffset, in,out); break;
+    case 19:
+        iunpackFOR19(initOffset, in,out);
+        break;
 
-        case 20: iunpackFOR20(initOffset, in,out); break;
+    case 20:
+        iunpackFOR20(initOffset, in,out);
+        break;
 
-        case 21: iunpackFOR21(initOffset, in,out); break;
+    case 21:
+        iunpackFOR21(initOffset, in,out);
+        break;
 
-        case 22: iunpackFOR22(initOffset, in,out); break;
+    case 22:
+        iunpackFOR22(initOffset, in,out);
+        break;
 
-        case 23: iunpackFOR23(initOffset, in,out); break;
+    case 23:
+        iunpackFOR23(initOffset, in,out);
+        break;
 
-        case 24: iunpackFOR24(initOffset, in,out); break;
+    case 24:
+        iunpackFOR24(initOffset, in,out);
+        break;
 
-        case 25: iunpackFOR25(initOffset, in,out); break;
+    case 25:
+        iunpackFOR25(initOffset, in,out);
+        break;
 
-        case 26: iunpackFOR26(initOffset, in,out); break;
+    case 26:
+        iunpackFOR26(initOffset, in,out);
+        break;
 
-        case 27: iunpackFOR27(initOffset, in,out); break;
+    case 27:
+        iunpackFOR27(initOffset, in,out);
+        break;
 
-        case 28: iunpackFOR28(initOffset, in,out); break;
+    case 28:
+        iunpackFOR28(initOffset, in,out);
+        break;
 
-        case 29: iunpackFOR29(initOffset, in,out); break;
+    case 29:
+        iunpackFOR29(initOffset, in,out);
+        break;
 
-        case 30: iunpackFOR30(initOffset, in,out); break;
+    case 30:
+        iunpackFOR30(initOffset, in,out);
+        break;
 
-        case 31: iunpackFOR31(initOffset, in,out); break;
+    case 31:
+        iunpackFOR31(initOffset, in,out);
+        break;
 
-        case 32: iunpackFOR32(initOffset, in,out); break;
+    case 32:
+        iunpackFOR32(initOffset, in,out);
+        break;
 
-        default: break;
+    default:
+        break;
     }
 }
 
-
-static uint32_t simdselectFOR(uint32_t initvalue, const __m128i *in, uint32_t bit,
-                int slot) {
-	const uint32_t * pin = (const uint32_t *) in;
-	if (bit == 32) {
-		/* silly special case */
-		return pin[slot];
-	} else {
-		const int lane = slot % 4; /* we have 4 interleaved lanes */
-		const int bitsinlane = (slot / 4) * bit; /* how many bits in lane */
-		const int firstwordinlane = bitsinlane / 32;
-		const int secondwordinlane = (bitsinlane + bit - 1) / 32;
-		const uint32_t firstpart = pin[4 * firstwordinlane + lane]
-				>> (bitsinlane % 32);
-		const uint32_t mask = (1 << bit) - 1;
-		if (firstwordinlane == secondwordinlane) {
-			/* easy common case*/
-			return initvalue + (firstpart & mask);
-		} else {
-			/* harder case where we need to combine two words */
-			const uint32_t secondpart = pin[4 * firstwordinlane + 4 + lane];
-			const int usablebitsinfirstword = 32 - (bitsinlane % 32);
-			return initvalue
-					+ ((firstpart | (secondpart << usablebitsinfirstword))
-							& mask);
-		}
-	}
-
-}
 
 
 // Returns a decompressed value in an encoded array
 uint32_t SIMDCompressionLib::SIMDFrameOfReference::select(const uint32_t *in, size_t index) {
-	//uint32_t length = *in;
-	in ++;
+    //uint32_t length = *in;
+    in ++;
     uint32_t m = *in;
     ++in;
     uint32_t M = *in;
     ++in;
-    uint32_t b = bits(M-m);
-    if(b == 32) {
-    	return in[index];
+    uint32_t bit = bits(M-m);
+    if(bit == 32) {
+        return in[index];
     }
-    in += index / 128 * 4 * b;
-    return simdselectFOR(m, (const __m128i *)in, b, index % 128);
+    in += index / 128 * 4 * bit;
+    const int slot = index % 128;
+    const int lane = slot % 4; /* we have 4 interleaved lanes */
+    const int bitsinlane = (slot / 4) * bit; /* how many bits in lane */
+    const int firstwordinlane = bitsinlane / 32;
+    const int secondwordinlane = (bitsinlane + bit - 1) / 32;
+    const uint32_t firstpart = in[4 * firstwordinlane + lane]
+                               >> (bitsinlane % 32);
+    const uint32_t mask = (1 << bit) - 1;
+    if (firstwordinlane == secondwordinlane) {
+        /* easy common case*/
+        return m + (firstpart & mask);
+    } else {
+        /* harder case where we need to combine two words */
+        const uint32_t secondpart = in[4 * firstwordinlane + 4 + lane];
+        const int usablebitsinfirstword = 32 - (bitsinlane % 32);
+        return m
+               + ((firstpart | (secondpart << usablebitsinfirstword))
+                  & mask);
+    }
+
 }
 
 
 
 
-static uint32_t simdfastselect(selectmetadata * s, size_t index) {
-	if (s->b == 32) {
-		return s->in[index];
-	}
-	//uint32_t packedlength = s->length / 128 * 128;
-	//if (index > packedlength) {
-	//	uint32_t packedsizeinwords = packedlength * s->b * 4 / 128;
-	//	return s->in[packedsizeinwords + index - packedlength];
-	//}
-	const int lane = index % 4; /* we have 4 interleaved lanes */
-	const int bitsinlane = (index / 4) * s->b; /* how many bits in lane */
+
+
+static uint32_t simdfastselect(const uint32_t * in, int b, uint32_t m, size_t index) {
+    //if (b == 32) {
+    //	return in[index];
+    //}
+    const int lane = index % 4; /* we have 4 interleaved lanes */
+    const int bitsinlane = (index / 4) * b; /* how many bits in lane */
     const int firstwordinlane = bitsinlane / 32;
-	const int secondwordinlane = (bitsinlane + s->b - 1) / 32;
-	const uint32_t firstpart = (s->in)[4 * firstwordinlane + lane]
-			>> (bitsinlane % 32);
-	const uint32_t mask = (1 << s->b) - 1;
-	if (firstwordinlane == secondwordinlane) {
-		/* easy common case*/
-		return s->m + (firstpart & mask);
-	} else {
-		/* harder case where we need to combine two words */
-		const uint32_t secondpart = (s->in)[4 * firstwordinlane + 4 + lane];
-		const int usablebitsinfirstword = 32 - (bitsinlane % 32);
-		return s->m
-				+ ((firstpart | (secondpart << usablebitsinfirstword)) & mask);
-	}
+    const int secondwordinlane = (bitsinlane + b - 1) / 32;
+    const uint32_t firstpart = in[4 * firstwordinlane + lane]
+                               >> (bitsinlane % 32);
+    const uint32_t mask = (1 << b) - 1;
+    if (firstwordinlane == secondwordinlane) {
+        /* easy common case*/
+        return m + (firstpart & mask);
+    } else {
+        /* harder case where we need to combine two words */
+        const uint32_t secondpart = in[4 * firstwordinlane + 4 + lane];
+        const int usablebitsinfirstword = 32 - (bitsinlane % 32);
+        return m
+               + ((firstpart | (secondpart << usablebitsinfirstword)) & mask);
+    }
 
 }
 
@@ -22089,69 +22677,80 @@ static uint32_t simdfastselect(selectmetadata * s, size_t index) {
 // Performs a lower bound find in the encoded array.
 // Returns the index
 size_t SIMDCompressionLib::SIMDFrameOfReference::findLowerBound(const uint32_t *in, const size_t , uint32_t key,
-                      uint32_t *presult) {
-	selectmetadata s;
-	s.length = *in;
-	in ++;
-	s.m = *in;
-	++in;
-	uint32_t M = *in;
-	++in;
-	s.b = bits(M-s.m);
-	s.in = in;
-	int count = s.length;
-	int begin = 0;
-	uint32_t val;
-	while (count > 0) {
-		int step = count / 2;
-		val = simdfastselect(&s, begin+step);
-	    if (val < key) {
-	    	begin += step + 1;
-	    	count -= step + 1;
-	    } else count = step;
-	}
-	*presult = simdfastselect(&s, begin);
-	return begin;
+        uint32_t *presult) {
+    uint32_t length = *in;
+    in ++;
+    uint32_t  m = *in;
+    ++in;
+    uint32_t M = *in;
+    ++in;
+    uint32_t b = bits(M-m);
+    uint32_t count = length;
+    uint32_t begin = 0;
+    uint32_t val;
+    if(b == 32) { // we handle the special case separately
+        while (count > 0) {
+            uint32_t step = count / 2;
+            val = in[begin+step];
+            if (val < key) {
+                begin += step + 1;
+                count -= step + 1;
+            } else count = step;
+        }
+        *presult = in[begin];
+        return begin;
+    }
+    while (count > 0) {
+        uint32_t step = count / 2;
+        val = simdfastselect(in,b,m, begin+step);
+        if (val < key) {
+            begin += step + 1;
+            count -= step + 1;
+        } else count = step;
+    }
+    *presult = simdfastselect(in,b,m, begin);
+    return begin;
 }
+
 static uint32_t minasint(const __m128i accumulator) {
-	const __m128i _tmp1 = _mm_min_epu32(_mm_srli_si128(accumulator, 8), accumulator); /* (A,B,C,D) xor (0,0,A,B) = (A,B,C xor A,D xor B)*/
-	const __m128i _tmp2 = _mm_min_epu32(_mm_srli_si128(_tmp1, 4), _tmp1); /*  (A,B,C xor A,D xor B) xor  (0,0,0,C xor A)*/
-	return  _mm_cvtsi128_si32(_tmp2);
+    const __m128i _tmp1 = _mm_min_epu32(_mm_srli_si128(accumulator, 8), accumulator); /* (A,B,C,D) xor (0,0,A,B) = (A,B,C xor A,D xor B)*/
+    const __m128i _tmp2 = _mm_min_epu32(_mm_srli_si128(_tmp1, 4), _tmp1); /*  (A,B,C xor A,D xor B) xor  (0,0,0,C xor A)*/
+    return  _mm_cvtsi128_si32(_tmp2);
 }
 
 static uint32_t maxasint(const __m128i accumulator) {
-	const __m128i _tmp1 = _mm_max_epu32(_mm_srli_si128(accumulator, 8), accumulator); /* (A,B,C,D) xor (0,0,A,B) = (A,B,C xor A,D xor B)*/
-	const __m128i _tmp2 = _mm_max_epu32(_mm_srli_si128(_tmp1, 4), _tmp1); /*  (A,B,C xor A,D xor B) xor  (0,0,0,C xor A)*/
-	return  _mm_cvtsi128_si32(_tmp2);
+    const __m128i _tmp1 = _mm_max_epu32(_mm_srli_si128(accumulator, 8), accumulator); /* (A,B,C,D) xor (0,0,A,B) = (A,B,C xor A,D xor B)*/
+    const __m128i _tmp2 = _mm_max_epu32(_mm_srli_si128(_tmp1, 4), _tmp1); /*  (A,B,C xor A,D xor B) xor  (0,0,0,C xor A)*/
+    return  _mm_cvtsi128_si32(_tmp2);
 }
 
 
 
 static void simdmaxmin_length(const uint32_t * in, uint32_t length, uint32_t * getmin, uint32_t * getmax) {
-	uint32_t lengthdividedby4 = length / 4;
-	uint32_t offset = lengthdividedby4 * 4;
-	uint32_t k;
-	*getmin = 0xFFFFFFFF;
-	*getmax = 0;
-	if (lengthdividedby4 > 0) {
-		const __m128i* pin = (const __m128i*)(in);
-		__m128i minaccumulator = _mm_loadu_si128(pin);
-		__m128i maxaccumulator = minaccumulator;
-		uint32_t k = 1;
-		for(; 4*k < lengthdividedby4 * 4; ++k) {
-			__m128i newvec = _mm_loadu_si128(pin+k);
-			minaccumulator = _mm_min_epu32(minaccumulator,newvec);
-			maxaccumulator = _mm_max_epu32(maxaccumulator,newvec);
-		}
-		*getmin = minasint(minaccumulator);
-		*getmax = maxasint(maxaccumulator);
-	}
-	for (k = offset; k < length; ++k) {
-		if (in[k] < *getmin)
-			*getmin = in[k];
-		if (in[k] > *getmax)
-			*getmax = in[k];
-	}
+    uint32_t lengthdividedby4 = length / 4;
+    uint32_t offset = lengthdividedby4 * 4;
+    uint32_t k;
+    *getmin = 0xFFFFFFFF;
+    *getmax = 0;
+    if (lengthdividedby4 > 0) {
+        const __m128i* pin = (const __m128i*)(in);
+        __m128i minaccumulator = _mm_loadu_si128(pin);
+        __m128i maxaccumulator = minaccumulator;
+        uint32_t k = 1;
+        for(; 4*k < lengthdividedby4 * 4; ++k) {
+            __m128i newvec = _mm_loadu_si128(pin+k);
+            minaccumulator = _mm_min_epu32(minaccumulator,newvec);
+            maxaccumulator = _mm_max_epu32(maxaccumulator,newvec);
+        }
+        *getmin = minasint(minaccumulator);
+        *getmax = maxasint(maxaccumulator);
+    }
+    for (k = offset; k < length; ++k) {
+        if (in[k] < *getmin)
+            *getmin = in[k];
+        if (in[k] > *getmax)
+            *getmax = in[k];
+    }
 }
 
 
@@ -22169,8 +22768,8 @@ uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_compress_length(const 
     ++out;
     uint32_t k = 0;
     for(; k+128<=length; k+=128,in+=128) {
-    	simdpackFOR(m,  in, (__m128i *)    out, b);
-    	out += b * 4;
+        simdpackFOR(m,  in, (__m128i *)    out, b);
+        out += b * 4;
     }
     if(length != k) out = (uint32_t *) simdpackFOR_length(m, in, length - k , (__m128i *) out,b);
     in += length - k;
@@ -22186,7 +22785,7 @@ const uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_uncompress_lengt
     ++in;
     int b = bits(static_cast<uint32_t>(M-m));
     for(uint32_t k = 0; k<nvalue/128; ++k) {
-    	simdunpackFOR(m, (const __m128i *)   (in + 4 * b * k), out + 128 * k, b);
+        simdunpackFOR(m, (const __m128i *)   (in + 4 * b * k), out + 128 * k, b);
     }
     out = out + nvalue/128*128;
     in = in + nvalue/128*4*b;
