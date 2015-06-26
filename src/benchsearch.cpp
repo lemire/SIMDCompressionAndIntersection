@@ -243,6 +243,10 @@ int benchmarkInsert() {
 
 	for (int b = 0; b <= 32; b++) {
 		compressedbuffer1.resize(compressedbuffer1.capacity());
+        compressedbuffer1[0] = 0; // required for streamvbyte
+        compressedbuffer1[1] = 0;
+        compressedbuffer2[0] = 0;
+        compressedbuffer2[1] = 0;
 		compressedbuffer2.resize(compressedbuffer2.capacity());
 
 		/* initialize the buffer */
@@ -274,7 +278,8 @@ int benchmarkInsert() {
         printf("# bit width = %d, fast insert function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  " \n", b, (S2-S1), (S3-S2) );
         printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
 		if(currentsize1 != currentsize2) {
-			printf("bug A\n");
+			printf("bug A: %u != %u\n", (uint32_t)currentsize1,
+                                (uint32_t)currentsize2);
 			return -1;
 		}
 		compressedbuffer1.resize(currentsize1);
@@ -300,6 +305,8 @@ int main() {
     QueryPerformanceFrequency((LARGE_INTEGER *)&freq);
 #endif
 
+    r = benchmarkInsert<SIMDCompressionLib::StreamVByteD1>();
+    if(r < 0) return r;
     r = benchmarkInsert<SIMDCompressionLib::VarIntGB<true>>();
     if(r < 0) return r;
     r = benchmarkInsert<SIMDCompressionLib::VariableByte<true>>();

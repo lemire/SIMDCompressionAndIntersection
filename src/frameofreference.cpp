@@ -22777,6 +22777,26 @@ uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_compress_length(const 
     return out;
 }
 
+uint32_t * simd_compress_length_sorted(const uint32_t * in, uint32_t length, uint32_t * out) {
+    if(length == 0) return out;
+    uint32_t m = in[0];
+    uint32_t M = in[length - 1];
+    int b = bits(static_cast<uint32_t>(M-m));
+    out[0] = m;
+    ++out;
+    out[0] = M;
+    ++out;
+    uint32_t k = 0;
+    for(; k+128<=length; k+=128,in+=128) {
+    	simdpackFOR(m,  in, (__m128i *)    out, b);
+    	out += b * 4;
+    }
+    if(length != k) out = (uint32_t *) simdpackFOR_length(m, in, length - k , (__m128i *) out,b);
+    in += length - k;
+
+    return out;
+}
+
 const uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_uncompress_length(const uint32_t * in, uint32_t * out, uint32_t  nvalue) {
     if(nvalue == 0) return out;
     uint32_t m = in[0];

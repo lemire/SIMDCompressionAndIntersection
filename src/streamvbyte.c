@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <string.h>
 
 
 typedef __m128i xmm_t;
@@ -29,6 +30,18 @@ typedef __m256i ymm_t;
 #define IACA_END
 #endif // not IACA
 
+static inline uint8_t _encoded_length(uint32_t val) {
+    if (val < (1 << 8)) {
+        return 1;
+    }
+    if (val < (1 << 16)) {
+        return 2;
+    }
+    if (val < (1 << 24)) {
+        return 3;
+    }
+    return 4;
+}
 
 static inline uint8_t _encode_data(uint32_t val, uint8_t *restrict *dataPtrPtr) {
     uint8_t *dataPtr = *dataPtrPtr;
@@ -128,6 +141,93 @@ static inline uint32_t _decode_data(uint8_t **dataPtrPtr, uint8_t code) {
     
     *dataPtrPtr = dataPtr;
     return val;
+}
+
+uint8_t *svb_insert_scalar_d1_init(uint8_t *keyPtr, uint8_t *dataPtr,
+                              size_t dataSize, uint32_t count,
+                              uint32_t prev, uint32_t new_key,
+                              uint32_t *position) {
+    if (count == 0) {
+        *position = 0;
+        return svb_encode_scalar_d1_init(&new_key, keyPtr, dataPtr, 1, prev);
+    }
+
+    uint8_t shift = 0;
+    uint32_t key = *keyPtr;
+    uint8_t *dataPtrBegin = dataPtr;
+
+    for (uint32_t c = 0; c < count; c++) {
+        uint8_t *dataPtrPrev = dataPtr;
+
+        if (shift == 8) {
+            shift = 0;
+            key = *(++keyPtr);
+        }
+
+        uint8_t current_key_code = (key >> shift) & 0x3;
+        uint32_t current_key = prev + _decode_data(&dataPtr, current_key_code);
+        if (current_key >= new_key) {
+            // rewind to the insertion position
+            dataPtr = dataPtrPrev;
+
+            // shift keys 2 bits "to the right"
+            uint32_t mask_hi = key & (~0 << shift);
+            uint32_t mask_lo = key & ((1 << shift) - 1);
+            key = (mask_hi << 2) | mask_lo;
+            uint32_t carry_bits, prev_carry_bits = (key & (3 << 8)) >> 8;
+
+            for (uint8_t *p = keyPtr + 1; p < dataPtrBegin; p++) {
+                carry_bits = (*p & (3 << 6)) >> 6;
+                *p <<= 2;
+                *p |= prev_carry_bits;
+                prev_carry_bits = carry_bits;
+            }
+
+            // shift values n bytes "to the right", then insert the new key
+            // and the updated delta of the next key
+            int gap = _encoded_length(new_key - prev)
+                            + _encoded_length(current_key - new_key)
+                            - (current_key_code + 1);
+            assert(gap >= 0);
+            if (gap > 0)
+              memmove(dataPtr + gap, dataPtr,
+                       dataSize - (dataPtr - dataPtrBegin));
+
+            // first insert the new key
+            uint8_t code = _encode_data(new_key - prev, &dataPtr);
+            *keyPtr = key | (code << shift);
+
+            // then update the current key
+            shift += 2;
+            if (shift == 8) {
+                shift = 0;
+                keyPtr++;
+            }
+            code = _encode_data(current_key - new_key, &dataPtr);
+            *keyPtr &= ~(3 << shift);
+            *keyPtr |= (code << shift);
+
+            *position = c;
+            return dataPtrBegin + dataSize + gap;
+        }
+
+        prev = current_key;
+        shift += 2;
+    }
+
+    // append the new key at the end
+    if (shift == 8) {
+        shift = 0;
+        keyPtr++;
+    }
+
+    uint8_t code = _encode_data(new_key - prev, &dataPtr);
+    key &= ~(3 << shift);
+    key |= code << shift;
+    *keyPtr = key;  // write last key (no increment needed)
+
+    *position = count;
+    return dataPtrBegin + dataSize + code + 1;
 }
 
 

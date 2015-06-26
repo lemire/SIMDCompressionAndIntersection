@@ -487,7 +487,7 @@ void testSelectAdvanced() {
 }
 
 int main() {
-
+    testInsert<StreamVByteD1>();
 	testInsert<VarIntGB<true>>();
     testInsert<VariableByte<true>>();
     testInsert<VByte<true>>();
