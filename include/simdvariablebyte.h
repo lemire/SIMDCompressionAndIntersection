@@ -106,21 +106,43 @@ public:
 
     const uint32_t * decodeArray(const uint32_t *in, const size_t length,
             uint32_t *out, size_t & nvalue) {
-        uint32_t num_ints = *in;
-        in++;
-        if (length == 0) {
-            nvalue = 0;
-            return in;//abort
-        }
-        const uint8_t * inbyte = reinterpret_cast<const uint8_t *> (in);
-        if(delta) {
-        	uint32_t prev = 0;
-            inbyte += masked_vbyte_read_loop_delta(inbyte, out, num_ints, prev);
-        } else
-            inbyte += masked_vbyte_read_loop(inbyte, out, num_ints);
-        nvalue = num_ints;
+        nvalue = *in;
+        const uint8_t *inbyte = decodeFromByteArray((const uint8_t *)in,
+                            length, out, nvalue);
         inbyte = padTo32bits(inbyte);
         return reinterpret_cast<const uint32_t *> (inbyte);
+    }
+
+    // Same as above, but operates on byte arrays (uint8_t *) and avoids
+    // the padding at the end
+    const uint8_t *decodeFromByteArray(const uint8_t *in,
+            const size_t /* length */,
+            uint32_t *out, size_t & nvalue) {
+        nvalue = *(uint32_t *)in;
+        in += sizeof(uint32_t);
+        if (nvalue == 0) {
+            return in;//abort
+        }
+        if(delta) {
+        	uint32_t prev = 0;
+            in += masked_vbyte_read_loop_delta(in, out, nvalue, prev);
+        } else
+            in += masked_vbyte_read_loop(in, out, nvalue);
+        return in;
+    }
+
+    // append a key. Keys must be in sorted order. We assume that there is
+    // enough room and that delta encoding was used.
+    // Returns the new size of the compressed array *in bytes*
+    size_t append(uint8_t *in, size_t bytesize, uint32_t previous_key,
+                    uint32_t key) {
+        uint32_t num_ints = *(uint32_t *)in;
+        if (bytesize == 0)
+            bytesize = 4;
+    	uint8_t *bytein = in + bytesize;
+    	bytein += encodeOneIntegerToByteArray(key - previous_key, bytein);
+        *(uint32_t *)in = num_ints + 1;
+        return bytein - in;
     }
 
     // Returns a decompressed value in a delta-encoded array
@@ -163,6 +185,62 @@ private:
         return static_cast<uint8_t>((val >>(7 * i)));
     }
 
+    // determine how many padding bytes were used
+    int paddingBytes(const  uint32_t *in, const size_t length) {
+    	if(length == 0) return 0;
+    	uint32_t lastword = in[length - 1];
+        if (lastword < (1U << 8)) {
+        	return 3;
+        } else if (lastword < (1U << 16)) {
+        	return 2;
+        } else if (lastword < (1U << 24)) {
+        	return 1;
+        }
+        return 0;
+    }
+
+    // write one compressed integer (without differential coding)
+	// returns the number of bytes written
+	size_t encodeOneIntegerToByteArray(uint32_t val, uint8_t *bout) {
+		const uint8_t * const initbout = bout;
+        if (val < (1U << 7)) {
+            *bout = val & 0x7F;
+            ++bout;
+        } else if (val < (1U << 14)) {
+            *bout = static_cast<uint8_t>((val & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(val >> 7);
+            ++bout;
+        } else if (val < (1U << 21)) {
+            *bout = static_cast<uint8_t>((val & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(((val >> 7) & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(val >> 14);
+            ++bout;
+        } else if (val < (1U << 28)) {
+            *bout = static_cast<uint8_t>((val & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(((val >> 7) & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(((val >> 14) & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(val >> 21);
+            ++bout;
+        } else {
+            *bout = static_cast<uint8_t>((val & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(((val >> 7) & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(((val >> 14) & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(((val >> 21) & 0x7F) | (1U << 7));
+            ++bout;
+            *bout = static_cast<uint8_t>(val >> 28);
+            ++bout;
+        }
+		return bout - initbout;
+	}
 };
 
 
@@ -267,7 +345,6 @@ private:
     uint8_t extract7bitsmaskless(const uint32_t val) {
         return static_cast<uint8_t>((val >>(7 * i)));
     }
-
 };
 
 } // namespace SIMDCompressionLib

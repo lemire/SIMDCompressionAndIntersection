@@ -386,6 +386,97 @@ void testInsert() {
 	cout << codec.name() << "::insert ok" << endl;
 }
 
+// same as testAppend<>, but uses encodeByteArray/decodeByteArray
+// to avoid padding
+template<typename T>
+void testAppendByteArray() {
+	T codec;
+	const int max = 256;
+	srand(0);
+	uint32_t ints[max];
+	for (int i = 0; i < max; i++)
+		ints[i] = rand();
+    std::sort(&ints[0], &ints[max]);
+
+	// encode in a buffer
+	vector < uint8_t >  compressedbuffer(max * sizeof(uint32_t) + 1024);
+	vector < uint32_t > decomp(max);
+	vector < uint32_t > sofar;
+
+	size_t currentsize = 0;
+	for (int i = 0; i < max; i++) {
+		currentsize = codec.append(compressedbuffer.data(), currentsize,
+                                    i > 0 ? ints[i - 1] : 0, ints[i]);
+		size_t howmany = decomp.size() * 4;
+		codec.decodeFromByteArray(compressedbuffer.data(), currentsize,
+                    decomp.data(), howmany);
+		sofar.push_back(ints[i]);
+		if (howmany != sofar.size())
+			cout << howmany << " " << sofar.size() << " " << i <<endl;
+		assert(howmany == sofar.size());
+
+		for (size_t j = 0; j < howmany; ++j) {
+			if (decomp[j] != sofar[j]) {
+				cout << codec.name() << "::append failed with i = " << i
+                        << ", j = " << j << endl;
+				for (size_t j = 0; j < howmany; ++j) {
+					cout << j << " -->  stored: " << decomp[j]
+                          << " correct: " << sofar[j] << endl;
+				}
+				cout << endl;
+
+				throw std::logic_error("bug");
+			}
+		}
+	}
+
+	cout << codec.name() << "::append ok" << endl;
+}
+
+template<typename T>
+void testAppend() {
+	T codec;
+	const int max = 256;
+	srand(0);
+	uint32_t ints[max];
+	for (int i = 0; i < max; i++)
+		ints[i] = rand();
+    std::sort(&ints[0], &ints[max]);
+
+	// encode in a buffer
+	vector < uint32_t > compressedbuffer(max * sizeof(uint32_t) + 1024);
+	vector < uint32_t > decomp(max);
+	vector < uint32_t > sofar;
+
+	size_t currentsize = 0;
+	for (int i = 0; i < max; i++) {
+		currentsize = codec.append(compressedbuffer.data(), currentsize,
+                                    i > 0 ? ints[i - 1] : 0, ints[i]);
+		size_t howmany = decomp.size() * 4;
+		codec.decodeArray(compressedbuffer.data(), currentsize,
+                    decomp.data(), howmany);
+		sofar.push_back(ints[i]);
+		if (howmany != sofar.size())
+			cout << howmany << " " << sofar.size() << " " << i <<endl;
+		assert(howmany == sofar.size());
+
+		for (size_t j = 0; j < howmany; ++j) {
+			if (decomp[j] != sofar[j]) {
+				cout << codec.name() << "::append failed with i = " << i
+                        << ", j = " << j << endl;
+				for (size_t j = 0; j < howmany; ++j) {
+					cout << j << " -->  stored: " << decomp[j]
+                          << " correct: " << sofar[j] << endl;
+				}
+				cout << endl;
+
+				throw std::logic_error("bug");
+			}
+		}
+	}
+
+	cout << codec.name() << "::append ok" << endl;
+}
 
 template<typename T>
 void testSelectSimple() {
@@ -492,6 +583,8 @@ int main() {
     testInsert<VariableByte<true>>();
     testInsert<VByte<true>>();
 
+    testAppendByteArray<MaskedVByte<true>>();
+    testAppendByteArray<VariableByte<true>>();
 
     testSelectSimple<ForCODEC>();
     testSelectSimple<SIMDFrameOfReference>();
