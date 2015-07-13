@@ -450,8 +450,7 @@ void testAppend() {
 
 	size_t currentsize = 0;
 	for (int i = 0; i < max; i++) {
-		currentsize = codec.append(compressedbuffer.data(), currentsize,
-                                    i > 0 ? ints[i - 1] : 0, ints[i]);
+		currentsize = codec.append((uint8_t *)compressedbuffer.data(), ints[i]);
 		size_t howmany = decomp.size() * 4;
 		codec.decodeArray(compressedbuffer.data(), currentsize,
                     decomp.data(), howmany);
@@ -585,6 +584,7 @@ int main() {
 
     testAppendByteArray<MaskedVByte<true>>();
     testAppendByteArray<VariableByte<true>>();
+    testAppend<ForCODEC>();
 
     testSelectSimple<ForCODEC>();
     testSelectSimple<SIMDFrameOfReference>();

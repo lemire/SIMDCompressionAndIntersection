@@ -32,7 +32,6 @@
 extern "C" {
 #endif
 
-
 /**
  * Returns the size required to compress a sequence of |length| ints,
  * each compressed with |bits| bits
@@ -147,6 +146,59 @@ for_uncompress_bits(const uint8_t *in, uint32_t *out, uint32_t length,
  */
 extern uint32_t
 for_uncompress(const uint8_t *in, uint32_t *out, uint32_t length);
+
+/**
+ * Appends a |value| to a compressed sequence of unsorted integers.
+ *
+ * This function is optimized for appending new values at the end of an
+ * encoded sequence. This is only possible if the new value (more precisely:
+ * the delta of the new value) can be stored in the same amount of bits that
+ * were used to encode the other integers.
+ *
+ * If this is not the case then memory is allocated, the whole sequence is
+ * decoded and re-encoded using more bits. This requires a heap allocation
+ * with malloc().
+ *
+ * Returns the size (in bytes) of the compressed data, or 0 if malloc() fails.
+ */
+extern uint32_t
+for_append_unsorted(uint8_t *in, uint32_t length, uint32_t value);
+
+/**
+ * Appends a |value| to a compressed sequence of sorted integers.
+ *
+ * This function is optimized for appending new values at the end of an
+ * encoded sequence. This is only possible if the new value (more precisely:
+ * the delta of the new value) can be stored in the same amount of bits that
+ * were used to encode the other integers.
+ *
+ * If this is not the case then memory is allocated, the whole sequence is
+ * decoded and re-encoded using more bits. This requires a heap allocation
+ * with malloc().
+ *
+ * Returns the size (in bytes) of the compressed data, or 0 if malloc() fails.
+ */
+extern uint32_t
+for_append_sorted(uint8_t *in, uint32_t length, uint32_t value);
+
+/**
+ * Appends a |value| to a compressed integer sequence.
+ *
+ * |base| is the "offset" (or common delta value) of all ints. It is usually
+ * set to the minimum value of the uncompressed sequence.
+ *
+ * |bits| are the bits required to store a single integer.
+ *
+ * Returns the size (in bytes) of the compressed data.
+ *
+ * Invariant: bits <= 32
+ * Invariant: the new |value| (more precisely: |value - base|) can be stored
+ *      in |bits| bits. Details can be found in the implementation of
+ *      for_append() in for.c.
+ */
+extern uint32_t
+for_append_bits(uint8_t *in, uint32_t length, uint32_t base,
+                uint32_t bits, uint32_t value);
 
 /**
  * Returns the value at the given |index| from a compressed sequence.
