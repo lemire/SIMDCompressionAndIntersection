@@ -18,6 +18,24 @@ using namespace std;
 
 
 
+static uint8_t group_size[] = {
+         4,  5,  6,  7,  5,  6,  7,  8,  6,  7,  8,  9,  7,  8,  9, 10,
+         5,  6,  7,  8,  6,  7,  8,  9,  7,  8,  9, 10,  8,  9, 10, 11,
+         6,  7,  8,  9,  7,  8,  9, 10,  8,  9, 10, 11,  9, 10, 11, 12,
+         7,  8,  9, 10,  8,  9, 10, 11,  9, 10, 11, 12, 10, 11, 12, 13,
+         5,  6,  7,  8,  6,  7,  8,  9,  7,  8,  9, 10,  8,  9, 10, 11,
+         6,  7,  8,  9,  7,  8,  9, 10,  8,  9, 10, 11,  9, 10, 11, 12,
+         7,  8,  9, 10,  8,  9, 10, 11,  9, 10, 11, 12, 10, 11, 12, 13,
+         8,  9, 10, 11,  9, 10, 11, 12, 10, 11, 12, 13, 11, 12, 13, 14,
+         6,  7,  8,  9,  7,  8,  9, 10,  8,  9, 10, 11,  9, 10, 11, 12,
+         7,  8,  9, 10,  8,  9, 10, 11,  9, 10, 11, 12, 10, 11, 12, 13,
+         8,  9, 10, 11,  9, 10, 11, 12, 10, 11, 12, 13, 11, 12, 13, 14,
+         9, 10, 11, 12, 10, 11, 12, 13, 11, 12, 13, 14, 12, 13, 14, 15,
+         7,  8,  9, 10,  8,  9, 10, 11,  9, 10, 11, 12, 10, 11, 12, 13,
+         8,  9, 10, 11,  9, 10, 11, 12, 10, 11, 12, 13, 11, 12, 13, 14,
+         9, 10, 11, 12, 10, 11, 12, 13, 11, 12, 13, 14, 12, 13, 14, 15,
+        10, 11, 12, 13, 11, 12, 13, 14, 12, 13, 14, 15, 13, 14, 15, 16
+        };
 
 /**
  * Group VarInt.
@@ -38,7 +56,6 @@ public:
         bout += 4;
         bout = headlessEncode(in,length,0,bout);
 
-
         while (needPaddingTo32Bits(bout)) {
             *bout++ = 0;
         }
@@ -47,7 +64,16 @@ public:
         nvalue = storageinbytes / 4;
     }
 
-    const uint32_t * decodeArray(const uint32_t *in, const size_t length,
+    void encodeToByteArray(uint32_t *in, const size_t length, uint8_t *bout,
+                     size_t &nvalue) {
+        const uint8_t *const initbout = bout;
+        *(uint32_t *)bout = static_cast<uint32_t>(length);
+        bout += 4;
+        bout = headlessEncode(in, length, 0, bout);
+        nvalue = bout - initbout;
+    }
+
+    const uint32_t *decodeArray(const uint32_t *in, const size_t length,
                                  uint32_t *out, size_t & nvalue) {
 		if(length == 0) {
 			nvalue = 0;
@@ -61,7 +87,74 @@ public:
         return in + length;
     }
 
+    const uint8_t *decodeFromByteArray(const uint8_t *inbyte,
+                                const size_t length, uint32_t *out,
+                                size_t & nvalue) {
+		if (length == 0) {
+			nvalue = 0;
+			return inbyte;
+		}
+        nvalue = *(uint32_t *)inbyte;
+        inbyte += 4;
+        size_t decoded = headlessDecode(inbyte, length - 4, 0, out, nvalue);
+        assert(decoded == nvalue);
+        return inbyte + length;
+    }
 
+    // appends a key
+    size_t append(uint8_t *in, const size_t length, uint32_t previous,
+                        uint32_t value) {
+        uint32_t num_ints = *(uint32_t *)in;
+        uint8_t *bout = reinterpret_cast<uint8_t *> (in + 4);
+        uint8_t *bend = in + (length == 0 ? 4 : length);
+
+        if (delta)
+            value -= previous;
+
+        uint8_t *keyp;
+        int shift;
+
+        // fast-forward to the last block
+        if (num_ints % 4 != 0) {
+            uint32_t size = 0;
+            do {
+                bout += size;
+                size = 1 + group_size[*bout];
+            } while (bout + size < bend);
+            keyp = bout;
+            bout = bend;
+            shift = (num_ints % 4) * 2;
+        }
+        else {
+            keyp = bend;
+            bout = keyp + 1;
+            shift = 0;
+        }
+        
+        if (value < (1U << 8)) {
+            *bout++ = static_cast<uint8_t> (value);
+        }
+        else if (value < (1U << 16)) {
+            *bout++ = static_cast<uint8_t> (value);
+            *bout++ = static_cast<uint8_t> (value >> 8);
+            *keyp |= (1 << shift);
+        }
+        else if (value < (1U << 24)) {
+            *bout++ = static_cast<uint8_t> (value);
+            *bout++ = static_cast<uint8_t> (value >> 8);
+            *bout++ = static_cast<uint8_t> (value >> 16);
+            *keyp |= (2 << shift);
+        }
+        else {
+            // the compiler will do the right thing
+            *reinterpret_cast<uint32_t *> (bout) = value;
+            bout += 4;
+            *keyp |= (3 << shift);
+        }
+
+        *(uint32_t *)in = num_ints + 1;
+        return bout - in;
+    }
 
     // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
     size_t insert(uint32_t *in, const size_t length, uint32_t key) {
