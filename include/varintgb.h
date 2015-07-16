@@ -128,6 +128,7 @@ public:
         else {
             keyp = bend;
             bout = keyp + 1;
+            *keyp = 0;
             shift = 0;
         }
         
