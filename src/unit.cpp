@@ -583,6 +583,7 @@ int main() {
     testInsert<VariableByte<true>>();
     testInsert<VByte<true>>();
 
+    testAppendByteArray<StreamVByteD1>();
     testAppendByteArray<VarIntGB<true>>();
     testAppendByteArray<MaskedVByte<true>>();
     testAppendByteArray<VariableByte<true>>();

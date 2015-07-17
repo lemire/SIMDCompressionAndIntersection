@@ -143,6 +143,29 @@ static inline uint32_t _decode_data(uint8_t **dataPtrPtr, uint8_t code) {
     return val;
 }
 
+uint8_t *svb_append_scalar_d1(uint8_t *keyPtr, uint8_t *dataPtr,
+                            size_t sizebytes, size_t count, uint32_t delta)
+{
+    uint32_t keyLen = (count + 3) / 4; // 2-bits rounded to full byte
+
+    // make space for additional keys?
+    if (count >= keyLen * 4) {
+        memmove(dataPtr + 1, dataPtr, sizebytes - keyLen);
+        *dataPtr = 0;
+        dataPtr++;
+        sizebytes++;
+        keyLen++;
+    }
+
+    keyPtr += count / 4;
+    dataPtr += sizebytes - keyLen;
+    int shift = (count % 4) * 2;
+
+    uint8_t code = _encode_data(delta, &dataPtr);
+    *keyPtr |= code << shift;
+    return dataPtr;
+}
+
 uint8_t *svb_insert_scalar_d1_init(uint8_t *keyPtr, uint8_t *dataPtr,
                               size_t dataSize, uint32_t count,
                               uint32_t prev, uint32_t new_key,
