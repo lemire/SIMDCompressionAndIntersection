@@ -102,7 +102,8 @@ public:
     }
 
     // appends a key
-    size_t append(uint8_t *in, const size_t length, uint32_t previous,
+    // return the new size in bytes
+    size_t appendToByteArray(uint8_t *in, const size_t length, uint32_t previous,
                         uint32_t value) {
         uint32_t num_ints = *(uint32_t *)in;
         uint8_t *bout = reinterpret_cast<uint8_t *> (in + 4);
@@ -162,7 +163,7 @@ public:
     	size_t bytesize = length * 4;
     	uint8_t * bytein = (uint8_t *) in;
     	uint8_t * byteininit = bytein;
-    	size_t bl = insert(bytein, bytesize,  key);
+    	size_t bl = insertInByteArray(bytein, bytesize,  key);
 		bytein += bl;
 
         while (needPaddingTo32Bits(bytein)) {
@@ -174,8 +175,8 @@ public:
     }
 
     // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
-    // the new size is returned
-	size_t insert(uint8_t *inbyte, size_t length, uint32_t key) {
+    // the new size is returned (in bytes)
+	size_t insertInByteArray(uint8_t *inbyte, size_t length, uint32_t key) {
 		if(length == 0) {
 			*((uint32_t *) inbyte) =  0;
 			length = 4;

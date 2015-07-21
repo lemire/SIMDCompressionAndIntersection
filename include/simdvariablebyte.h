@@ -36,7 +36,7 @@ int masked_vbyte_search_delta(const uint8_t *in, uint64_t length, uint32_t prev,
 
 /**
  * This is a SIMD-accelerated version that is byte-by-byte format compatible with
- * AltVariableByte (that is, standard vbyte).
+ * the VByte codec (that is, standard vbyte).
  */
 template<bool delta>
 class MaskedVByte: public IntegerCODEC {
@@ -134,7 +134,7 @@ public:
     // append a key. Keys must be in sorted order. We assume that there is
     // enough room and that delta encoding was used.
     // Returns the new size of the compressed array *in bytes*
-    size_t append(uint8_t *in, size_t bytesize, uint32_t previous_key,
+    size_t appendToByteArray(uint8_t *in, size_t bytesize, uint32_t previous_key,
                     uint32_t key) {
         uint32_t num_ints = *(uint32_t *)in;
         if (bytesize == 0)
@@ -166,6 +166,114 @@ public:
         return (masked_vbyte_search_delta((uint8_t *)in, num_ints,
                     0, key, presult));
     }
+    // insert the key in sorted order. We assume that there is enough room
+    // and that delta encoding was used.
+    size_t insert(uint32_t *in, const size_t length, uint32_t key) {
+    	assert(delta);
+    	size_t bytesize = length * 4;
+    	bytesize -= paddingBytes(in,length);
+    	uint8_t * bytein = (uint8_t *) in;
+    	uint8_t * byteininit = bytein;
+    	bytein += insert(bytein, bytesize,  key);
+
+        while (needPaddingTo32Bits(bytein)) {
+            *bytein++ = 0xFF;
+        }
+        size_t storageinbytes = bytein - byteininit;
+        assert((storageinbytes % 4) == 0);
+        return storageinbytes / 4;
+    }
+
+    // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
+    // the new size (in *byte) is returned
+    size_t insertInByteArray(uint8_t *inbyte, const size_t length, uint32_t key) {
+        uint32_t prev = 0;
+        assert(delta);
+        const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(inbyte
+                                        + length);
+        // this assumes that there is a value to be read
+
+		while (endbyte > inbyte + 5) {
+			uint8_t c;
+			uint32_t v;
+
+			c = inbyte[0];
+			v = c & 0x7F;
+			if (c < 128) {
+				inbyte += 1;
+				prev = v + prev;
+				if (prev >= key) {
+					return length
+							+ __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+				}
+				continue;
+			}
+
+			c = inbyte[1];
+			v |= (c & 0x7F) << 7;
+			if (c < 128) {
+				inbyte += 2;
+				prev = v + prev;
+				if (prev >= key) {
+					return length
+							+ __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+				}
+				continue;
+			}
+
+			c = inbyte[2];
+			v |= (c & 0x7F) << 14;
+			if (c < 128) {
+				inbyte += 3;
+				prev = v + prev;
+				if (prev >= key) {
+					return length
+							+ __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+				}
+				continue;
+			}
+
+			c = inbyte[3];
+			v |= (c & 0x7F) << 21;
+			if (c < 128) {
+				inbyte += 4;
+				prev = v + prev;
+				if (prev >= key) {
+					return length
+							+ __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+				}
+				continue;
+			}
+
+			c = inbyte[4];
+			inbyte += 5;
+			v |= (c & 0x0F) << 28;
+			prev = v + prev;
+			if (prev >= key) {
+				return length + __insert(inbyte, prev - v, key, prev, endbyte - inbyte);
+			}
+		}
+		while (endbyte > inbyte) {
+			unsigned int shift = 0;
+			for (uint32_t v = 0; endbyte > inbyte; shift += 7) {
+				uint8_t c = *inbyte++;
+				v += ((c & 127) << shift);
+				if ((c < 128)) {
+					prev = v + prev;
+					if (prev >= key) {
+						return length
+								+ __insert(inbyte, prev - v, key, prev,
+										endbyte - inbyte);
+
+					}
+					break;
+				}
+			}
+		}
+		// if we make it here, then we need to append
+		assert(key >= prev);
+		return length + encodeOneIntegerToByteArray(key - prev, inbyte);
+    }
 
     std::string name() const {
     	if (delta)
@@ -175,6 +283,40 @@ public:
     }
 
 private:
+
+
+    // convenience function used by insert, writes key and newvalue to compressed stream, and return
+    // extra storage used, pointer should be right after where nextvalue is right now
+    size_t __insert(uint8_t *in, uint32_t previous, uint32_t key, uint32_t nextvalue, size_t followingbytes) {
+    	assert(nextvalue >= key);
+    	assert(key >= previous);
+    	size_t oldstorage = storageCost(nextvalue - previous);
+    	size_t newstorage = storageCost(nextvalue - key) + storageCost(key - previous);
+    	assert(newstorage >= oldstorage);
+    	if(newstorage > oldstorage) std::memmove(in + newstorage - oldstorage, in,followingbytes);
+    	uint8_t *newin = in - oldstorage;
+    	newin += encodeOneIntegerToByteArray(key - previous, newin);
+    	newin += encodeOneIntegerToByteArray(nextvalue - key, newin);
+    	assert(newin == in + newstorage - oldstorage);
+    	return newstorage - oldstorage;
+    }
+
+
+    // how many bytes are required to store this integer?
+    int storageCost(uint32_t val) {
+        if (val < (1U << 7)) {
+        	return 1;
+        } else if (val < (1U << 14)) {
+        	return 2;
+        } else if (val < (1U << 21)) {
+        	return 3;
+        } else if (val < (1U << 28)) {
+        	return 4;
+        } else {
+        	return 5;
+        }
+    }
+
     template<uint32_t i>
     uint8_t extract7bits(const uint32_t val) {
         return static_cast<uint8_t>((val >>(7 * i)) & ((1U << 7) - 1));

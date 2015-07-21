@@ -454,8 +454,9 @@ public:
     // append a key. Keys must be in sorted order. We assume that there is
     // enough room and that delta encoding was used.
     // Returns the new size of the compressed array *in bytes*
-    size_t append(uint8_t *in, const size_t bytesize, uint32_t previous_key,
+    size_t appendToByteArray(uint8_t *in, const size_t bytesize, uint32_t previous_key,
                     uint32_t key) {
+    	assert(delta);// no performance impact expected.
     	uint8_t *byteininit = (uint8_t *)in;
     	uint8_t *bytein = (uint8_t *)in + bytesize;
     	bytein += encodeOneIntegerToByteArray(key - previous_key, bytein);
@@ -468,7 +469,7 @@ public:
     	bytesize -= paddingBytes(in,length);
     	uint8_t * bytein = (uint8_t *) in;
     	uint8_t * byteininit = bytein;
-    	size_t bl = insert(bytein, bytesize,  key);
+    	size_t bl = insertInByteArray(bytein, bytesize,  key);
 		bytein += bl;
 
         while (needPaddingTo32Bits(bytein)) {
@@ -482,7 +483,7 @@ public:
 
     // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
     // the new size is returned
-    size_t insert(uint8_t *inbyte, const size_t length, uint32_t key) {
+    size_t insertInByteArray(uint8_t *inbyte, const size_t length, uint32_t key) {
         uint32_t prev = 0;
         assert(delta);
         const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(inbyte
@@ -1095,7 +1096,7 @@ public:
 
     // append a key. Keys must be in sorted order. We assume that there is
     // enough room and that delta encoding was used.
-    size_t append(uint32_t *in, const size_t length, uint32_t previous_key,
+    /*size_t append(uint32_t *in, const size_t length, uint32_t previous_key,
                     uint32_t key) {
     	size_t bytesize = (length * 4) - paddingBytes(in, length);
     	uint8_t *byteininit = (uint8_t *)in;
@@ -1107,16 +1108,30 @@ public:
         size_t storageinbytes = bytein - byteininit;
         assert((storageinbytes % 4) == 0);
         return storageinbytes / 4;
+    }*/
+
+
+    // append a key. Keys must be in sorted order. We assume that there is
+    // enough room and that delta encoding was used.
+    // Returns the new size of the compressed array *in bytes*
+    size_t appendToByteArray(uint8_t *in, const size_t bytesize, uint32_t previous_key,
+                    uint32_t key) {
+    	assert(delta);// no performance impact expected.
+    	uint8_t *byteininit = (uint8_t *)in;
+    	uint8_t *bytein = (uint8_t *)in + bytesize;
+    	bytein += encodeOneIntegerToByteArray(key - previous_key, bytein);
+        return bytein - byteininit;
     }
 
     // insert the key in sorted order. We assume that there is enough room
     // and that delta encoding was used.
     size_t insert(uint32_t *in, const size_t length, uint32_t key) {
+    	assert(delta);
     	size_t bytesize = length * 4;
     	bytesize -= paddingBytes(in,length);
     	uint8_t * bytein = (uint8_t *) in;
     	uint8_t * byteininit = bytein;
-    	bytein += insert(bytein, bytesize,  key);
+    	bytein += insertInByteArray(bytein, bytesize,  key);
 
         while (needPaddingTo32Bits(bytein)) {
             *bytein++ = 0xFF;
@@ -1127,8 +1142,8 @@ public:
     }
 
     // insert the key in sorted order. We assume that there is enough room and that delta encoding was used.
-    // the new size is returned
-    size_t insert(uint8_t *inbyte, const size_t length, uint32_t key) {
+    // the new size (in *byte) is returned
+    size_t insertInByteArray(uint8_t *inbyte, const size_t length, uint32_t key) {
         uint32_t prev = 0;
         assert(delta);
         const uint8_t * const endbyte = reinterpret_cast<const uint8_t *>(inbyte

@@ -140,7 +140,7 @@ public:
     // append a key. Keys must be in sorted order. We assume that there is
     // enough room and that delta encoding was used.
     // Returns the new size of the compressed array *in bytes*
-    size_t append(uint8_t *in, const size_t /* length */, uint32_t previous_key,
+    size_t appendToByteArray(uint8_t *in, const size_t /* length */, uint32_t previous_key,
                     uint32_t key) {
         uint8_t *initin = in;
         size_t size = *(uint32_t *)in;

@@ -405,7 +405,7 @@ void testAppendByteArray() {
 
 	size_t currentsize = 0;
 	for (int i = 0; i < max; i++) {
-		currentsize = codec.append(compressedbuffer.data(), currentsize,
+		currentsize = codec.appendToByteArray(compressedbuffer.data(), currentsize,
                                     i > 0 ? ints[i - 1] : 0, ints[i]);
 		size_t howmany = decomp.size() * 4;
 		codec.decodeFromByteArray(compressedbuffer.data(), currentsize,
