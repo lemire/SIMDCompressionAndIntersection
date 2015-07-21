@@ -520,11 +520,6 @@ void testSelectSimpleOdd() {
     compressedbuffer.resize(nvalue);
     compressedbuffer.shrink_to_fit();
     for (int i = 0; i < max; i++) {
-        cout << i << " = " << codec.select(compressedbuffer.data(), i) << endl;
-
-    }
-    for (int i = 0; i < max; i++) {
-    	cout<<"hell select "<<i<<endl;
         uint32_t k = codec.select(compressedbuffer.data(), i);
         if (k != (uint32_t)i) {
             cout << codec.name() << "::odd select failed with " << i << " got back "<< k << endl;
