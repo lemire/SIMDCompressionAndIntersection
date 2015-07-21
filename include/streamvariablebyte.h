@@ -28,6 +28,8 @@ uint8_t *svb_insert_scalar_d1_init(uint8_t *keyPtr, uint8_t *dataPtr,
                               size_t dataSize, uint32_t count,
                               uint32_t prev, uint32_t new_key,
                               uint32_t *position);
+uint8_t *svb_append_scalar_d1(uint8_t *keyPtr, uint8_t *dataPtr,
+                            size_t sizebytes, size_t count, uint32_t delta);
 }
 
 
@@ -78,6 +80,14 @@ public:
         nvalue = 1 + (bytesWritten + 3) / 4;
     }
 
+    void encodeToByteArray(uint32_t *in, const size_t count, uint8_t *out,
+                     size_t &nvalue) {
+        uint32_t bytesWritten = svb_encode((uint8_t *)(out + 1), in,
+                                    count, 1, 1);
+        *out = 4 + bytesWritten;
+        nvalue = 4 + bytesWritten;
+    }
+
     const uint32_t * decodeArray(const uint32_t *in, const size_t /* count */,
                                  uint32_t *out, size_t & nvalue) {
         ++in;   // number of encoded bytes
@@ -91,6 +101,19 @@ public:
         return reinterpret_cast<const uint32_t *>((reinterpret_cast<uintptr_t>(
         		svb_decode_avx_d1_simple(out, keyPtr, dataPtr, count))
                 + 3) & ~3);
+    }
+
+    const uint8_t * decodeFromByteArray(const uint8_t *in, const size_t /* count */,
+                                 uint32_t *out, size_t & nvalue) {
+        in += 4;   // number of encoded bytes
+        uint32_t count = *(uint32_t *)in;  // next 4 bytes is number of ints
+        nvalue = count;
+        if (count == 0) return 0;
+
+        uint8_t *keyPtr = (uint8_t *)in + 4; // full list of keys is next
+        uint32_t keyLen = ((count + 3) / 4);   // 2-bits per key (rounded up)
+        uint8_t *dataPtr = keyPtr + keyLen;    // data starts at end of keys
+        return svb_decode_avx_d1_simple(out, keyPtr, dataPtr, count);
     }
 
     uint32_t select(const uint32_t *in, int slot) {
@@ -112,6 +135,36 @@ public:
         uint8_t *dataPtr = keyPtr + keyLen;    // data starts at end of keys
         return (uint32_t)svb_find_avx_d1_init(keyPtr, dataPtr, count,
                          0, key, presult);
+    }
+
+    // append a key. Keys must be in sorted order. We assume that there is
+    // enough room and that delta encoding was used.
+    // Returns the new size of the compressed array *in bytes*
+    size_t append(uint8_t *in, const size_t /* length */, uint32_t previous_key,
+                    uint32_t key) {
+        uint8_t *initin = in;
+        size_t size = *(uint32_t *)in;
+        in += 4;
+        size_t count = *(uint32_t *)in;
+        in += 4;
+
+        // if the buffer is not yet initialized: pretend that the first 8
+        // bytes are already occupied
+        if (size == 0)
+            size = 8;
+
+        uint8_t *keyPtr = (uint8_t *)in;       // full list of keys is next
+        uint32_t keyLen = ((count + 3) / 4);   // 2-bits per key (rounded up)
+        uint8_t *dataPtr = keyPtr + keyLen;    // data starts after the keys
+        size = svb_append_scalar_d1(keyPtr, dataPtr, size - 8, count,
+                            key - previous_key) - initin;
+
+        // update 'size' and 'count' at the beginning of the buffer
+        in = initin;
+        *(uint32_t *)in = size;
+        in += 4;
+        *(uint32_t *)in = count + 1;
+        return size;
     }
 
     // Inserts |key| into an encoded sequence. |encodedSize| is the total

@@ -16,6 +16,7 @@
 #include "for.h"
 
 #include <assert.h>
+#include <stdlib.h> /* for malloc, free */
 #include <string.h> /* for memcpy */
 
 #if defined(_MSC_VER) && _MSC_VER < 1600
@@ -57,7 +58,7 @@ typedef uint32_t(*for_linsearchxfunc_t)(uint32_t, const uint8_t *, uint32_t,
 #include "for-gen.c"
 
 static INLINE uint32_t
-bits(const uint32_t v)
+required_bits(const uint32_t v)
 {
   return v == 0 ? 0 : 32 - CLZ(v);
 }
@@ -112,7 +113,7 @@ for_compressed_size_unsorted(const uint32_t *in, uint32_t length)
   }
 
   /* calculate the bits */
-  b = bits(M - m);
+  b = required_bits(M - m);
 
   return METADATA + for_compressed_size_bits(length, b);
 }
@@ -130,7 +131,7 @@ for_compressed_size_sorted(const uint32_t *in, uint32_t length)
   M = in[length - 1];
 
   /* calculate the bits */
-  b = bits(M - m);
+  b = required_bits(M - m);
 
   return METADATA + for_compressed_size_bits(length, b);
 }
@@ -176,11 +177,11 @@ for_compress_unsorted(const uint32_t *in, uint8_t *out, uint32_t length)
   }
 
   /* calculate the bits */
-  b = bits(M - m);
+  b = required_bits(M - m);
 
   /* store m and the bits */
   *(uint32_t *)(out + 0) = m;
-  *(uint32_t *)(out + 4) = b;
+  *(uint8_t *) (out + 4) = b;
   return METADATA + for_compress_bits(in, out + METADATA, length, m, b);
 }
 
@@ -197,11 +198,11 @@ for_compress_sorted(const uint32_t *in, uint8_t *out, uint32_t length)
   M = in[length - 1];
 
   /* calculate the bits */
-  b = bits(M - m);
+  b = required_bits(M - m);
 
   /* store m and the bits */
   *(uint32_t *)(out + 0) = m;
-  *(uint32_t *)(out + 4) = b;
+  *(uint8_t *) (out + 4) = b;
 
   return METADATA + for_compress_bits(in, out + METADATA, length, m, b);
 }
@@ -240,6 +241,116 @@ for_uncompress(const uint8_t *in, uint32_t *out, uint32_t length)
   b = *(in + 4);
 
   return METADATA + for_uncompress_bits(in + METADATA, out, length, m, b);
+}
+
+uint32_t
+for_append_bits(uint8_t *in, uint32_t length, uint32_t base,
+                uint32_t bits, uint32_t value)
+{
+  uint32_t b, start;
+  uint8_t *initin = in;
+  uint32_t *in32 = (uint32_t *)in;
+
+  assert(bits <= 32);
+  assert(required_bits(value - base) <= bits);
+  assert(value >= base);
+
+  if (bits == 32) {
+    in32[length] = value - base;
+    return (length + 1) * sizeof(uint32_t);
+  }
+
+  if (length > 32) {
+    b = length / 32;
+    in += (b * 32 * bits) / 8;
+    length %= 32;
+  }
+
+  if (length > 16) {
+    b = length / 16;
+    in += (b * 16 * bits) / 8;
+    length %= 16;
+  }
+
+  if (length > 8) {
+    b = length / 8;
+    in += (b * 8 * bits) / 8;
+    length %= 8;
+  }
+
+  start = length * bits;
+
+  in += start / 8;
+  start %= 8;
+
+  /* |in| now points to the byte where the new value will be stored */
+  /* |start| is the bit position where the compressed value starts */
+
+  in32 = (uint32_t *)in;
+
+  value -= base;
+
+  /* easy common case: the compressed value is not split between words */
+  if (start + bits < 32) {
+    uint32_t mask = (1 << bits) - 1;
+    *in32 &= ~(mask << start);
+    *in32 |= value << start;
+  }
+  /* not so easy: store value in two words */
+  else {
+    uint32_t mask1 = (1 << bits) - 1;
+    uint32_t mask2 = (1 << (bits - (32 - start))) - 1;
+    *(in32 + 0) &= ~(mask1 << start);
+    *(in32 + 0) |= (value & mask1) << start;
+    *(in32 + 1) &= ~mask2;
+    *(in32 + 1) |= value >> (32 - start);
+  }
+
+  return (in - initin) + ((start + bits) + 7) / 8;
+}
+
+typedef uint32_t (* append_impl)(const uint32_t *in, uint8_t *out,
+                uint32_t length);
+
+static uint32_t
+for_append_impl(uint8_t *in, uint32_t length, uint32_t value, append_impl impl)
+{
+  uint32_t m, b, bnew, s;
+
+  if (length == 0)
+    return impl(&value, in, 1);
+
+  /* load min and the bits */
+  m = *(uint32_t *)(in + 0);
+  b = *(in + 4);
+
+  /* if the new value cannot be stored in |b| bits then re-encode the whole
+   * sequence */
+  bnew = required_bits(value - m);
+  if (m > value || bnew > b) {
+    uint32_t *tmp = (uint32_t *)malloc(sizeof(uint32_t) * (length + 1));
+    if (!tmp)
+      return 0;
+    for_uncompress(in, tmp, length);
+    tmp[length] = value;
+    s = impl(tmp, in, length + 1);
+    free(tmp);
+    return s;
+  }
+
+  return METADATA + for_append_bits(in + METADATA, length, m, b, value);
+}
+
+uint32_t
+for_append_unsorted(uint8_t *in, uint32_t length, uint32_t value)
+{
+  return for_append_impl(in, length, value, for_compress_unsorted);
+}
+
+uint32_t
+for_append_sorted(uint8_t *in, uint32_t length, uint32_t value)
+{
+  return for_append_impl(in, length, value, for_compress_sorted);
 }
 
 uint32_t
@@ -298,8 +409,6 @@ for_select_bits(const uint8_t *in, uint32_t base, uint32_t bits,
     return base + ((v2 << (32 - start)) | v1);
   }
 }
-
-
 
 uint32_t
 for_select(const uint8_t *in, uint32_t index)

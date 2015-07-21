@@ -54,6 +54,13 @@ class ForCODEC : public IntegerCODEC {
       return in + for_uncompress((const uint8_t *)in, out, nvalue);
     }
 
+    size_t append(uint8_t *in, const size_t /* unused */, uint32_t value) {
+      uint32_t length = *(uint32_t *)in;
+      size_t s = for_append_unsorted(in + 4, length, value);
+      *(uint32_t *)in = length + 1;
+      return s + 4;
+    }
+
     size_t findLowerBound(const uint32_t *in, const size_t,
                         uint32_t key, uint32_t *presult) {
       uint32_t length = *in;
