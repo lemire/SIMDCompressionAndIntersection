@@ -114,7 +114,7 @@ libSIMDCompressionAndIntersection.a: $(OBJECTS)
 
 
 clean: 
-	rm -f *.o unit testintegration testcodecs   simplesynth  compress uncompress budgetedtest   entropy example benchintersection
+	rm -f *.o unit benchsearch testintegration testcodecs   simplesynth  compress uncompress budgetedtest   entropy example benchintersection
 
 
 

@@ -12,10 +12,30 @@ pack0_n(uint32_t base, const uint32_t *in, uint8_t *out) {
 }
 
 static uint32_t
-unpack0_n(uint32_t base, const uint8_t *in, uint32_t *out) {
+unpack0_32(uint32_t base, const uint8_t *in, uint32_t *out) {
   int k;
   (void)in;
   for (k = 0; k < 32; ++k) {
+    out[k] = base;
+  }
+  return 0;
+}
+
+static uint32_t
+unpack0_16(uint32_t base, const uint8_t *in, uint32_t *out) {
+  int k;
+  (void)in;
+  for (k = 0; k < 16; ++k) {
+    out[k] = base;
+  }
+  return 0;
+}
+
+static uint32_t
+unpack0_8(uint32_t base, const uint8_t *in, uint32_t *out) {
+  int k;
+  (void)in;
+  for (k = 0; k < 8; ++k) {
     out[k] = base;
   }
   return 0;
@@ -6227,7 +6247,7 @@ for_packfunc_t for_pack32[33] = {
 };
 
 for_unpackfunc_t for_unpack32[33] = {
-                       unpack0_n,
+                       unpack0_32,
                        unpack1_32,
                        unpack2_32,
                        unpack3_32,
@@ -9616,7 +9636,7 @@ for_packfunc_t for_pack16[33] = {
 };
 
 for_unpackfunc_t for_unpack16[33] = {
-                       unpack0_n,
+                       unpack0_16,
                        unpack1_16,
                        unpack2_16,
                        unpack3_16,
@@ -11585,7 +11605,7 @@ for_packfunc_t for_pack8[33] = {
 };
 
 for_unpackfunc_t for_unpack8[33] = {
-                       unpack0_n,
+                       unpack0_8,
                        unpack1_8,
                        unpack2_8,
                        unpack3_8,
