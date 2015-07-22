@@ -7573,6 +7573,65 @@ const uint32_t * SIMDCompressionLib::FrameOfReference::uncompress_length(const u
     return in;
 }
 
+size_t SIMDCompressionLib::FrameOfReference::append(uint8_t *inbyte, const size_t currentcompressedsizeinbytes, uint32_t value) {
+	if(currentcompressedsizeinbytes == 0) {
+		size_t nvalue = 16;// 16 is arbitrary
+		encodeArray(&value, 1, (uint32_t *)inbyte,nvalue);
+		return nvalue * sizeof(uint32_t);
+	}
+	uint32_t * in = (uint32_t *) inbyte;
+
+	uint32_t nvalue = *in;
+	in[0] += 1;// incrementing!
+	in++;
+
+	uint32_t m = in[0];
+    uint32_t M = in[1];
+
+    int b = bits(static_cast<uint32_t>(M-m));
+	if ((value < m) || (value > M)) {// should be unlikely
+		uint32_t newm = m;
+		uint32_t newM = M;
+
+		if (value < m) {
+			newm = value;
+		}
+		if (value > M) {
+			newM = value;
+		}
+		int newb = bits(static_cast<uint32_t>(newM - newm));
+		if ((newb != b) || (value < m) ) { // unlucky path
+			vector < uint32_t > buffer(nvalue + 1);
+			uncompress_length(in, buffer.data(), nvalue);
+			buffer[nvalue] = value;
+			uint32_t * newin = compress_length(buffer.data(), nvalue + 1, in);
+			return (newin - in + 1) * sizeof(uint32_t);
+		} else {// only max changed
+			in[1] = newM;
+			M = newM;// probably unnecessary
+		}
+	}
+	// add one
+	in += 2;
+	uint32_t headersize  = 3;
+	uint32_t index = nvalue;
+	if(b == 32) {
+		in[index] = value;
+		return ( index + 1 + headersize ) * sizeof(uint32_t);
+	}
+    uint32_t oldpackedlength = nvalue / 32 * 32;
+    uint32_t newpackedlength = ( nvalue + 1 ) / 32 * 32;
+    uint32_t packedsizeinwords = oldpackedlength * b / 32;
+    in[packedsizeinwords +  index - oldpackedlength] = value;
+    if(oldpackedlength == newpackedlength) {
+    	return (headersize + (packedsizeinwords +  index - oldpackedlength)) * sizeof(uint32_t);
+    }
+    // we now have exactly 32 to pack
+    uint32_t buffer[32];
+    memcpy(buffer,in + packedsizeinwords, 32 * sizeof (uint32_t)); // copy to a safe buffer
+    uint32_t * out = pack32[b](m,buffer,in + packedsizeinwords);
+    return ( out - in + headersize )  * sizeof(uint32_t);
+}
 
 
 

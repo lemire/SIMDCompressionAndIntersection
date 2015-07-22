@@ -44,7 +44,10 @@ public:
     	return uncompress_length(in,out,nvalue);
     }
 
-
+     // appends the value "value" at the end of the compressed stream. Assumes that we have
+    // the space to do so.
+    // returns the next (total) size of the compressed output in bytes
+    size_t append(uint8_t *inbyte, const size_t /* unused */, uint32_t value);
 
     // Performs a lower bound find in the encoded array.
     // Returns the index
