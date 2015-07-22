@@ -22733,6 +22733,7 @@ static uint32_t simdfastselect(const uint32_t * in, int b, uint32_t m, size_t in
 }
 
 
+
 // Performs a lower bound find in the encoded array.
 // Returns the index
 size_t SIMDCompressionLib::SIMDFrameOfReference::findLowerBound(const uint32_t *in, const size_t , uint32_t key,
@@ -22836,6 +22837,72 @@ uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_compress_length(const 
     return out;
 }
 
+size_t SIMDCompressionLib::SIMDFrameOfReference::append(uint8_t *inbyte, const size_t currentcompressedsizeinbytes, uint32_t value) {
+	if(currentcompressedsizeinbytes == 0) {
+		size_t nvalue = 16;// 16 is arbitrary
+		encodeArray(&value, 1, (uint32_t *)inbyte,nvalue);
+		return nvalue * sizeof(uint32_t);
+	}
+	uint32_t * in = (uint32_t *) inbyte;
+
+	uint32_t nvalue = *in;
+	in[0] += 1;// incrementing!
+	in++;
+
+	uint32_t m = in[0];
+    uint32_t M = in[1];
+
+    int b = bits(static_cast<uint32_t>(M-m));
+	if ((value < m) || (value > M)) {// should be unlikely
+		uint32_t newm = m;
+		uint32_t newM = M;
+
+		if (value < m) {
+			newm = value;
+		}
+		if (value > M) {
+			newM = value;
+		}
+		int newb = bits(static_cast<uint32_t>(newM - newm));
+		if ((newb != b) || (value < m) ) { // unlucky path
+			printf("have to redo everything\n");
+			vector < uint32_t > buffer(nvalue + 1);
+			simd_uncompress_length(in, buffer.data(), nvalue);
+			buffer[nvalue] = value;
+			uint32_t * newin = simd_compress_length(buffer.data(), nvalue + 1, in);
+			return (newin - in + 1) * sizeof(uint32_t);
+		} else {// only max changed
+			in[1] = newM;
+			M = newM;// probably unnecessary
+		}
+	}
+	// add one
+	in += 2;
+	uint32_t headersize  = 3;
+
+	// Appending values one by one defeats the purpose of
+	// vectorization which is best for in-bulk processing.
+	// So we are not going to waste too much time trying to
+	// optimize the code here. We just try to avoid
+	// obviously unnecessary processing.
+
+	uint32_t buffer[128];
+	size_t oldhowmanyfull = nvalue / 128;
+	uint32_t * const newin = in +  4 * b * oldhowmanyfull;
+	size_t need_decoding = nvalue - oldhowmanyfull * 128;
+	simdunpackFOR_length(m, (__m128i *)newin, need_decoding, buffer, b);
+
+	buffer[need_decoding] = value;
+
+	uint32_t * out = (uint32_t *)simdpackFOR_length(m, buffer, need_decoding + 1 , (__m128i *) newin,b);
+
+    return ( out - in + headersize )  * sizeof(uint32_t);
+}
+
+
+/*
+ * Not sure what this was for?
+ *
 uint32_t * simd_compress_length_sorted(const uint32_t * in, uint32_t length, uint32_t * out) {
     if(length == 0) return out;
     uint32_t m = in[0];
@@ -22854,7 +22921,7 @@ uint32_t * simd_compress_length_sorted(const uint32_t * in, uint32_t length, uin
     in += length - k;
 
     return out;
-}
+}*/
 
 const uint32_t * SIMDCompressionLib::SIMDFrameOfReference::simd_uncompress_length(const uint32_t * in, uint32_t * out, uint32_t  nvalue) {
     if(nvalue == 0) return out;

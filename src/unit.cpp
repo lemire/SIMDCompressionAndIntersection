@@ -584,6 +584,7 @@ int main() {
     testAppendByteArray<VariableByte<true>>();
     testAppend<ForCODEC>();
     testAppend<FrameOfReference>();
+    testAppend<SIMDFrameOfReference>();
 
     testSelectSimple<ForCODEC>();
     testSelectSimple<SIMDFrameOfReference>();
