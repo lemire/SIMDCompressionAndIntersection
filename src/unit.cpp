@@ -408,8 +408,19 @@ void testAppendByteArray() {
 		currentsize = codec.appendToByteArray(compressedbuffer.data(), currentsize,
                                     i > 0 ? ints[i - 1] : 0, ints[i]);
 		size_t howmany = decomp.size() * 4;
-		codec.decodeFromByteArray(compressedbuffer.data(), currentsize,
-                    decomp.data(), howmany);
+		// we pad if needed
+		if (codec.name() == "VByteDelta") {// must pad with 1s
+			for (unsigned int k = 0; k < (currentsize + 3)/4*4 - currentsize; ++k) {
+				compressedbuffer[currentsize + k] = 0xFF;
+			}
+		} else {// regular padding with 0s
+			for (unsigned int k = 0; k < (currentsize + 3)/4*4 - currentsize; ++k) {
+				compressedbuffer[currentsize + k] = 0;
+			}
+		}
+		codec.decodeArray((const uint32_t *)compressedbuffer.data(), (currentsize + 3)/4,decomp.data(), howmany);
+		//codec.decodeFromByteArray(compressedbuffer.data(), currentsize,
+        //            decomp.data(), howmany);
 		sofar.push_back(ints[i]);
 		if (howmany != sofar.size())
 			cout << howmany << " " << sofar.size() << " " << i <<endl;
@@ -432,6 +443,7 @@ void testAppendByteArray() {
 
 	cout << codec.name() << "::append ok" << endl;
 }
+
 
 template<typename T>
 void testAppend() {
@@ -580,8 +592,13 @@ int main() {
 
     testAppendByteArray<StreamVByteD1>();
     testAppendByteArray<VarIntGB<true>>();
+    testAppendByteArray<VByte<true>>();
     testAppendByteArray<MaskedVByte<true>>();
     testAppendByteArray<VariableByte<true>>();
+    testAppendByteArray<ForCODEC>();
+    testAppendByteArray<FrameOfReference>();
+    testAppendByteArray<SIMDFrameOfReference>();
+
     testAppend<ForCODEC>();
     testAppend<FrameOfReference>();
     testAppend<SIMDFrameOfReference>();

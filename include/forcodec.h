@@ -23,7 +23,6 @@
 #ifndef INCLUDE_FOR_H
 #define INCLUDE_FOR_H
 
-#include <stdint.h>
 
 #include "common.h"
 #include "codecs.h"
@@ -53,6 +52,14 @@ class ForCODEC : public IntegerCODEC {
       in++;
       return in + for_uncompress((const uint8_t *)in, out, nvalue);
     }
+
+    // append a key.
+    // Returns the new size of the compressed array *in bytes*
+    size_t appendToByteArray(uint8_t *in, const size_t bytesize, uint32_t /*previous_key*/,
+                    uint32_t key) {
+    	return append(in, bytesize, key);
+    }
+
 
     size_t append(uint8_t *in, const size_t /* unused */, uint32_t value) {
       uint32_t length = *(uint32_t *)in;

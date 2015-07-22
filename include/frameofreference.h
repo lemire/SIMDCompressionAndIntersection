@@ -50,6 +50,14 @@ public:
     // the "currentcompressedsizeinbytes" should be zero when no data has been compressed yet
     size_t append(uint8_t *inbyte, const size_t currentcompressedsizeinbytes, uint32_t value);
 
+    // append a key.
+    // Returns the new size of the compressed array *in bytes*
+    size_t appendToByteArray(uint8_t *in, const size_t bytesize, uint32_t /*previous_key*/,
+                    uint32_t key) {
+    	return append(in, bytesize, key);
+    }
+
+
     // Performs a lower bound find in the encoded array.
     // Returns the index
     size_t findLowerBound(const uint32_t *in, const size_t length, uint32_t key,
@@ -105,6 +113,13 @@ public:
     // returns the next (total) size of the compressed output in bytes
     // the "currentcompressedsizeinbytes" should be zero when no data has been compressed yet
     size_t append(uint8_t *inbyte, const size_t currentcompressedsizeinbytes, uint32_t value);
+
+    // append a key.
+    // Returns the new size of the compressed array *in bytes*
+    size_t appendToByteArray(uint8_t *in, const size_t bytesize, uint32_t /* previous_key*/,
+                    uint32_t key) {
+    	return append(in, bytesize, key);
+    }
 
 
 

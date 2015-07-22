@@ -296,6 +296,63 @@ int benchmarkInsert() {
 
 }
 
+// same as testAppend<>, but uses encodeByteArray/decodeByteArray
+// to avoid padding
+template<typename T>
+int benchmarkAppendToByteArray() {
+	T codec;
+	const int max = 256;
+	srand(0);
+    time_snap_t S1, S2, S3;
+    printf("# benchmarking insert %s \n",codec.name().c_str());
+	// encode in a buffer
+	std::vector < uint32_t > compressedbuffer1(max * sizeof(uint32_t) + 1024);
+	std::vector < uint32_t > compressedbuffer2(max * sizeof(uint32_t) + 1024);
+
+	std::vector < uint32_t > buffer(max);
+	std::vector < uint32_t > backbuffer(max);
+
+	for (int b = 0; b <= 32; b++) {
+		compressedbuffer1.resize(compressedbuffer1.capacity());
+        compressedbuffer1[0] = 0; // required for streamvbyte
+        compressedbuffer1[1] = 0;
+        compressedbuffer2[0] = 0;
+        compressedbuffer2[1] = 0;
+		compressedbuffer2.resize(compressedbuffer2.capacity());
+
+		/* initialize the buffer */
+		for (int i = 0; i < max; i++) {
+			buffer[i] = ((uint32_t) rand());
+			if (b < 32)
+				buffer[i] %= (1 << b);
+		}
+        S1 = time_snap();
+
+		size_t currentsize1 = 0;
+		for (int i = 0; i < max; i++) {
+			currentsize1 = codec.appendToByteArray((uint8_t *)compressedbuffer1.data(), currentsize1,
+					i == 0 ? 0 : buffer[i-1],buffer[i]);
+		}
+        S2 = time_snap();
+
+		size_t currentsize2 = 0;
+		for (int i = 0; i < max; i++) {
+        	size_t recovlength = backbuffer.size();
+        	codec.decodeArray(compressedbuffer2.data(),currentsize2,backbuffer.data(),recovlength);
+        	backbuffer[recovlength] = buffer[i];
+        	currentsize2 = compressedbuffer2.size();
+            codec.encodeArray(backbuffer.data(), recovlength+1,compressedbuffer2.data(),currentsize2);
+		}
+        S3 = time_snap();
+
+        printf("# bit width = %d, fast append function time = " TIME_SNAP_FMT ", naive time = " TIME_SNAP_FMT  " \n", b, (S2-S1), (S3-S2) );
+        printf("%d " TIME_SNAP_FMT " " TIME_SNAP_FMT " \n",b, (S2-S1), (S3-S2));
+	}
+
+    printf("\n\n");
+    return 0;
+}
+
 
 
 using namespace SIMDCompressionLib;
@@ -352,6 +409,24 @@ int main() {
             RegularDeltaSIMD, true>>>();
     if(r < 0) return r;
     r = benchmarkSelect<SIMDCompressionLib::StreamVByteD1>();
+    if(r < 0) return r;
+
+
+    r = benchmarkAppendToByteArray<SIMDCompressionLib::SIMDFrameOfReference>();
+    if(r < 0) return r;
+    r = benchmarkAppendToByteArray<SIMDCompressionLib::FrameOfReference>();
+    if(r < 0) return r;
+    r = benchmarkAppendToByteArray<SIMDCompressionLib::ForCODEC>();
+    if(r < 0) return r;
+    r = benchmarkAppendToByteArray<SIMDCompressionLib::VarIntGB<true>>();
+    if(r < 0) return r;
+    r = benchmarkAppendToByteArray<SIMDCompressionLib::MaskedVByte<true>>();
+    if(r < 0) return r;
+    r = benchmarkAppendToByteArray<SIMDCompressionLib::VariableByte<true>>();
+    if(r < 0) return r;
+    r = benchmarkAppendToByteArray<SIMDCompressionLib::VByte<true>>();
+    if(r < 0) return r;
+    r = benchmarkAppendToByteArray<SIMDCompressionLib::StreamVByteD1>();
     if(r < 0) return r;
 
 
