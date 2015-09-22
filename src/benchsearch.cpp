@@ -428,6 +428,10 @@ int main() {
     r = benchmarkAppendToByteArray<SIMDCompressionLib::StreamVByteD1>();
     if(r < 0) return r;
 
+
+
+    r = benchmarkSearch<SIMDCompressionLib::VarIntGB<true>,128>();
+    if(r < 0) return r;
     return 0;
 }
 
