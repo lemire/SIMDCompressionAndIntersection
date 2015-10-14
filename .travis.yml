@@ -3,4 +3,4 @@ sudo: false
 compiler:
   - clang
 
-script: make && ./unit
+script: make unit && ./unit
