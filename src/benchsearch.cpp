@@ -141,9 +141,8 @@ int lower_bound(uint32_t * A, uint32_t key, int imin, int imax)
 }
 
 
-template<typename T>
+template<typename T, size_t N = 256>
 int benchmarkSearch() {
-	static const size_t N = 256;
 	T codec;
 	uint32_t buffer[N];
     uint32_t backbuffer[N];
@@ -151,7 +150,7 @@ int benchmarkSearch() {
     uint32_t result, initial = 0;
     uint32_t b, i;
     time_snap_t S1, S2, S3;
-    printf("# benchmarking search %s \n",codec.name().c_str());
+    printf("# benchmarking search %s N=%lu \n",codec.name().c_str(),N);
     srand(0);
 
     /* this test creates delta encoded buffers with different bits, then
@@ -430,6 +429,9 @@ int main() {
     if(r < 0) return r;
 
 
+
+    r = benchmarkSearch<SIMDCompressionLib::VarIntGB<true>,128>();
+    if(r < 0) return r;
     return 0;
 }
 
