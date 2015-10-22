@@ -33,6 +33,7 @@ HEADERS= $(shell ls include/*h)
 all: unit  testcodecs  testintegration  advancedbenchmarking benchintersection benchsearch libSIMDCompressionAndIntersection.a
 	echo "please run unit tests by running the unit executable"
 
+
 advancedbenchmarking: simplesynth compress uncompress budgetedtest entropy compflatstat
 
 bitpacking.o: include/bitpacking.h src/bitpacking.cpp
@@ -132,6 +133,10 @@ compress: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/compress.cpp $(OBJ
 
 budgetedtest: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/budgetedtest.cpp $(OBJECTS) 
 	$(CXX) $(CXXFLAGS) -o budgetedtest advancedbenchmarking/src/budgetedtest.cpp $(OBJECTS)  -Iinclude -Iadvancedbenchmarking/include
+
+ramtocache: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/ramtocache.cpp $(OBJECTS) 
+	$(CXX) $(CXXFLAGS) -o ramtocache advancedbenchmarking/src/ramtocache.cpp $(OBJECTS)  -Iinclude -Iadvancedbenchmarking/include
+
 
 entropy: $(HEADERS) $(BENCHHEADERS) advancedbenchmarking/src/entropy.cpp $(OBJECTS) 
 	$(CXX) $(CXXFLAGS) -o entropy advancedbenchmarking/src/entropy.cpp $(OBJECTS)  -Iinclude -Iadvancedbenchmarking/include
