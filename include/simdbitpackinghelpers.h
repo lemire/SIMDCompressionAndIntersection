@@ -543,7 +543,7 @@ struct SIMDBitPackingHelpers {
         __m128i initoffset = _mm_set1_epi32(0);
 
         for (size_t k = 0; k  < Qty / SIMDBlockSize; ++k) {
-            __m128i nextoffset = _mm_load_si128(reinterpret_cast<__m128i *>((in + k * SIMDBlockSize + SIMDBlockSize - 4)));
+            __m128i nextoffset = MM_LOAD_SI_128(reinterpret_cast<__m128i *>((in + k * SIMDBlockSize + SIMDBlockSize - 4)));
 
             if (bit < 32) SIMDDeltaProcessor<DeltaHelper, SIMDBlockSize>::runDelta(initoffset, in + k * SIMDBlockSize);
             simdpack(in + k * SIMDBlockSize, reinterpret_cast<__m128i *>(out + SIMDBlockSize * k * bit / 32), bit);
@@ -579,7 +579,7 @@ struct SIMDBitPackingHelpers {
         __m128i initoffset = _mm_set1_epi32(0);
 
         for (size_t k = 0; k  < Qty / SIMDBlockSize; ++k) {
-            __m128i nextoffset = _mm_load_si128(reinterpret_cast<__m128i *>((in + k * SIMDBlockSize + SIMDBlockSize - 4)));
+            __m128i nextoffset = MM_LOAD_SI_128(reinterpret_cast<__m128i *>((in + k * SIMDBlockSize + SIMDBlockSize - 4)));
             if (bit < 32) SIMDDeltaProcessor<DeltaHelper, SIMDBlockSize>::runDelta(initoffset, in + k * SIMDBlockSize);
             simdpackwithoutmask(in + k * SIMDBlockSize, reinterpret_cast<__m128i *>(out + SIMDBlockSize * k * bit / 32), bit);
             initoffset = nextoffset;
@@ -595,7 +595,7 @@ struct SIMDBitPackingHelpers {
 
         for (size_t k = 0; k  < Qty / SIMDBlockSize; ++k) {
             SIMDipack<DeltaHelper>(initoffset, in + k * SIMDBlockSize, out + k * bit, bit);
-            initoffset = _mm_load_si128(reinterpret_cast<const __m128i *>(in + k * SIMDBlockSize + SIMDBlockSize - 4));
+            initoffset = MM_LOAD_SI_128(reinterpret_cast<const __m128i *>(in + k * SIMDBlockSize + SIMDBlockSize - 4));
             //memcpy(&initoffset, (in+k*SIMDBlockSize+SIMDBlockSize - 4), sizeof initoffset);// Daniel: memcpy looks like a hack
         }
     }
@@ -609,7 +609,7 @@ struct SIMDBitPackingHelpers {
 
         for (size_t k = 0; k  < Qty / SIMDBlockSize; ++k) {
             SIMDipackwithoutmask<DeltaHelper>(initoffset, in + k * SIMDBlockSize, out + k * bit, bit);
-            initoffset = _mm_load_si128(reinterpret_cast<const __m128i *>(in + k * SIMDBlockSize + SIMDBlockSize - 4));
+            initoffset = MM_LOAD_SI_128(reinterpret_cast<const __m128i *>(in + k * SIMDBlockSize + SIMDBlockSize - 4));
             //memcpy(&initoffset, (in+k*SIMDBlockSize+SIMDBlockSize - 4), sizeof initoffset);// Daniel: memcpy looks like a hack
         }
     }

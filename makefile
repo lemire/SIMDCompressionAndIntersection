@@ -2,6 +2,7 @@
 #
 .SUFFIXES: .cpp .o .c .h
 # replace the CXX variable with a path to a C++11 compatible compiler.
+# to build an aligned version, add -DUSE_ALIGNED=1
 ifeq ($(INTEL), 1)
 # if you wish to use the Intel compiler, please do "make INTEL=1".
     CXX ?= /opt/intel/bin/icpc
@@ -106,16 +107,18 @@ example:  $(HEADERS) example.cpp  $(OBJECTS)
 
 
 
-testintegration:  bitpacking.o simdbitpacking.o usimdbitpacking.o integratedbitpacking.o     simdintegratedbitpacking.o src/testintegration.cpp  $(HEADERS) 
-	$(CXX) $(CXXFLAGS) -Iinclude -o testintegration src/testintegration.cpp   bitpacking.o integratedbitpacking.o  simdbitpacking.o usimdbitpacking.o     simdintegratedbitpacking.o 
+testintegration:  bitpacking.o simdbitpacking.o usimdbitpacking.o integratedbitpacking.o     simdintegratedbitpacking.o src/testintegration.cpp  $(HEADERS)
+	$(CXX) $(CXXFLAGS) -Iinclude -o testintegration src/testintegration.cpp   bitpacking.o integratedbitpacking.o  simdbitpacking.o usimdbitpacking.o     simdintegratedbitpacking.o
 
 libSIMDCompressionAndIntersection.a: $(OBJECTS)
 	ar rvs $@ $^
 
+libSIMDCompressionAndIntersection.so: $(OBJECTS)
+	g++  -DDEBUG -g  -shared -fpic -o $@ $^
 
 
-clean: 
-	rm -f *.o unit benchsearch testintegration testcodecs   simplesynth  compress uncompress budgetedtest   entropy example benchintersection
+clean:
+	rm -f *.o unit benchsearch testintegration testcodecs   simplesynth  compress uncompress budgetedtest   entropy example benchintersection libSIMDCompressionAndIntersection.so libSIMDCompressionAndIntersection.a
 
 
 

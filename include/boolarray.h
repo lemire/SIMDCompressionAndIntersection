@@ -54,8 +54,8 @@ public:
         __m128i *bin = reinterpret_cast<__m128i *>(buffer.data());
         const  __m128i *bo = reinterpret_cast<const  __m128i *>(other.buffer.data());
         for (size_t i = 0; i < buffer.size() / 2; ++i) {
-            __m128i p1 = _mm_load_si128(bin + i);
-            __m128i p2 = _mm_load_si128(bo + i);
+            __m128i p1 = MM_LOAD_SI_128(bin + i);
+            __m128i p2 = MM_LOAD_SI_128(bo + i);
             __m128i andp1p2 = _mm_and_si128(p1, p2);
             _mm_storeu_si128(bin + i, andp1p2);
         }
@@ -82,8 +82,8 @@ public:
         __m128i *bout = reinterpret_cast<__m128i *>(output.buffer.data());
 
         for (size_t i = 0; i < buffer.size() / 2; ++i) {
-            __m128i p1 = _mm_load_si128(bin + i);
-            __m128i p2 = _mm_load_si128(bo + i);
+            __m128i p1 = MM_LOAD_SI_128(bin + i);
+            __m128i p2 = MM_LOAD_SI_128(bo + i);
             __m128i andp1p2 = _mm_and_si128(p1, p2);
             _mm_storeu_si128(bout + i, andp1p2);
         }
