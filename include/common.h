@@ -42,6 +42,15 @@
 #include <unordered_set>
 #include <vector>
 
+
+#ifdef USE_ALIGNED
+# define MM_LOAD_SI_128  _mm_load_si128
+# define MM_STORE_SI_128 _mm_store_si128
+#else
+# define MM_LOAD_SI_128  _mm_loadu_si128
+# define MM_STORE_SI_128 _mm_storeu_si128
+#endif
+
 namespace SIMDCompressionLib {
 
 

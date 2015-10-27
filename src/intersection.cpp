@@ -726,8 +726,8 @@ size_t lemire_highlyscalable_intersect_SIMD(const uint32_t *A, const size_t s_a,
     size_t st_b = (s_b / 4) * 4;
     if (i_a < st_a && i_b < st_b) {
         __m128i v_a, v_b;
-        v_a = _mm_load_si128((__m128i *) &A[i_a]);
-        v_b = _mm_load_si128((__m128i *) &B[i_b]);
+        v_a = MM_LOAD_SI_128((__m128i *) &A[i_a]);
+        v_b = MM_LOAD_SI_128((__m128i *) &B[i_b]);
         while (true) {
             const __m128i cmp_mask1 = _mm_cmpeq_epi32(v_a, v_b); // pairwise comparison
             const __m128i cmp_mask2 = _mm_cmpeq_epi32(v_a,
@@ -752,13 +752,13 @@ size_t lemire_highlyscalable_intersect_SIMD(const uint32_t *A, const size_t s_a,
                 i_a += 4;
                 if (i_a >= st_a)
                     break;
-                v_a = _mm_load_si128((__m128i *) &A[i_a]);
+                v_a = MM_LOAD_SI_128((__m128i *) &A[i_a]);
             }
             if (a_max >= B[i_b + 3]) {
                 i_b += 4;
                 if (i_b >= st_b)
                     break;
-                v_b = _mm_load_si128((__m128i *) &B[i_b]);
+                v_b = MM_LOAD_SI_128((__m128i *) &B[i_b]);
             }
 
         }

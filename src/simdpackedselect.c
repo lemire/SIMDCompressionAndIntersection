@@ -4,6 +4,13 @@
 #include <stdint.h>
 #include <smmintrin.h>
 
+#ifdef USE_ALIGNED
+# define MM_LOAD_SI_128  _mm_load_si128
+# define MM_STORE_SI_128 _mm_store_si128
+#else
+# define MM_LOAD_SI_128  _mm_loadu_si128
+# define MM_STORE_SI_128 _mm_storeu_si128
+#endif
 
 #if defined(_MSC_VER)
 #define SIMDCOMP_ALIGNED(x) __declspec(align(x))
@@ -1094,7 +1101,7 @@ iunpackselect6(__m128i * initOffset, const __m128i *in, int slot)
   __m128i out;
   __m128i tmp;
   __m128i mask = _mm_set1_epi32((1U<<6)-1);
- 
+
   tmp = InReg;
   out = _mm_and_si128(tmp, mask);
   PrefixSum(out, out, *initOffset);
@@ -7695,7 +7702,7 @@ static uint32_t
 iunpackselect32(__m128i * initOffset , const __m128i *in, int slot)
 {
   uint32_t *begin = (uint32_t *)in;
-  *initOffset = _mm_load_si128(in + 31);
+  *initOffset = MM_LOAD_SI_128(in + 31);
   return begin[slot];
 }
 
@@ -15411,7 +15418,7 @@ iunpackscan31(__m128i * initOffset, const __m128i *in)
 static void
 iunpackscan32(__m128i * initOffset , const __m128i *in)
 {
-	*initOffset = _mm_load_si128(in + 31);
+	*initOffset = MM_LOAD_SI_128(in + 31);
 }
 
 
@@ -15490,4 +15497,3 @@ simdscand1(__m128i * initOffset, const __m128i *in, uint32_t bit)
 
    return ;
 }
-

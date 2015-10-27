@@ -52,7 +52,7 @@ inline uint32_t gccbits(const uint32_t v) {
  */
 inline uint32_t maxbitas32int(const __m128i accumulator) {
     ALIGN16 uint32_t tmparray[4];
-    _mm_store_si128(reinterpret_cast<__m128i *>(tmparray), accumulator);
+    MM_STORE_SI_128(reinterpret_cast<__m128i *>(tmparray), accumulator);
     return gccbits(tmparray[0] | tmparray[1] | tmparray[2] | tmparray[3]);
 }
 

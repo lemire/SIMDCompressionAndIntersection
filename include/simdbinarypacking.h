@@ -52,17 +52,17 @@ struct SIMDBlockPacker {
         if (bit < 32) {
             initoffset = DeltaProcessor::runPrefixSum(initoffset, out);
         } else {
-            initoffset = _mm_load_si128(reinterpret_cast<__m128i *>(out + SIMDBlockSize - 4));
+            initoffset = MM_LOAD_SI_128(reinterpret_cast<__m128i *>(out + SIMDBlockSize - 4));
         }
     }
 
     static uint32_t maxbits(const uint32_t *in,  __m128i &initoffset) {
         const __m128i *pin = reinterpret_cast<const __m128i *>(in);
-        __m128i newvec = _mm_load_si128(pin);
+        __m128i newvec = MM_LOAD_SI_128(pin);
         __m128i accumulator =  DeltaHelper::Delta(newvec , initoffset);
         __m128i oldvec = newvec;
         for (uint32_t k = 1; 4 * k < SIMDBlockSize; ++k) {
-            newvec = _mm_load_si128(pin + k);
+            newvec = MM_LOAD_SI_128(pin + k);
             accumulator = _mm_or_si128(accumulator, DeltaHelper::Delta(newvec , oldvec));
             oldvec = newvec;
         }
@@ -71,7 +71,7 @@ struct SIMDBlockPacker {
     }
 
     static void  packblockwithoutmask(uint32_t *in, uint32_t *out,  const uint32_t bit, __m128i &initoffset) {
-        __m128i nextoffset = _mm_load_si128(reinterpret_cast<__m128i *>(in + SIMDBlockSize - 4));
+        __m128i nextoffset = MM_LOAD_SI_128(reinterpret_cast<__m128i *>(in + SIMDBlockSize - 4));
         if (bit < 32)
             DeltaProcessor::runDelta(initoffset, in);
         if (ArrayDispatch)
@@ -105,11 +105,11 @@ struct SIMDIntegratedBlockPacker {
 
     static uint32_t maxbits(const uint32_t *in,  __m128i &initoffset) {
         const __m128i *pin = reinterpret_cast<const __m128i *>(in);
-        __m128i newvec = _mm_load_si128(pin);
+        __m128i newvec = MM_LOAD_SI_128(pin);
         __m128i accumulator =  DeltaHelper::Delta(newvec , initoffset);
         __m128i oldvec = newvec;
         for (uint32_t k = 1; 4 * k < SIMDBlockSize; ++k) {
-            newvec = _mm_load_si128(pin + k);
+            newvec = MM_LOAD_SI_128(pin + k);
             accumulator = _mm_or_si128(accumulator, DeltaHelper::Delta(newvec , oldvec));
             oldvec = newvec;
         }
@@ -118,7 +118,7 @@ struct SIMDIntegratedBlockPacker {
     }
 
     static void  packblockwithoutmask(uint32_t *in, uint32_t *out,  const uint32_t bit, __m128i &initoffset) {
-        __m128i nextoffset = _mm_load_si128(reinterpret_cast<__m128i *>(in + SIMDBlockSize - 4));
+        __m128i nextoffset = MM_LOAD_SI_128(reinterpret_cast<__m128i *>(in + SIMDBlockSize - 4));
         if (ArrayDispatch)
             IntegratedArrayDispatch<DeltaHelper>::SIMDipackwithoutmask(initoffset, in, reinterpret_cast<__m128i *>(out), bit);
         else
@@ -147,7 +147,9 @@ struct SIMDIntegratedBlockPacker {
 template <class BlockPacker>
 class SIMDBinaryPacking: public IntegerCODEC {
 public:
+#ifdef USE_ALIGNED
     static const uint32_t CookiePadder = 123456;// just some made up number
+#endif
     static const uint32_t MiniBlockSize = 128;
     static const uint32_t HowManyMiniBlocks = 16;
     static const uint32_t BlockSize = MiniBlockSize;//HowManyMiniBlocks * MiniBlockSize;
@@ -158,11 +160,15 @@ public:
                      size_t &nvalue) {
         checkifdivisibleby(length, BlockSize);
         const uint32_t *const initout(out);
+#ifdef USE_ALIGNED
         if (needPaddingTo128Bits(out)
             or needPaddingTo128Bits(in)) throw
             std::runtime_error("alignment issue: pointers should be aligned on 128-bit boundaries");
+#endif
         *out++ = static_cast<uint32_t>(length);
+#ifdef USE_ALIGNED
         while (needPaddingTo128Bits(out)) *out++ = CookiePadder;
+#endif
         uint32_t Bs[HowManyMiniBlocks];
         __m128i init = _mm_set1_epi32(0);
         const uint32_t *const final = in + length;
@@ -212,14 +218,18 @@ public:
 
     const uint32_t *decodeArray(const uint32_t *in, const size_t /*length*/,
                                 uint32_t *out, size_t &nvalue) {
+#ifdef USE_ALIGNED
         if (needPaddingTo128Bits(out)
             or needPaddingTo128Bits(in)) throw
             std::runtime_error("alignment issue: pointers should be aligned on 128-bit boundaries");
+#endif
         const uint32_t actuallength = *in++;
+#ifdef USE_ALIGNED
         while (needPaddingTo128Bits(in)) {
             if (in[0] != CookiePadder) throw logic_error("SIMDBinaryPacking alignment issue.");
             ++in;
         }
+#endif
         const uint32_t *const initout(out);
         uint32_t Bs[HowManyMiniBlocks];
         __m128i init = _mm_set1_epi32(0);
@@ -261,13 +271,17 @@ public:
     // WARNING: THIS IMPLEMENTATION WILL ONLY PROVIDE THE CORRECT RESULT
     // WHEN USING REGULAR (D1) DIFFERENTIAL CODING.	 TODO: Generalize the support. TODO: Should check the type.
     uint32_t select(uint32_t *in, size_t index) {
+#ifdef USE_ALIGNED
         if (needPaddingTo128Bits(in)) throw
             std::runtime_error("alignment issue: pointers should be aligned on 128-bit boundaries");
+#endif
         const uint32_t actuallength = *in++;
+#ifdef USE_ALIGNED
         while (needPaddingTo128Bits(in)) {
             if (in[0] != CookiePadder) throw logic_error("SIMDBinaryPacking alignment issue.");
             ++in;
         }
+#endif
         uint32_t Bs[HowManyMiniBlocks];
         __m128i init = _mm_set1_epi32(0);
         size_t runningindex = 0;
@@ -317,13 +331,17 @@ public:
     // WHEN USING REGULAR (D1) DIFFERENTIAL CODING.	 TODO: Generalize the support. TODO: Should check the type.
     size_t findLowerBound(const uint32_t *in, const size_t /*length*/, uint32_t key,
                           uint32_t *presult) {
+#ifdef USE_ALIGNED
         if (needPaddingTo128Bits(in)) throw
             std::runtime_error("alignment issue: pointers should be aligned on 128-bit boundaries");
+#endif
         const uint32_t actuallength = *in++;
+#ifdef USE_ALIGNED
         while (needPaddingTo128Bits(in)) {
             if (in[0] != CookiePadder) throw logic_error("SIMDBinaryPacking alignment issue.");
             ++in;
         }
+#endif
         uint32_t Bs[HowManyMiniBlocks];
         __m128i init = _mm_set1_epi32(0);
         size_t runningindex = 0;

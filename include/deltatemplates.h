@@ -123,11 +123,11 @@ struct SIMDDeltaProcessor {
 
         // Leonid Boytsov: manual loop unrolling may be crucial here.
         while (pCurr < pEnd) {
-            initOffset = DeltaHelper::PrefixSum(_mm_load_si128(pCurr), initOffset);
-            _mm_store_si128(pCurr++, initOffset);
+            initOffset = DeltaHelper::PrefixSum(MM_LOAD_SI_128(pCurr), initOffset);
+            MM_STORE_SI_128(pCurr++, initOffset);
 
-            initOffset = DeltaHelper::PrefixSum(_mm_load_si128(pCurr), initOffset);
-            _mm_store_si128(pCurr++, initOffset);
+            initOffset = DeltaHelper::PrefixSum(MM_LOAD_SI_128(pCurr), initOffset);
+            MM_STORE_SI_128(pCurr++, initOffset);
         }
 
         return initOffset;
@@ -139,25 +139,25 @@ struct SIMDDeltaProcessor {
         assert(QtyDivBy4 && QtyDivBy4 % 2 == 0);
         __m128i *pCurr = reinterpret_cast<__m128i *>(pData) + QtyDivBy4 - 1;
         __m128i *pStart = reinterpret_cast<__m128i *>(pData);
-        __m128i a = _mm_load_si128(pCurr);
+        __m128i a = MM_LOAD_SI_128(pCurr);
         // Leonid Boytsov: manual loop unrolling may be crucial here.
         while (pCurr > pStart + 1) {
-            __m128i b = _mm_load_si128(pCurr - 1);
-            _mm_store_si128(pCurr, DeltaHelper::Delta(a, b));
+            __m128i b = MM_LOAD_SI_128(pCurr - 1);
+            MM_STORE_SI_128(pCurr, DeltaHelper::Delta(a, b));
             a = b;
             --pCurr;
 
-            b = _mm_load_si128(pCurr - 1);
-            _mm_store_si128(pCurr, DeltaHelper::Delta(a, b));
+            b = MM_LOAD_SI_128(pCurr - 1);
+            MM_STORE_SI_128(pCurr, DeltaHelper::Delta(a, b));
             a = b;
             --pCurr;
         }
 
-        __m128i b = _mm_load_si128(pStart);
-        _mm_store_si128(pStart + 1, DeltaHelper::Delta(a, b));
+        __m128i b = MM_LOAD_SI_128(pStart);
+        MM_STORE_SI_128(pStart + 1, DeltaHelper::Delta(a, b));
         a = b;
 
-        _mm_store_si128(pStart , DeltaHelper::Delta(a, initOffset));
+        MM_STORE_SI_128(pStart , DeltaHelper::Delta(a, initOffset));
     }
 };
 

@@ -62,9 +62,11 @@ public:
 
     const uint32_t *decodeArray(const uint32_t *in, const size_t length,
                                 uint32_t *out, size_t &nvalue) {
+#ifdef USE_ALIGNED
         if (needPaddingTo128Bits(out)
             or needPaddingTo128Bits(in)) throw
             std::runtime_error("alignment issue: pointers should be aligned on 128-bit boundaries");
+#endif
         const uint32_t *const initin(in);
         const size_t mynvalue = *in;
         ++in;
@@ -98,9 +100,11 @@ public:
      */
     void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
                      size_t &nvalue) {
+#ifdef USE_ALIGNED
         if (needPaddingTo128Bits(out)
             or needPaddingTo128Bits(in)) throw
             std::runtime_error("alignment issue: pointers should be aligned on 128-bit boundaries");
+#endif
         checkifdivisibleby(length, BlockSize);
         const uint32_t *const initout(out);
         const uint32_t *const finalin(in + length);
@@ -161,13 +165,15 @@ public:
         uint32_t *const headerout = out++;  // keep track of this
         bpacker.clear();
         uint8_t *bc = bytescontainer.data();
+#ifdef USE_ALIGNED
         out = padTo128bits(out);
         if (needPaddingTo128Bits(in)) throw std::runtime_error("alignment bug");
+#endif
         for (const uint32_t *const final = in + length; (in + BlockSize
                 <= final); in += BlockSize) {
             uint8_t bestb, bestcexcept, maxb;
 
-            const __m128i nextprev =   _mm_load_si128(reinterpret_cast<const __m128i *>(in + BlockSize - 4));
+            const __m128i nextprev =   MM_LOAD_SI_128(reinterpret_cast<const __m128i *>(in + BlockSize - 4));
             SIMDDeltaProcessor<DeltaHelper, BlockSize>::runDelta(prev, in);
             prev = nextprev;
 
@@ -216,8 +222,10 @@ public:
         for (uint32_t k = 1; k <= 32; ++k) {
             unpackpointers[k] = bpacker.get(k - 1);
         }
+#ifdef USE_ALIGNED
         in = padTo128bits(in);
         assert(!needPaddingTo128Bits(out));
+#endif
         for (uint32_t run = 0; run < nvalue / BlockSize; ++run, out
              += BlockSize) {
             const uint8_t b = *bytep++;

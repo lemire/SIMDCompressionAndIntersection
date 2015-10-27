@@ -4,6 +4,14 @@
 #include <smmintrin.h>
 #include <stdint.h>
 
+#ifdef USE_ALIGNED
+# define MM_LOAD_SI_128 _mm_load_si128
+# define MM_STORE_SI_128 _mm_store_si128
+#else
+# define MM_LOAD_SI_128 _mm_loadu_si128
+# define MM_STORE_SI_128 _mm_storeu_si128
+#endif
+
 
 #if defined(_MSC_VER)
 #define SIMDCOMP_ALIGNED(x) __declspec(align(x))
@@ -7893,7 +7901,7 @@ iunpacksearch32(__m128i *  initOffset, const __m128i *in,
 		    return (128);
 	  }
 	  *presult = in32[answer];
-	  *initOffset = _mm_load_si128(in + 31);
+	  *initOffset = MM_LOAD_SI_128(in + 31);
 	  return answer;
 
 }
@@ -7974,5 +7982,3 @@ simdsearchd1(__m128i * initOffset, const __m128i *in, uint32_t bit,
    }
    return (-1);
 }
-
-

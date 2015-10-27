@@ -89,12 +89,21 @@ void sillybenchmark(vector<dataarray> datas,
         for (const vector<uint32_t> &D : data) {
             vector <uint32_t> dirtycopy(D);
             size_t nvalue = compressedbuffer.size();
+#ifdef USE_ALIGNED
             codec.encodeArray(dirtycopy.data(), dirtycopy.size(),
                               compressedbuffer.data(), nvalue);
+#else
+            codec.encodeArray(dirtycopy.data()+1, dirtycopy.size()-1, // use unaligned address
+                              compressedbuffer.data(), nvalue);
+#endif
             size_t recoveredvalues = recoverybuffer.size();
             codec.decodeArray(compressedbuffer.data(), nvalue,
                               recoverybuffer.data(), recoveredvalues);
+#ifdef USE_ALIGNED
             if (recoveredvalues != dirtycopy.size()) throw runtime_error("bug");
+#else
+            if (recoveredvalues != dirtycopy.size()-1) throw runtime_error("bug");
+#endif
         }
         // actual run
         for (const vector<uint32_t> &D : data) {
@@ -102,8 +111,13 @@ void sillybenchmark(vector<dataarray> datas,
             intcounter += static_cast<double>(dirtycopy.size());
             size_t nvalue = compressedbuffer.size();
             z.reset();
+#ifdef USE_ALIGNED
             codec.encodeArray(dirtycopy.data(), dirtycopy.size(),
                               compressedbuffer.data(), nvalue);
+#else
+            codec.encodeArray(dirtycopy.data()+1, dirtycopy.size()-1, // use unaligned address
+                              compressedbuffer.data(), nvalue);
+#endif
             packtime += static_cast<double>(z.split());
             compsize += static_cast<double>(nvalue);
             size_t recoveredvalues = recoverybuffer.size();
@@ -116,7 +130,12 @@ void sillybenchmark(vector<dataarray> datas,
                 if (tup < bestunpacktime) bestunpacktime = tup;
             }
             unpacktime += bestunpacktime;
-            //if(recoveredvalues != dirtycopy.size()) throw runtime_error("bug");
+
+#ifdef USE_ALIGNED
+            if (recoveredvalues != dirtycopy.size()) throw runtime_error("bug");
+#else
+            if (recoveredvalues != dirtycopy.size()-1) throw runtime_error("bug");
+#endif
         }
         cout << std::setprecision(4) << it->name << "\t"
              << (static_cast<double>(compsize) * 32.0 / intcounter
