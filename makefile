@@ -8,20 +8,20 @@ ifeq ($(INTEL), 1)
     CXX ?= /opt/intel/bin/icpc
     CC ?= /opt/intel/bin/icpc
 ifeq ($(DEBUG),1)
-    CXXFLAGS = -std=c++11 -O3 -Wall -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
-    CCFLAGS = -std=c99 -O3 -Wall -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
+    CXXFLAGS = -fpic -std=c++11 -O3 -Wall -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
+    CCFLAGS = -fpic -std=c99 -O3 -Wall -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
 else
-    CXXFLAGS = -std=c++11 -O2 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
-    CCFLAGS = -std=c99 -O2 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
+    CXXFLAGS = -fpic -std=c++11 -O2 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
+    CCFLAGS = -fpic -std=c99 -O2 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
 endif # debug
 else #intel
     CXX ?= g++-4.7
 ifeq ($(DEBUG),1)
-    CXXFLAGS = -mavx -std=c++11  -Weffc++ -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra   
-    CCFLAGS =-mavx -std=c99  -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra 
+    CXXFLAGS = -fpic -mavx -std=c++11  -Weffc++ -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra
+    CCFLAGS = -fpic -mavx -std=c99  -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra
 else
-    CXXFLAGS = -mavx -std=c++11  -Weffc++ -pedantic -O3 -Wall -Wextra 
-    CCFLAGS =-mavx -std=c99 -pedantic -O3 -Wall -Wextra  
+    CXXFLAGS = -fpic -mavx -std=c++11  -Weffc++ -pedantic -O3 -Wall -Wextra
+    CCFLAGS = -fpic -mavx -std=c99 -pedantic -O3 -Wall -Wextra
 endif #debug
 endif #intel
 
@@ -114,7 +114,7 @@ libSIMDCompressionAndIntersection.a: $(OBJECTS)
 	ar rvs $@ $^
 
 libSIMDCompressionAndIntersection.so: $(OBJECTS)
-	g++  -DDEBUG -g  -shared -fpic -o $@ $^
+	$(CXX) $(CXXFLAGS) -shared -o $@ $^
 
 
 clean:
