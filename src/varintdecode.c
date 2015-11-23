@@ -295,7 +295,7 @@ static int read_int(const uint8_t* in, uint32_t* out) {
     return 5;
 }
 
-static int read_int_delta(const uint8_t* in, uint32_t* out, uint32_t* prev) {
+static inline int read_int_delta(const uint8_t* in, uint32_t* out, uint32_t* prev) {
     *out = in[0] & 0x7F;
     if (in[0] < 128) {
         *prev += *out;
@@ -947,7 +947,8 @@ static uint64_t masked_vbyte_read_group(const uint8_t* in, uint32_t* out,
 
     return consumed;
 }
-__m128i PrefixSum(__m128i curr, __m128i prev) {
+
+static inline __m128i PrefixSum(__m128i curr, __m128i prev) {
     __m128i Add = _mm_slli_si128(curr, 4);  // Cycle 1: [- A B C] (already done)
     prev = _mm_shuffle_epi32(prev, 0xff); // Cycle 2: [P P P P]
     curr = _mm_add_epi32(curr, Add);                    // Cycle 2: [A AB BC CD]
