@@ -59,7 +59,7 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     schemes["simdframeofreference"] = shared_ptr<IntegerCODEC> (
                                   new SIMDFrameOfReference ());
 
-    schemes["varintgb"] = std::shared_ptr<IntegerCODEC> (new VarIntGB<>());
+    schemes["varintgb"] = std::shared_ptr<IntegerCODEC> (new VarIntGB<true>());
 
     schemes["s4-fastpfor-d4"] = shared_ptr<IntegerCODEC> (
                                    new CompositeCodec<SIMDFastPFor<8,CoarseDelta4SIMD> , leftovercodec> ());
