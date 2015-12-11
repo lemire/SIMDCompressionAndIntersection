@@ -63,7 +63,12 @@ The FastPFOR C++ Library available at https://github.com/lemire/FastPFor
 implements some of the same compression schemes except that
 it is not optimized for the compression of sorted lists of integers.
 
+Other recommended libraries
+-----------------------------
 
+TurboPFor is a C library that offers lots of interesting optimizations. Well worth checking!
+
+https://github.com/powturbo/TurboPFor
 
 
 Licensing
