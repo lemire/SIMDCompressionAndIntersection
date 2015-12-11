@@ -31,7 +31,7 @@ endif #intel
 
 HEADERS= $(shell ls include/*h)
 
-all: unit  testcodecs  testintegration  advancedbenchmarking benchintersection benchsearch libSIMDCompressionAndIntersection.a
+all: unit  testcodecs  testintegration  advancedbenchmarking benchintersection benchsearch ramtocache libSIMDCompressionAndIntersection.a
 	echo "please run unit tests by running the unit executable"
 
 
@@ -118,7 +118,7 @@ libSIMDCompressionAndIntersection.so: $(OBJECTS)
 
 
 clean:
-	rm -f *.o unit benchsearch testintegration testcodecs   simplesynth  compress uncompress budgetedtest   entropy example benchintersection libSIMDCompressionAndIntersection.so libSIMDCompressionAndIntersection.a
+	rm -f *.o unit benchsearch testintegration testcodecs   simplesynth  compress uncompress budgetedtest ramtocache  entropy example benchintersection libSIMDCompressionAndIntersection.so libSIMDCompressionAndIntersection.a compflatstat
 
 
 
