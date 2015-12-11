@@ -74,6 +74,7 @@ void blockedcompress(shared_ptr<IntegerCODEC> c, vector<uint32_t> & buffer,
 		inpos += l;
 	}
 	obuffer.resize(outpos);
+	obuffer.shrink_to_fit();
 }
 
 
@@ -97,15 +98,22 @@ void simpleProcessArray(
 			s.BytesDecoded += obuffer.size() * sizeof(uint32_t) ;
         	}
 		// now we benchmark
+		// we first materialize everything in a cache-friendly manner
+		size_t howmany = mbuffer.size();
+		vector<uint32_t *> datap(howmany);
+		vector<size_t> datal(howmany);
+		for (size_t K = 0; K < howmany; ++K) {
+			datap[K] = mobuffer[K].data();
+			datal[K] = mobuffer[K].size();
+		}
+
 		z.reset();
-		for (size_t K = 0; K < mbuffer.size(); ++K) {
-			vector < uint32_t > &obuffer = mobuffer[K];
+		for (size_t K = 0; K < howmany; ++K) {
 			  s.NumberOfArrays++;
 			  size_t l = l1buf.size();
-			  codec->decodeArray(obuffer.data(), obuffer.size(),
+			  codec->decodeArray(datap[K], datal[K],
 						l1buf.data(), l);
 			  bogus += l1buf[0];
-                          if(l != mbuffer[K].size()) throw runtime_error("something is wrong");
 		}
 		uint64_t timespent = z.split();
 		s.TimeDecoding += timespent;
@@ -157,24 +165,30 @@ void processArray(
 			}
 		}
 		// now we benchmark for real knowing that the result will be sound
+		size_t howmany = mbuffer.size();
+		vector<uint32_t *> datap(howmany);
+		vector<uint32_t *> counts(howmany);
+		vector<size_t> datal(howmany);
+		for (size_t K = 0; K < howmany; ++K) {
+			counts[K] = mobuffer[K].data();
+			datap[K] = mobuffer[K].data() + (mbuffer[K].size()+ blocksize - 1) / blocksize;
+			datal[K] = mobuffer[K].size() - (mbuffer[K].size()+ blocksize - 1) / blocksize;
+		}
 		z.reset();
-		for (size_t K = 0; K < mbuffer.size(); ++K) {
-			vector < uint32_t > &obuffer = mobuffer[K];
-			vector < uint32_t > &buffer = mbuffer[K];
-			inpos = 0;
-			outpos = 0;
+		for (size_t K = 0; K < howmany; ++K) {
+			uint32_t * obuffer = datap[K];
+			uint32_t * counters = counts[K];
+			size_t thiscompressedlength = datal[K];
 			s.NumberOfArrays++;
-			for (outpos = (buffer.size() + blocksize - 1) / blocksize, outcounter =
-					0; outpos < obuffer.size(); outpos +=
-					obuffer[outcounter++]) {
-				size_t l;
-				l = blocksize;
-				codec->decodeArray(obuffer.data() + outpos, obuffer[outcounter],
+			for (outcounter = 0; outcounter < thiscompressedlength; ) {
+				size_t l = blocksize;
+				codec->decodeArray(obuffer + outcounter, *counters,
 						l1buf.data(), l);
 				bogus += l1buf[0];
-				inpos += l;
+				outcounter += *counters;
+				counters++;
 			}
-                        if(inpos != buffer.size()) throw runtime_error("something is wrong");
+			if(thiscompressedlength != outcounter) cerr<<"bug?"<<endl;
 		}
 		uint64_t timespent = z.split();
 		s.TimeDecoding += timespent;
@@ -217,7 +231,7 @@ int main(int argc, char **argv) {
 	vector<shared_ptr<IntegerCODEC> > schemes;
 	int c;
 	size_t MAX_ARRAYS = std::numeric_limits<size_t>::max();
-	size_t REPEAT = 100;
+	size_t VOLUME = 1024;// 1024 MB or 1 GB
 	while ((c = getopt(argc, argv, "r:l:")) != -1) {
 		switch (c) {
 			case 'l':
@@ -228,10 +242,10 @@ int main(int argc, char **argv) {
 				return -1;
 			}
 			break;
-			case 'r':
-			REPEAT = atoi(optarg);
-			if (REPEAT < 1) {
-				cerr << " REPEAT param needs to be within [1,infty)." << endl;
+			case 'v':
+			VOLUME = atoi(optarg);
+			if (VOLUME < 1) {
+				cerr << " VOLUME param needs to be within [1,infty). (In MB.)" << endl;
 				printusage(argv[0]);
 				return -1;
 			}
@@ -282,11 +296,23 @@ int main(int argc, char **argv) {
 		size_t numberofarrays = 0;
 		std::map<uint32_t, double> counter;
 		vector<uint32_t> b;
-
+		size_t howmanyints = 0;
+		size_t longestarray = 0;
+		size_t shortestarray = ~((size_t)0);
+		size_t buffermaxsize = 0;
+		size_t bufferminsize = ~((size_t)0);
+		size_t buffercurrentsize = 0;
 		while (reader.loadIntegers(b)) {
+			howmanyints += b.size();
+			if(longestarray < b.size()) longestarray = b.size();
+			if(shortestarray > b.size()) shortestarray = b.size();
+			buffercurrentsize += b.size();
 			distributionOfDeltas(b.data(), b.size(), counter);
 			buffer.push_back(b);
-			if(buffer.size() == REPEAT) {
+			if(buffercurrentsize > VOLUME * 1024 * 1024 / 4) {// VOLUME is in MB
+				if(buffermaxsize < buffercurrentsize) buffermaxsize = buffercurrentsize;
+				if(bufferminsize > buffercurrentsize) bufferminsize = buffercurrentsize;
+				buffercurrentsize = 0;
 #ifdef LIKWID_MARKERS
                                 snprintf(currentMarker, sizeof(currentMarker), "all");
                                 likwid_markerStartRegion(currentMarker);
@@ -306,6 +332,9 @@ int main(int argc, char **argv) {
 			if(numberofarrays == MAX_ARRAYS) break;
 		}
 		if(buffer.size() > 0) {
+			if(buffermaxsize < buffercurrentsize) buffermaxsize = buffercurrentsize;
+			if(bufferminsize > buffercurrentsize) bufferminsize = buffercurrentsize;
+			buffercurrentsize = 0;
 #ifdef LIKWID_MARKERS
                         snprintf(currentMarker, sizeof(currentMarker), "all");
                         likwid_markerStartRegion(currentMarker);
@@ -320,7 +349,13 @@ int main(int argc, char **argv) {
 		cout << endl;
 		cout << "# Entropy of deltas " << entropy(counter) << endl;
 		cout << "# Processed " << numberofarrays << " arrays " << endl;
-		cout << "# Arrays are grouped in bunches of up to " << REPEAT << " arrays " << endl;
+		cout << "# Processed " << howmanyints << " integers " << endl;
+		cout << "# Average array length is " << howmanyints / numberofarrays << " integers " << endl;
+		cout << "# Smallest array has " << shortestarray << " integers " << endl;
+		cout << "# Longest array has " << longestarray << " integers " << endl;
+		cout << "# Smallest buffer size " << bufferminsize*4.0/(1024.0*1024) << " MB " << endl;
+		cout << "# Largest buffer size " << buffermaxsize*4.0/(1024.0*1024) << " MB " << endl;
+		cout<<"# in-memory volume tops at "<<VOLUME<<" MB (can be smaller if not enough data)"<<endl;
 		cout << "# ignore: " << bogus << endl;
 		cout<<"# blocksize -- scheme -- decoding speed (mis) -- bits per int" << endl;
 		for (auto p = mystats.begin(); p != mystats.end(); ++p) {
