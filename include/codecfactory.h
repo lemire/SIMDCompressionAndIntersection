@@ -88,7 +88,7 @@ static std::map<string, shared_ptr<IntegerCODEC>> initializefactory() {
     schemes["s4-bp128-d4-ni"] = shared_ptr<IntegerCODEC> (
                                  new CompositeCodec <SIMDBinaryPacking<SIMDBlockPacker<
                                  CoarseDelta4SIMD, true>>, leftovercodec> ());
-    schemes["s4-bp128-dm"] = shared_ptr<IntegerCODEC> (
+    schemes["s4-bp128-dm-ni"] = shared_ptr<IntegerCODEC> (
                                  new CompositeCodec <SIMDBinaryPacking<SIMDBlockPacker<
                                  Max4DeltaSIMD, true>>, leftovercodec> ());
 
