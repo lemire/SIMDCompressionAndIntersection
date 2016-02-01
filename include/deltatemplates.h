@@ -26,14 +26,14 @@ namespace SIMDCompressionLib {
 
 struct RegularDeltaSIMD {
     // Folklore code, unknown origin of this idea
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     static inline __m128i PrefixSum(__m128i curr, __m128i prev) {
         const __m128i _tmp1 = _mm_add_epi32(_mm_slli_si128(curr, 8), curr);
         const __m128i _tmp2 = _mm_add_epi32(_mm_slli_si128(_tmp1, 4), _tmp1);
         return _mm_add_epi32(_tmp2, _mm_shuffle_epi32(prev, 0xff));
     }
 
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     static inline __m128i Delta(__m128i curr, __m128i prev) {
         return _mm_sub_epi32(curr, _mm_or_si128(_mm_slli_si128(curr, 4), _mm_srli_si128(prev, 12)));
     }
@@ -44,11 +44,11 @@ struct RegularDeltaSIMD {
 };
 
 struct NoDelta {
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     static inline __m128i PrefixSum(__m128i curr, __m128i) {
         return curr;
     }
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     static inline __m128i Delta(__m128i curr, __m128i) {
         return curr;
     }
@@ -58,12 +58,12 @@ struct NoDelta {
 };
 
 struct CoarseDelta4SIMD {
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     // Proposed and implemented by L. Boytosv
     static inline __m128i PrefixSum(__m128i curr, __m128i prev) {
         return _mm_add_epi32(curr, prev);
     }
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     static inline __m128i Delta(__m128i curr, __m128i prev) {
         return _mm_sub_epi32(curr, prev);
     }
@@ -74,13 +74,13 @@ struct CoarseDelta4SIMD {
 };
 
 struct CoarseDelta2SIMD {
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     // Proposed and implemented by L. Boytosv
     static inline __m128i PrefixSum(__m128i curr, __m128i prev) {
         const __m128i _tmp1 = _mm_add_epi32(_mm_slli_si128(curr, 8), curr);
         return _mm_add_epi32(_tmp1, _mm_shuffle_epi32(prev, _MM_SHUFFLE(3, 2, 3, 2)));
     }
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     static inline __m128i Delta(__m128i curr, __m128i prev) {
         return _mm_sub_epi32(curr, _mm_or_si128(_mm_slli_si128(curr, 8), _mm_srli_si128(prev, 8)));
     }
@@ -90,12 +90,12 @@ struct CoarseDelta2SIMD {
 };
 
 struct Max4DeltaSIMD {
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     // The idea is due to N. Kurz
     static inline __m128i PrefixSum(__m128i curr, __m128i prev) {
         return _mm_add_epi32(curr, _mm_shuffle_epi32(prev, 0xff));
     }
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     static inline __m128i Delta(__m128i curr, __m128i prev) {
         return _mm_sub_epi32(curr,  _mm_shuffle_epi32(prev, 0xff));
     }

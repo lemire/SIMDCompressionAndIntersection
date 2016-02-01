@@ -486,20 +486,20 @@ typedef void (*packingfunction)(const uint32_t *, __m128i *);
 
 constexpr unpackingfunction unpack[33] = {SIMD_nullunpacker32, __SIMD_fastunpack1, __SIMD_fastunpack2, __SIMD_fastunpack3, __SIMD_fastunpack4, __SIMD_fastunpack5, __SIMD_fastunpack6, __SIMD_fastunpack7, __SIMD_fastunpack8, __SIMD_fastunpack9, __SIMD_fastunpack10, __SIMD_fastunpack11, __SIMD_fastunpack12, __SIMD_fastunpack13, __SIMD_fastunpack14, __SIMD_fastunpack15, __SIMD_fastunpack16, __SIMD_fastunpack17, __SIMD_fastunpack18, __SIMD_fastunpack19, __SIMD_fastunpack20, __SIMD_fastunpack21, __SIMD_fastunpack22, __SIMD_fastunpack23, __SIMD_fastunpack24, __SIMD_fastunpack25, __SIMD_fastunpack26, __SIMD_fastunpack27, __SIMD_fastunpack28, __SIMD_fastunpack29, __SIMD_fastunpack30, __SIMD_fastunpack31, __SIMD_fastunpack32};
 
-__attribute__((always_inline))
+ALWAYS_INLINE
 inline void SIMDunpack(const __m128i   *__restrict__ in, uint32_t   *__restrict__  out, const uint32_t bit) {
     return unpack[bit](in, out);
 }
 
 constexpr packingfunction packwithoutmask[33] = {__SIMD_fastpackwithoutmask0, __SIMD_fastpackwithoutmask1, __SIMD_fastpackwithoutmask2, __SIMD_fastpackwithoutmask3, __SIMD_fastpackwithoutmask4, __SIMD_fastpackwithoutmask5, __SIMD_fastpackwithoutmask6, __SIMD_fastpackwithoutmask7, __SIMD_fastpackwithoutmask8, __SIMD_fastpackwithoutmask9, __SIMD_fastpackwithoutmask10, __SIMD_fastpackwithoutmask11, __SIMD_fastpackwithoutmask12, __SIMD_fastpackwithoutmask13, __SIMD_fastpackwithoutmask14, __SIMD_fastpackwithoutmask15, __SIMD_fastpackwithoutmask16, __SIMD_fastpackwithoutmask17, __SIMD_fastpackwithoutmask18, __SIMD_fastpackwithoutmask19, __SIMD_fastpackwithoutmask20, __SIMD_fastpackwithoutmask21, __SIMD_fastpackwithoutmask22, __SIMD_fastpackwithoutmask23, __SIMD_fastpackwithoutmask24, __SIMD_fastpackwithoutmask25, __SIMD_fastpackwithoutmask26, __SIMD_fastpackwithoutmask27, __SIMD_fastpackwithoutmask28, __SIMD_fastpackwithoutmask29, __SIMD_fastpackwithoutmask30, __SIMD_fastpackwithoutmask31, __SIMD_fastpackwithoutmask32};
 
-__attribute__((always_inline))
+ALWAYS_INLINE
 inline void SIMDpackwithoutmask(const uint32_t   *__restrict__ in, __m128i   *__restrict__  out, const uint32_t bit) {
     packwithoutmask[bit](in, out);
 }
 constexpr packingfunction pack[33] = {__SIMD_fastpack0, __SIMD_fastpack1, __SIMD_fastpack2, __SIMD_fastpack3, __SIMD_fastpack4, __SIMD_fastpack5, __SIMD_fastpack6, __SIMD_fastpack7, __SIMD_fastpack8, __SIMD_fastpack9, __SIMD_fastpack10, __SIMD_fastpack11, __SIMD_fastpack12, __SIMD_fastpack13, __SIMD_fastpack14, __SIMD_fastpack15, __SIMD_fastpack16, __SIMD_fastpack17, __SIMD_fastpack18, __SIMD_fastpack19, __SIMD_fastpack20, __SIMD_fastpack21, __SIMD_fastpack22, __SIMD_fastpack23, __SIMD_fastpack24, __SIMD_fastpack25, __SIMD_fastpack26, __SIMD_fastpack27, __SIMD_fastpack28, __SIMD_fastpack29, __SIMD_fastpack30, __SIMD_fastpack31, __SIMD_fastpack32};
 
-__attribute__((always_inline))
+ALWAYS_INLINE
 inline void SIMDpack(const uint32_t   *__restrict__ in, __m128i   *__restrict__  out, const uint32_t bit) {
     pack[bit](in, out);
 }
@@ -509,20 +509,20 @@ inline void SIMDpack(const uint32_t   *__restrict__ in, __m128i   *__restrict__ 
 
 constexpr unpackingfunction Uunpack[33] = {uSIMD_nullunpacker32, __uSIMD_fastunpack1, __uSIMD_fastunpack2, __uSIMD_fastunpack3, __uSIMD_fastunpack4, __uSIMD_fastunpack5, __uSIMD_fastunpack6, __uSIMD_fastunpack7, __uSIMD_fastunpack8, __uSIMD_fastunpack9, __uSIMD_fastunpack10, __uSIMD_fastunpack11, __uSIMD_fastunpack12, __uSIMD_fastunpack13, __uSIMD_fastunpack14, __uSIMD_fastunpack15, __uSIMD_fastunpack16, __uSIMD_fastunpack17, __uSIMD_fastunpack18, __uSIMD_fastunpack19, __uSIMD_fastunpack20, __uSIMD_fastunpack21, __uSIMD_fastunpack22, __uSIMD_fastunpack23, __uSIMD_fastunpack24, __uSIMD_fastunpack25, __uSIMD_fastunpack26, __uSIMD_fastunpack27, __uSIMD_fastunpack28, __uSIMD_fastunpack29, __uSIMD_fastunpack30, __uSIMD_fastunpack31, __uSIMD_fastunpack32};
 
-__attribute__((always_inline))
+ALWAYS_INLINE
 inline void uSIMDunpack(const __m128i   *__restrict__ in, uint32_t   *__restrict__  out, const uint32_t bit) {
     return Uunpack[bit](in, out);
 }
 
 constexpr packingfunction Upackwithoutmask[33] = {__uSIMD_fastpackwithoutmask0, __uSIMD_fastpackwithoutmask1, __uSIMD_fastpackwithoutmask2, __uSIMD_fastpackwithoutmask3, __uSIMD_fastpackwithoutmask4, __uSIMD_fastpackwithoutmask5, __uSIMD_fastpackwithoutmask6, __uSIMD_fastpackwithoutmask7, __uSIMD_fastpackwithoutmask8, __uSIMD_fastpackwithoutmask9, __uSIMD_fastpackwithoutmask10, __uSIMD_fastpackwithoutmask11, __uSIMD_fastpackwithoutmask12, __uSIMD_fastpackwithoutmask13, __uSIMD_fastpackwithoutmask14, __uSIMD_fastpackwithoutmask15, __uSIMD_fastpackwithoutmask16, __uSIMD_fastpackwithoutmask17, __uSIMD_fastpackwithoutmask18, __uSIMD_fastpackwithoutmask19, __uSIMD_fastpackwithoutmask20, __uSIMD_fastpackwithoutmask21, __uSIMD_fastpackwithoutmask22, __uSIMD_fastpackwithoutmask23, __uSIMD_fastpackwithoutmask24, __uSIMD_fastpackwithoutmask25, __uSIMD_fastpackwithoutmask26, __uSIMD_fastpackwithoutmask27, __uSIMD_fastpackwithoutmask28, __uSIMD_fastpackwithoutmask29, __uSIMD_fastpackwithoutmask30, __uSIMD_fastpackwithoutmask31, __uSIMD_fastpackwithoutmask32};
 
-__attribute__((always_inline))
+ALWAYS_INLINE
 inline void uSIMDpackwithoutmask(const uint32_t   *__restrict__ in, __m128i   *__restrict__  out, const uint32_t bit) {
     Upackwithoutmask[bit](in, out);
 }
 constexpr packingfunction Upack[33] = {__uSIMD_fastpack0, __uSIMD_fastpack1, __uSIMD_fastpack2, __uSIMD_fastpack3, __uSIMD_fastpack4, __uSIMD_fastpack5, __uSIMD_fastpack6, __uSIMD_fastpack7, __uSIMD_fastpack8, __uSIMD_fastpack9, __uSIMD_fastpack10, __uSIMD_fastpack11, __uSIMD_fastpack12, __uSIMD_fastpack13, __uSIMD_fastpack14, __uSIMD_fastpack15, __uSIMD_fastpack16, __uSIMD_fastpack17, __uSIMD_fastpack18, __uSIMD_fastpack19, __uSIMD_fastpack20, __uSIMD_fastpack21, __uSIMD_fastpack22, __uSIMD_fastpack23, __uSIMD_fastpack24, __uSIMD_fastpack25, __uSIMD_fastpack26, __uSIMD_fastpack27, __uSIMD_fastpack28, __uSIMD_fastpack29, __uSIMD_fastpack30, __uSIMD_fastpack31, __uSIMD_fastpack32};
 
-__attribute__((always_inline))
+ALWAYS_INLINE
 inline void uSIMDpack(const uint32_t   *__restrict__ in, __m128i   *__restrict__  out, const uint32_t bit) {
     Upack[bit](in, out);
 }

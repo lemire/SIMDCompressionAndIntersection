@@ -3,6 +3,7 @@
  */
 #include <stdint.h>
 #include <smmintrin.h>
+#include "platform.h"
 
 #ifdef USE_ALIGNED
 # define MM_LOAD_SI_128  _mm_load_si128
@@ -10,14 +11,6 @@
 #else
 # define MM_LOAD_SI_128  _mm_loadu_si128
 # define MM_STORE_SI_128 _mm_storeu_si128
-#endif
-
-#if defined(_MSC_VER)
-#define SIMDCOMP_ALIGNED(x) __declspec(align(x))
-#else
-#if defined(__GNUC__)
-#define SIMDCOMP_ALIGNED(x) __attribute__ ((aligned(x)))
-#endif
 #endif
 
 SIMDCOMP_ALIGNED(16) int8_t shuffle_mask_bytes[256] = {

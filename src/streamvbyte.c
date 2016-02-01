@@ -5,12 +5,15 @@
 // each 8-bit key has four 2-bit lengths: 00=1B, 01=2B, 10=3B, 11=4B
 // no particular alignment is assumed or guaranteed for any elements
 
+#ifndef _MSC_VER
 #include <x86intrin.h>
+#endif
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
+#include "platform.h"
 
 
 typedef __m128i xmm_t;
@@ -43,7 +46,7 @@ static inline uint8_t _encoded_length(uint32_t val) {
     return 4;
 }
 
-static inline uint8_t _encode_data(uint32_t val, uint8_t *restrict *dataPtrPtr) {
+static inline uint8_t _encode_data(uint32_t val, uint8_t * __restrict__ *dataPtrPtr) {
     uint8_t *dataPtr = *dataPtrPtr;
     uint8_t code;
 
@@ -69,8 +72,8 @@ static inline uint8_t _encode_data(uint32_t val, uint8_t *restrict *dataPtrPtr) 
     return code;
 }
 
-uint8_t *svb_encode_scalar_d1_init(const uint32_t *in, uint8_t *restrict keyPtr, 
-                              uint8_t *restrict dataPtr, uint32_t count,
+uint8_t *svb_encode_scalar_d1_init(const uint32_t *in, uint8_t * __restrict__ keyPtr,
+                              uint8_t * __restrict__ dataPtr, uint32_t count,
                               uint32_t prev) {
     if (count == 0) return dataPtr; // exit immediately if no data
 
@@ -93,13 +96,13 @@ uint8_t *svb_encode_scalar_d1_init(const uint32_t *in, uint8_t *restrict keyPtr,
     return dataPtr; // pointer to first unused data byte
 }
 
-uint8_t *svb_encode_scalar_d1(const uint32_t *in, uint8_t *restrict keyPtr, 
-                              uint8_t *restrict dataPtr, uint32_t count) {
+uint8_t *svb_encode_scalar_d1(const uint32_t *in, uint8_t * __restrict__ keyPtr,
+                              uint8_t * __restrict__ dataPtr, uint32_t count) {
     return svb_encode_scalar_d1_init(in, keyPtr, dataPtr, count, 0);
 }
 
-uint8_t *svb_encode_scalar(const uint32_t *in, uint8_t *restrict keyPtr, 
-                           uint8_t *restrict dataPtr, uint32_t count) {
+uint8_t *svb_encode_scalar(const uint32_t *in, uint8_t * __restrict__ keyPtr,
+                           uint8_t * __restrict__ dataPtr, uint32_t count) {
     if (count == 0) return dataPtr; // exit immediately if no data
     
     uint8_t shift = 0; // cycles 0, 2, 4, 6, 0, 2, 4, 6, ...
@@ -582,8 +585,11 @@ static uint8_t shuffleTable[256][16] = {
 
 // static char HighTo32[16] = {8, 9, -1, -1, 10, 11, -1, -1, 12, 13, -1, -1, 14, 15, -1, -1};
 // Byte Order: {0x0706050403020100, 0x0F0E0D0C0B0A0908}
+#ifndef _MSC_VER
 static xmm_t High16To32 = {0xFFFF0B0AFFFF0908, 0xFFFF0F0EFFFF0D0C};
-
+#else
+static xmm_t High16To32 = {8, 9, -1, -1, 10, 11, -1, -1, 12, 13, -1, -1, 14, 15, -1, -1};
+#endif
 
 
 
@@ -638,7 +644,7 @@ static inline xmm_t _write_avx_d1(uint32_t *out, xmm_t Vec, xmm_t Prev) {
 // static xmm_t ExtraDelta[256] = { {0x0000000000000000, 0x0000000000000000} };
 
 static inline xmm_t _decode_avx(uint32_t key, 
-                                uint8_t *restrict *dataPtrPtr) {
+                                uint8_t * __restrict__ *dataPtrPtr) {
     uint8_t len = lengthTable[key];
     xmm_t Data =  _mm_loadu_si128((xmm_t *)*dataPtrPtr);
     xmm_t Shuf = *(xmm_t *)&shuffleTable[key];
@@ -654,8 +660,8 @@ static inline xmm_t _decode_avx(uint32_t key,
 
 
 
-uint8_t *svb_decode_avx_d1_init(uint32_t *out, uint8_t *restrict keyPtr,
-                           uint8_t *restrict dataPtr, uint64_t count,
+uint8_t *svb_decode_avx_d1_init(uint32_t *out, uint8_t * __restrict__ keyPtr,
+                           uint8_t * __restrict__ dataPtr, uint64_t count,
                            uint32_t prev) {
 	uint64_t keybytes = count / 4; // number of key bytes
 	if (keybytes >= 8) {
@@ -760,8 +766,8 @@ uint8_t *svb_decode_avx_d1_init(uint32_t *out, uint8_t *restrict keyPtr,
 
 }
 
-uint8_t *svb_decode_avx_d1_simple(uint32_t *out, uint8_t *restrict keyPtr,
-                           uint8_t *restrict dataPtr, uint64_t count) {
+uint8_t *svb_decode_avx_d1_simple(uint32_t *out, uint8_t * __restrict__ keyPtr,
+                           uint8_t * __restrict__ dataPtr, uint64_t count) {
     return svb_decode_avx_d1_init(out, keyPtr, dataPtr, count, 0);
 }
 
@@ -769,8 +775,8 @@ uint8_t *svb_decode_avx_d1_simple(uint32_t *out, uint8_t *restrict keyPtr,
 
 
 
-uint8_t *svb_decode_avx_simple(uint32_t *out, uint8_t *restrict keyPtr,
-                        uint8_t *restrict dataPtr, uint64_t count) {
+uint8_t *svb_decode_avx_simple(uint32_t *out, uint8_t * __restrict__ keyPtr,
+                        uint8_t * __restrict__ dataPtr, uint64_t count) {
 
 	uint64_t keybytes = count  / 4; // number of key bytes
 	xmm_t Data;
@@ -912,31 +918,7 @@ static int lower_bound(uint32_t * A, uint32_t key, int imin, int imax)
     return imax;
 }
 
-#if defined(_MSC_VER)
-# include <intrin.h>
-/* 64-bit needs extending */
-# define STREAMVBYTE_CTZ(result, mask) do { \
-		unsigned long index; \
-		if (!_BitScanForward(&(index), (mask))) { \
-			(result) = 32U; \
-		} else { \
-			(result) = (uint32_t)(index); \
-		} \
-	} while (0)
-#else
-# define STREAMVBYTE_CTZ(result, mask) \
-	result = __builtin_ctz(mask)
-#endif
-
-#if defined(_MSC_VER)
-#  define ALIGNED(x) __declspec(align(x))
-#else
-#  if defined(__GNUC__)
-#    define ALIGNED(x) __attribute__ ((aligned(x)))
-#  endif
-#endif
-
-static int8_t shuffle_mask_bytes[16 * 16 ]  ALIGNED(16) = {
+static SIMDCOMP_ALIGNED(16) int8_t shuffle_mask_bytes[16 * 16 ] = {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
         4, 5, 6, 7, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
@@ -990,7 +972,7 @@ static inline int find_lower_bound(__m128i *PrevHi, __m128i *PrevLow,
     assert(mask != 15);
     const __m128i p = _mm_shuffle_epi8(*out,
                             streamvbyte_shuffle_mask[mask ^ 15]);
-    STREAMVBYTE_CTZ(s, mask ^ 15);
+    s = __builtin_ctz(mask ^ 15);
     *presult = _mm_cvtsi128_si32(p);
 
     return (offset + s);
@@ -1019,15 +1001,7 @@ static inline xmm_t _scan_avx_d1(xmm_t Vec, xmm_t Prev) {
     return _mm_add_epi32(Vec, Add);                   // Cycle 4: [PA PAB PABC PABCD]
 }
 
-#if defined(_MSC_VER)
-#  define STREAMVBYTE_ALIGNED(x) __declspec(align(x))
-#else
-#  if defined(__GNUC__)
-#    define STREAMVBYTE_ALIGNED(x) __attribute__ ((aligned(x)))
-#  endif
-#endif
-
-STREAMVBYTE_ALIGNED(16) int8_t streamvbyte_shuffle_mask_bytes[256] = {
+SIMDCOMP_ALIGNED(16) int8_t streamvbyte_shuffle_mask_bytes[256] = {
         0,1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,
         4,5,6,7,0,0,0,0,0,0,0,0,0,0,0,0,
         8,9,10,11,0,0,0,0,0,0,0,0,0,0,0,0,

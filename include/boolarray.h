@@ -106,7 +106,7 @@ public:
             while (myword != 0) {
                 int ntz =  __builtin_ctzl(myword);
                 ans[pos++] = k * 64 + ntz;
-                myword ^= (1l << ntz);
+                myword ^= (1ll << ntz);
             }
         }
         ans.resize(pos);
@@ -141,7 +141,7 @@ public:
      * This is an expensive (random access) API, you really ought to
      * prepare a new word and then append it.
      */
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     inline void set(const size_t pos) {
         buffer[pos / 64] |= (static_cast<uint64_t>(1) << (pos
                              % 64));
@@ -153,7 +153,7 @@ public:
      * This is an expensive (random access) API, you really ought to
      * prepare a new word and then append it.
      */
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     inline void unset(const size_t pos) {
         buffer[pos / 64] |= ~(static_cast<uint64_t>(1) << (pos
                               % 64));
@@ -162,7 +162,7 @@ public:
     /**
      * true of false? (set or unset)
      */
-    __attribute__((always_inline))
+    ALWAYS_INLINE
     inline bool get(const size_t pos) const {
         return (buffer[pos / 64] & (static_cast<uint64_t>(1) << (pos
                                     % 64))) != 0;

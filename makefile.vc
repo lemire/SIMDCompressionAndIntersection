@@ -1,0 +1,51 @@
+
+!IFNDEF DEBUG
+DEBUG=no
+!ENDIF
+
+!IFNDEF CC
+CC=cl.exe
+!ENDIF
+
+!IFNDEF AR
+AR=lib.exe
+!ENDIF
+
+!IFNDEF LINK
+LINK=link.exe
+!ENDIF
+
+INC = /Iinclude
+
+!IF "$(DEBUG)"=="yes"
+CFLAGS = /nologo /MDd /LDd /Od /Zi /D_DEBUG /D__SSSE3__ /RTC1 /W3 /wd"4141" /GS /Gm /arch:AVX
+ARFLAGS = /nologo
+LDFLAGS = /nologo /debug /nodefaultlib:msvcrt
+!ELSE
+CFLAGS = /nologo /MD /O2 /Zi /DNDEBUG /D__SSSE3__ /W3 /wd"4141" /Gm- /GS /Gy /Oi /GL /MP /arch:AVX
+ARFLAGS = /nologo /LTCG
+LDFLAGS = /nologo /LTCG /DYNAMICBASE /incremental:no /debug /opt:ref,icf
+!ENDIF
+
+LIB_OBJS = bitpacking.obj integratedbitpacking.obj simdbitpacking.obj usimdbitpacking.obj simdintegratedbitpacking.obj intersection.obj varintdecode.obj streamvbyte.obj simdpackedsearch.obj simdpackedselect.obj frameofreference.obj for.obj
+
+
+all: lib unit
+
+$(LIB_OBJS):
+	$(CC) $(INC) $(CFLAGS) /c src/bitpacking.cpp src/integratedbitpacking.cpp src/simdbitpacking.cpp src/usimdbitpacking.cpp src/simdintegratedbitpacking.cpp src/intersection.cpp src/varintdecode.c src/streamvbyte.c src/simdpackedsearch.c src/simdpackedselect.c src/frameofreference.cpp src/for.c  
+
+lib: $(LIB_OBJS)
+	$(AR) $(ARFLAGS) /OUT:simdcomp_a.lib $(LIB_OBJS)
+
+unit: lib
+	$(CC) $(INC) $(CFLAGS) /c src/unit.cpp
+	$(LINK) $(LDFLAGS) /OUT:unit.exe unit.obj simdcomp_a.lib
+
+clean:
+	del /Q *.obj
+	del /Q *.lib
+	del /Q *.exe
+	del /Q *.dll
+	del /Q *.idb
+	del /Q *.pdb

@@ -3,6 +3,7 @@
  */
 #include <smmintrin.h>
 #include <stdint.h>
+#include "platform.h"
 
 #ifdef USE_ALIGNED
 # define MM_LOAD_SI_128 _mm_load_si128
@@ -11,32 +12,6 @@
 # define MM_LOAD_SI_128 _mm_loadu_si128
 # define MM_STORE_SI_128 _mm_storeu_si128
 #endif
-
-
-#if defined(_MSC_VER)
-#define SIMDCOMP_ALIGNED(x) __declspec(align(x))
-#else
-#if defined(__GNUC__)
-#define SIMDCOMP_ALIGNED(x) __attribute__ ((aligned(x)))
-#endif
-#endif
-
-#if defined(_MSC_VER)
-# include <intrin.h>
-/* 64-bit needs extending */
-# define SIMDCOMP_CTZ(result, mask) do { \
-		unsigned long index; \
-		if (!_BitScanForward(&(index), (mask))) { \
-			(result) = 32U; \
-		} else { \
-			(result) = (uint32_t)(index); \
-		} \
-	} while (0)
-#else
-# define SIMDCOMP_CTZ(result, mask) \
-	result = __builtin_ctz(mask)
-#endif
-
 
 SIMDCOMP_ALIGNED(16) static int8_t shuffle_mask_bytes[256] = {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
@@ -94,7 +69,7 @@ static int lower_bound(uint32_t * A, uint32_t key, int imin, int imax)
         if (mask != 15) {                                                        \
           __m128i p = _mm_shuffle_epi8(out, shuffle_mask[mask ^ 15]);      \
           int offset; \
-          SIMDCOMP_CTZ(offset, mask ^ 15);                                 \
+          offset = __builtin_ctz(mask ^ 15);                                 \
           *presult = _mm_cvtsi128_si32(p);                                        \
           return (i + offset);                                              \
         }                                                                   \
