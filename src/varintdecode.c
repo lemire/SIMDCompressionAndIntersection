@@ -1,33 +1,12 @@
 
 #include <stdint.h>
 #include <assert.h>
+#ifndef _MSC_VER
 #include <x86intrin.h>
-
-#if defined(_MSC_VER)
-#define ALIGNED(x) __declspec(align(x))
-#else
-#if defined(__GNUC__)
-#define ALIGNED(x) __attribute__ ((aligned(x)))
 #endif
-#endif
+#include "platform.h"
 
-#if defined(_MSC_VER)
-# include <intrin.h>
-/* 64-bit needs extending */
-# define SIMDCOMP_CTZ(result, mask) do { \
-        unsigned long index; \
-        if (!_BitScanForward(&(index), (mask))) { \
-            (result) = 32U; \
-        } else { \
-            (result) = (uint32_t)(index); \
-        } \
-    } while (0)
-#else
-# define SIMDCOMP_CTZ(result, mask) \
-    result = __builtin_ctz(mask)
-#endif
-
-static const uint8_t vec_lookup[] ALIGNED(0x1000)
+static SIMDCOMP_ALIGNED(0x1000) const uint8_t vec_lookup[]
 = { 0, 32,
     16, 118, 8, 48, 82, 160, 4, 40, 24, 127, 70, 109, 148, 165, 2, 36, 20,
     121, 12, 56, 85, 161, 66, 97, 79, 136, 145, 153, 149, 0, 1, 34, 18, 119,
@@ -1764,7 +1743,7 @@ size_t masked_vbyte_read_loop_fromcompressedsize_delta(const uint8_t* in, uint32
     return out - initout;
 }
 
-static int8_t shuffle_mask_bytes1[16 * 16 ]  ALIGNED(16) = {
+static SIMDCOMP_ALIGNED(16) int8_t shuffle_mask_bytes1[16 * 16 ] = {
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
     4, 5, 6, 7, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
@@ -1794,7 +1773,7 @@ static const __m128i *shuffle_mask = (__m128i *) shuffle_mask_bytes1;
         if (mask != 15) {                                                   \
           __m128i p = _mm_shuffle_epi8(out, shuffle_mask[mask ^ 15]);       \
           int offset;                                                       \
-          SIMDCOMP_CTZ(offset, mask ^ 15);                            \
+          offset = __builtin_ctz(mask ^ 15);                            \
           *presult = _mm_cvtsi128_si32(p);                                  \
           return (i + offset);                                              \
         }                                                                   \
@@ -1811,7 +1790,7 @@ static const __m128i *shuffle_mask = (__m128i *) shuffle_mask_bytes1;
         if (mask != 3) {                                                   \
           __m128i p = _mm_shuffle_epi8(out, shuffle_mask[mask ^ 3]);       \
           int offset;                                                       \
-          SIMDCOMP_CTZ(offset, mask ^ 3);                            \
+          offset = __builtin_ctz(mask ^ 3);                            \
           *presult = _mm_cvtsi128_si32(p);                                  \
           return (i + offset);                                              \
         }                                                                   \
@@ -2024,7 +2003,7 @@ int masked_vbyte_search_delta(const uint8_t *in, uint64_t length, uint32_t prev,
     return length;
 }
 
-static int8_t shuffle_mask_bytes2[16 * 16 ] ALIGNED(16) = {
+static SIMDCOMP_ALIGNED(16) int8_t shuffle_mask_bytes2[16 * 16 ] = {
     0,1,2,3,0,0,0,0,0,0,0,0,0,0,0,0,
     4,5,6,7,0,0,0,0,0,0,0,0,0,0,0,0,
     8,9,10,11,0,0,0,0,0,0,0,0,0,0,0,0,

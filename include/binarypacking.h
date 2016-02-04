@@ -67,7 +67,7 @@ struct NoDeltaBlockPacker {
 
 
 struct IntegratedBlockPacker {
-    __attribute__((pure))
+    PURE_FUNCTION
     static uint32_t maxbits(const uint32_t *in,  uint32_t &initoffset) {
         uint32_t accumulator = in[0] - initoffset;
         for (uint32_t k = 1; k < BitPackingHelpers::BlockSize; ++k) {

@@ -17,7 +17,7 @@ namespace SIMDCompressionLib {
 
 
 template <class T>
-__attribute__((const))
+CONST_FUNCTION
 static T *padTo128bits(T *inbyte) {
     return reinterpret_cast<T *>((reinterpret_cast<uintptr_t>(inbyte)
                                   + 15) & ~15);

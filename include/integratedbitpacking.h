@@ -7,6 +7,7 @@
 #ifndef SIMDCompressionAndIntersection_INTEGRATEDBITPACKING
 #define SIMDCompressionAndIntersection_INTEGRATEDBITPACKING
 #include <stdint.h>
+#include "platform.h"
 
 namespace SIMDCompressionLib {
 

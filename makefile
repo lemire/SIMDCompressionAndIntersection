@@ -54,18 +54,18 @@ integratedbitpacking.o: include/integratedbitpacking.h src/integratedbitpacking.
 	$(CXX) $(CXXFLAGS) -c src/integratedbitpacking.cpp -Iinclude
 
 simdpackedsearch.o:  src/simdpackedsearch.c
-	$(CC) $(CCFLAGS) -c src/simdpackedsearch.c
+	$(CC) $(CCFLAGS) -c src/simdpackedsearch.c -Iinclude
 
 simdpackedselect.o:  src/simdpackedselect.c
-	$(CC) $(CCFLAGS) -c src/simdpackedselect.c
+	$(CC) $(CCFLAGS) -c src/simdpackedselect.c -Iinclude
 
 
 
 streamvbyte.o:  src/streamvbyte.c
-	$(CC) $(CCFLAGS) -c src/streamvbyte.c
+	$(CC) $(CCFLAGS) -c src/streamvbyte.c -Iinclude
 
 varintdecode.o:  src/varintdecode.c
-	$(CC) $(CCFLAGS) -c src/varintdecode.c
+	$(CC) $(CCFLAGS) -c src/varintdecode.c -Iinclude
 
 simdbitpacking.o: include/simdbitpacking.h src/simdbitpacking.cpp
 	$(CXX) $(CXXFLAGS) -c src/simdbitpacking.cpp -Iinclude

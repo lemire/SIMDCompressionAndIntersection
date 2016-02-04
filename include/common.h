@@ -13,13 +13,17 @@
 #include <immintrin.h>
 #include <iso646.h>
 #include <limits.h>
+#ifndef _MSC_VER
 #include <sys/resource.h>
+#endif
 #include <sys/types.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#ifndef _MSC_VER
 #include <sys/time.h>
 #include <sys/mman.h>
+#endif
 #include <sys/stat.h>
 #include <time.h>
 
@@ -42,6 +46,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "platform.h"
 
 #ifdef USE_ALIGNED
 # define MM_LOAD_SI_128  _mm_load_si128
