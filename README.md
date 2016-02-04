@@ -13,8 +13,8 @@ This library can decode at least 4 billions of compressed integers per second on
 desktop or laptop processors. That is, it can decompress data at a rate of 15 GB/s.
 This is significantly faster than generic codecs like gzip, LZO, Snappy or LZ4.
 
-Authors: Leonid Boystov, Nathan Kurz and Daniel Lemire
-with some contributions from Owen Kaser, Andrew Consroe, Shlomi Vaknin, Christoph Rupp, and others.
+Authors: Leonid Boystov, Nathan Kurz,  Daniel Lemire,
+Owen Kaser, Andrew Consroe, Shlomi Vaknin, Christoph Rupp, Bradley Grainger, and others.
 
 Documentation
 -----------------------
