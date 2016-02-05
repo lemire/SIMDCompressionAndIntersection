@@ -41,7 +41,7 @@ public:
     void encodeArray(uint32_t *in, const size_t count, uint32_t *out,
                      size_t &nvalue) {
         uint64_t bytesWritten = svb_encode((uint8_t *)out, in, static_cast<uint32_t>(std::min<size_t>(count, std::numeric_limits<uint32_t>::max())), 0, 1);
-        nvalue = (bytesWritten + 3)/4;
+        nvalue = static_cast<size_t>(bytesWritten + 3)/4;
     }
 
     const uint32_t * decodeArray(const uint32_t *in, const size_t /* count */,
