@@ -225,7 +225,7 @@ for_uncompress_bits(const uint8_t *in, uint32_t *out, uint32_t length,
   for (; i + 8 <= length; i += 8, out += 8)
     in += for_unpack8[bits](base, in, out);
 
-  return (in - bin) + for_unpackx[bits](base, in, out, length - i);
+  return (uint32_t)(in - bin) + for_unpackx[bits](base, in, out, length - i);
 }
 
 uint32_t
@@ -306,7 +306,7 @@ for_append_bits(uint8_t *in, uint32_t length, uint32_t base,
     *(in32 + 1) |= value >> (32 - start);
   }
 
-  return (in - initin) + ((start + bits) + 7) / 8;
+  return (uint32_t)(in - initin) + ((start + bits) + 7) / 8;
 }
 
 typedef uint32_t (* append_impl)(const uint32_t *in, uint8_t *out,

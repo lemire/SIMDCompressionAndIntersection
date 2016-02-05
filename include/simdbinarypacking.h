@@ -295,7 +295,7 @@ public:
             for (uint32_t i = 0; i < HowManyMiniBlocks; ++i) {
             	if(runningindex + 128 > index) {
             		return simdselectd1(&init, (const __m128i *)in, Bs[i],
-            		                index - runningindex);
+            		                static_cast<int>(index - runningindex));
             	}
             	simdscand1(&init, (const __m128i *)in, Bs[i]);
             	runningindex += MiniBlockSize;
@@ -314,14 +314,14 @@ public:
             for (uint32_t i = 0; i < howmany; ++i) {
             	if(runningindex + 128 > index) {
             		return simdselectd1(&init, (const __m128i *)in, Bs[i],
-            		                index - runningindex);
+            		                static_cast<int>(index - runningindex));
             	}
             	simdscand1(&init, (const __m128i *)in, Bs[i]);
             	runningindex += MiniBlockSize;
                 in += MiniBlockSize / 32 * Bs[i];
             }
         }
-        return runningindex;
+        return static_cast<uint32_t>(runningindex);
     }
 
 

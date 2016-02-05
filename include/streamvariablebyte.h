@@ -40,7 +40,7 @@ class StreamVByte : public IntegerCODEC {
 public:
     void encodeArray(uint32_t *in, const size_t count, uint32_t *out,
                      size_t &nvalue) {
-        uint64_t bytesWritten = svb_encode((uint8_t *)out, in, count, 0, 1);
+        uint64_t bytesWritten = svb_encode((uint8_t *)out, in, static_cast<uint32_t>(std::min<size_t>(count, std::numeric_limits<uint32_t>::max())), 0, 1);
         nvalue = (bytesWritten + 3)/4;
     }
 
@@ -74,16 +74,16 @@ public:
 
     void encodeArray(uint32_t *in, const size_t count, uint32_t *out,
                      size_t &nvalue) {
-        uint32_t bytesWritten = svb_encode((uint8_t *)(out + 1), in,
-                                    count, 1, 1);
+        uint32_t bytesWritten = static_cast<uint32_t>(svb_encode((uint8_t *)(out + 1), in,
+                                    static_cast<uint32_t>(std::min<size_t>(count, std::numeric_limits<uint32_t>::max())), 1, 1));
         *out = 4 + bytesWritten;
         nvalue = 1 + (bytesWritten + 3) / 4;
     }
 
     void encodeToByteArray(uint32_t *in, const size_t count, uint8_t *out,
                      size_t &nvalue) {
-        uint32_t bytesWritten = svb_encode((uint8_t *)(out + 1), in,
-                                    count, 1, 1);
+        uint32_t bytesWritten = static_cast<uint32_t>(svb_encode((uint8_t *)(out + 1), in,
+                                    static_cast<uint32_t>(std::min<size_t>(count, std::numeric_limits<uint32_t>::max())), 1, 1));
         *out = 4 + bytesWritten;
         nvalue = 4 + bytesWritten;
     }
@@ -154,16 +154,16 @@ public:
             size = 8;
 
         uint8_t *keyPtr = (uint8_t *)in;       // full list of keys is next
-        uint32_t keyLen = ((count + 3) / 4);   // 2-bits per key (rounded up)
+        uint32_t keyLen = static_cast<uint32_t>((count + 3) / 4);   // 2-bits per key (rounded up)
         uint8_t *dataPtr = keyPtr + keyLen;    // data starts after the keys
         size = svb_append_scalar_d1(keyPtr, dataPtr, size - 8, count,
                             key - previous_key) - initin;
 
         // update 'size' and 'count' at the beginning of the buffer
         in = initin;
-        *(uint32_t *)in = size;
+        *(uint32_t *)in = static_cast<uint32_t>(size);
         in += 4;
-        *(uint32_t *)in = count + 1;
+        *(uint32_t *)in = static_cast<uint32_t>(count + 1);
         return size;
     }
 
@@ -190,9 +190,9 @@ public:
         *(in + 1) = count + 1;
 
         uint32_t position;
-        uint32_t bytesWritten = svb_insert_scalar_d1_init(keyPtr, dataPtr,
+        uint32_t bytesWritten = static_cast<uint32_t>(svb_insert_scalar_d1_init(keyPtr, dataPtr,
                                     dataSize, count, 0, key, &position)
-                                - (uint8_t *)in;
+                                - (uint8_t *)in);
         *in = bytesWritten; 
         return (bytesWritten + 3) / 4;
     }
@@ -221,9 +221,9 @@ public:
         *(in + 1) = count + 1;
 
         uint32_t position;
-        uint32_t bytesWritten = svb_insert_scalar_d1_init(keyPtr, dataPtr,
+        uint32_t bytesWritten = static_cast<uint32_t>(svb_insert_scalar_d1_init(keyPtr, dataPtr,
                                     dataSize, count, 0, key, &position)
-                                - (uint8_t *)in;
+                                - (uint8_t *)in);
         *in = bytesWritten;
         return bytesWritten;
     }

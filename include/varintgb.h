@@ -247,7 +247,7 @@ public:
 			uint8_t * fb = encodeGroupVarIntDelta(block1->data, initial,
 					tmpbuffer);
 
-			block1->length = fb - block1->data;
+			block1->length = static_cast<uint32_t>(fb - block1->data);
 			uint32_t nextval = tmpbuffer[4] - tmpbuffer[3];
 			uint32_t newsel = getByteLength(nextval) - 1;
 			// everything after that is just going to be shifting
@@ -372,7 +372,7 @@ public:
 			i += 4;
 		}
 		if (endbyte > inbyte && nvalue > i) {
-			uint32_t tnvalue = nvalue - 1 - i;
+			uint32_t tnvalue = static_cast<uint32_t>(nvalue - 1 - i);
 			inbyte = decodeCarefully(inbyte, &initial, out, tnvalue);
 			assert(inbyte <= endbyte);
 			if (key <= out[0]) {
@@ -434,7 +434,7 @@ public:
                 return (out[index - (i - 4)]);
         }
         {
-        	nvalue = nvalue - i;
+            nvalue = static_cast<uint32_t>(nvalue - i);
             inbyte = decodeCarefully(inbyte, &initial, out, nvalue);
             if (index == i)
                 return (out[0]);
@@ -632,9 +632,9 @@ private:
 
 
     void sortinfirstvalue(uint32_t * tmpbuffer, size_t length) {
-    	int top = length < 4 ? length : 4;
+    	size_t top = length < 4 ? length : 4;
 
-    	for (int j = 0; j < top; ++j) {
+    	for (size_t j = 0; j < top; ++j) {
     		if (tmpbuffer[j] > tmpbuffer[j + 1]) {
     			uint32_t t = tmpbuffer[j + 1];
     			tmpbuffer[j + 1] = tmpbuffer[j];
@@ -882,9 +882,9 @@ private:
 		return readinginbyte+b->length;
 	}
 
-	const uint8_t * loadblockcarefully(Block * b, const uint8_t * readinginbyte, int howmanyvals) {
+	const uint8_t * loadblockcarefully(Block * b, const uint8_t * readinginbyte, size_t howmanyvals) {
 		b->length = 1;
-		for(int k = 0; k < howmanyvals; ++k)
+		for(size_t k = 0; k < howmanyvals; ++k)
 			b->length += 1 + ((readinginbyte[0]>>(2*k)) & 3);
 		memcpy(b->data,readinginbyte,b->length);
 		return readinginbyte+b->length;
@@ -905,11 +905,11 @@ private:
 		*newsel = newnextsel;
 	}
 
-	void finalshiftin(Block * b, uint32_t nextval, uint32_t newsel, int howmany) {
+	void finalshiftin(Block * b, uint32_t nextval, uint32_t newsel, size_t howmany) {
 		b->data[0] = (b->data[0]<<2) | newsel;
 		std::memmove(b->data + 2 + newsel,b->data + 1,b->length - 1 );
 		b->length = 1;
-		for(int k = 0; k < howmany; ++k)
+		for(size_t k = 0; k < howmany; ++k)
 			b->length += 1 + ((b->data[0]>>(2*k)) & 3);
 		std::memcpy(b->data + 1, &nextval,newsel + 1);
 	}
