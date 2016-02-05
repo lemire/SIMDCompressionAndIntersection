@@ -47,10 +47,6 @@ inline uint32_t maxbitas32int(const __m128i accumulator) {
     return gccbits(tmparray[0] | tmparray[1] | tmparray[2] | tmparray[3]);
 }
 
-// for clarity
-#define min(X, Y)  ((X) < (Y) ? (X) : (Y))
-
-
 static CONST_FUNCTION
 bool divisibleby(size_t a, uint32_t x) {
     return (a % x == 0);
