@@ -283,8 +283,8 @@ void testFindSimple() {
 
     uint32_t k = 0;
     for (int i = 0; i < max; i++) {
-        int pos = codec.findLowerBound(compressedbuffer.data(), max, i, &k);
-        if (k != (uint32_t)i && pos != i) {
+        size_t pos = codec.findLowerBound(compressedbuffer.data(), max, i, &k);
+        if (k != (uint32_t)i && pos != static_cast<size_t>(i)) {
             cout << codec.name() << "::findLowerBoundDelta failed with "
                  << i << endl;
             throw std::logic_error("bug");
@@ -302,7 +302,7 @@ void testFindAdvanced() {
     // print random seed to make the test reproducable
     time_t t = ::time(0);
     cout << "Seed is " << t << endl;
-    ::srand(t);
+    ::srand(static_cast<unsigned int>(t));
 
     // initialize
     for (int i = 0; i < max; i++)
@@ -315,10 +315,10 @@ void testFindAdvanced() {
 
     uint32_t k1 = 0;
     uint32_t k2 = 0;
-    for (int i = 0; i < max * 2; i++) {
-        int pos1 = codec.findLowerBound(compressedbuffer.data(), max, i, &k1);
+    for (uint32_t i = 0; i < max * 2; i++) {
+        size_t pos1 = codec.findLowerBound(compressedbuffer.data(), max, i, &k1);
         uint32_t *it = std::lower_bound(&ints[0], &ints[max], i);
-        int pos2 = it - &ints[0];
+        size_t pos2 = static_cast<size_t>(it - &ints[0]);
         k2 = *it;
         // key not found?
         if (it == &ints[max] && pos1 != max) {
@@ -359,7 +359,7 @@ void testInsert() {
 
 	size_t currentsize = 0;
 	for (int i = 0; i < max; i++) {
-		currentsize = codec.insert(compressedbuffer.data(), currentsize, ints[i]);
+		currentsize = codec.insert(compressedbuffer.data(), static_cast<uint32_t>(currentsize), ints[i]);
 		size_t howmany = decomp.size();
 		codec.decodeArray(compressedbuffer.data(),currentsize,decomp.data(),howmany);
 		sofar.push_back(ints[i]);
@@ -550,7 +550,7 @@ void testSelectAdvanced() {
     // print random seed to make the test reproducable
     time_t t = ::time(0);
     cout << "Seed is " << t << endl;
-    ::srand(t);
+    ::srand(static_cast<unsigned int>(t));
 
     // fill array with "random" values
     for (int i = 0; i < max; i++)

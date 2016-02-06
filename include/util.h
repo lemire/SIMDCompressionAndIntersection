@@ -47,10 +47,6 @@ inline uint32_t maxbitas32int(const __m128i accumulator) {
     return gccbits(tmparray[0] | tmparray[1] | tmparray[2] | tmparray[3]);
 }
 
-// for clarity
-#define min(X, Y)  ((X) < (Y) ? (X) : (Y))
-
-
 static CONST_FUNCTION
 bool divisibleby(size_t a, uint32_t x) {
     return (a % x == 0);
@@ -83,7 +79,7 @@ uint32_t maxbits(const iterator &begin, const iterator &end) {
 template <class T>
 CONST_FUNCTION
 inline bool needPaddingTo128Bits(const T *inbyte) {
-    return reinterpret_cast<uintptr_t>(inbyte) & 15;
+    return (reinterpret_cast<uintptr_t>(inbyte) & 15) != 0;
 }
 
 
@@ -92,7 +88,7 @@ inline bool needPaddingTo128Bits(const T *inbyte) {
 template <class T>
 CONST_FUNCTION
 inline bool needPaddingTo32Bits(const T *inbyte) {
-    return reinterpret_cast<uintptr_t>(inbyte) & 3;
+    return (reinterpret_cast<uintptr_t>(inbyte) & 3) != 0;
 }
 
 template <class T>

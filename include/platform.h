@@ -36,7 +36,11 @@ uint32_t __inline __builtin_ctz(uint32_t value)
 
 uint32_t __inline __builtin_ctzl(uint64_t value)
 {
+#ifdef _M_X64
     unsigned long trailing_zero = 0;
     return _BitScanForward64(&trailing_zero, value) == 0 ? 64 : trailing_zero;
+#else
+    return ((value & 0xFFFFFFFF) == 0) ? (__builtin_ctz(value >> 32) + 32) : __builtin_ctz(value & 0xFFFFFFFF);
+#endif
 }
 #endif

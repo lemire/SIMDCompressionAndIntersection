@@ -838,7 +838,7 @@ void simdvbyteinit(void) {
 
 }
 
-static uint64_t masked_vbyte_read_group(const uint8_t* in, uint32_t* out,
+static uint8_t masked_vbyte_read_group(const uint8_t* in, uint32_t* out,
                                         uint64_t mask, uint64_t* ints_read) {
     __m128i initial = _mm_lddqu_si128((const __m128i *) (in));
     __m128i * mout = (__m128i *) out;
@@ -862,7 +862,7 @@ static uint64_t masked_vbyte_read_group(const uint8_t* in, uint32_t* out,
     uint32_t low_12_bits = mask & 0xFFF;
     // combine index and bytes consumed into a single lookup
     index_bytes_consumed combined = combined_lookup[low_12_bits];
-    uint64_t consumed = combined.bytes_consumed;
+    uint8_t consumed = combined.bytes_consumed;
     uint8_t index = combined.index;
 
     // Slightly slower to use combined than to lookup individually?
@@ -947,7 +947,7 @@ static inline __m128i PrefixSum2ints(__m128i curr, __m128i prev) {
     return curr;
 }
 
-static uint64_t masked_vbyte_read_group_delta(const uint8_t* in, uint32_t* out,
+static uint8_t masked_vbyte_read_group_delta(const uint8_t* in, uint32_t* out,
         uint64_t mask, uint64_t* ints_read, __m128i * prev) {
     __m128i initial = _mm_lddqu_si128((const __m128i *) (in));
     __m128i * mout = (__m128i *) out;
@@ -975,7 +975,7 @@ static uint64_t masked_vbyte_read_group_delta(const uint8_t* in, uint32_t* out,
     uint32_t low_12_bits = mask & 0xFFF;
     // combine index and bytes consumed into a single lookup
     index_bytes_consumed combined = combined_lookup[low_12_bits];
-    uint64_t consumed = combined.bytes_consumed;
+    uint8_t consumed = combined.bytes_consumed;
     uint8_t index = combined.index;
 
     __m128i shuffle_vector = vectors[index];
@@ -1132,7 +1132,7 @@ size_t masked_vbyte_read_loop(const uint8_t* in, uint32_t* out,
     uint64_t count = 0; // how many integers we have read so far
 
     uint64_t sig = 0;
-    int availablebytes = 0;
+    uint64_t availablebytes = 0;
     if (96 < length) {
         size_t scanned = 0;
 
@@ -1188,7 +1188,7 @@ size_t masked_vbyte_read_loop(const uint8_t* in, uint32_t* out,
             // need to reload when less than 16 scanned bytes remain in sig
             while (consumed < reload) {
                 uint64_t ints_read;
-                uint64_t bytes = masked_vbyte_read_group(in + consumed,
+                uint8_t bytes = masked_vbyte_read_group(in + consumed,
                                  out + count, sig, &ints_read);
                 sig >>= bytes;
 
@@ -1235,7 +1235,7 @@ size_t masked_vbyte_read_loop(const uint8_t* in, uint32_t* out,
         }
         uint64_t ints_read;
 
-        uint64_t eaten = masked_vbyte_read_group(in + consumed, out + count,
+        uint8_t eaten = masked_vbyte_read_group(in + consumed, out + count,
                          sig, &ints_read);
         consumed += eaten;
         availablebytes -= eaten;
@@ -1257,7 +1257,7 @@ size_t masked_vbyte_read_loop_fromcompressedsize(const uint8_t* in, uint32_t* ou
     uint32_t * initout = out;
 
     uint64_t sig = 0;
-    int availablebytes = 0;
+    uint64_t availablebytes = 0;
     if (96 < inputsize) {
         size_t scanned = 0;
 
@@ -1313,7 +1313,7 @@ size_t masked_vbyte_read_loop_fromcompressedsize(const uint8_t* in, uint32_t* ou
             // need to reload when less than 16 scanned bytes remain in sig
             while (consumed < reload) {
                 uint64_t ints_read;
-                uint64_t bytes = masked_vbyte_read_group(in + consumed,
+                uint8_t bytes = masked_vbyte_read_group(in + consumed,
                                  out, sig, &ints_read);
                 sig >>= bytes;
 
@@ -1359,7 +1359,7 @@ size_t masked_vbyte_read_loop_fromcompressedsize(const uint8_t* in, uint32_t* ou
             }
         }
         uint64_t ints_read;
-        uint64_t bytes = masked_vbyte_read_group(in + consumed, out,
+        uint8_t bytes = masked_vbyte_read_group(in + consumed, out,
                          sig, &ints_read);
         consumed += bytes;
         availablebytes -= bytes;
@@ -1555,7 +1555,7 @@ size_t masked_vbyte_read_loop_delta(const uint8_t* in, uint32_t* out,
             // need to reload when less than 16 scanned bytes remain in sig
             while (consumed < reload) {
                 uint64_t ints_read;
-                uint64_t bytes = masked_vbyte_read_group_delta(in + consumed,
+                uint8_t bytes = masked_vbyte_read_group_delta(in + consumed,
                                  out + count, sig, &ints_read, &mprev);
                 sig >>= bytes;
 
@@ -1568,13 +1568,13 @@ size_t masked_vbyte_read_loop_delta(const uint8_t* in, uint32_t* out,
             }
         }
         sig = (nextSig << (scanned - consumed - 48)) | sig;
-        availablebytes = scanned - consumed;
+        availablebytes = (int) (scanned - consumed);
     }
     while (availablebytes + count < length) {
         if (availablebytes < 16) break;
 
         uint64_t ints_read;
-        uint64_t eaten = masked_vbyte_read_group_delta(in + consumed, out + count,
+        uint8_t eaten = masked_vbyte_read_group_delta(in + consumed, out + count,
                          sig, &ints_read, &mprev);
         consumed += eaten;
         availablebytes -= eaten;
@@ -1616,7 +1616,7 @@ size_t masked_vbyte_read_loop_fromcompressedsize_delta(const uint8_t* in, uint32
     uint32_t * initout = out;
     __m128i mprev = _mm_set1_epi32(prev);
     uint64_t sig = 0;
-    int availablebytes = 0;
+    uint64_t availablebytes = 0;
     if (96 < inputsize) {
         size_t scanned = 0;
 
@@ -1672,7 +1672,7 @@ size_t masked_vbyte_read_loop_fromcompressedsize_delta(const uint8_t* in, uint32
             // need to reload when less than 16 scanned bytes remain in sig
             while (consumed < reload) {
                 uint64_t ints_read;
-                uint64_t bytes = masked_vbyte_read_group_delta(in + consumed,
+                uint8_t bytes = masked_vbyte_read_group_delta(in + consumed,
                                  out, sig, &ints_read, &mprev);
                 sig >>= bytes;
 
@@ -1718,7 +1718,7 @@ size_t masked_vbyte_read_loop_fromcompressedsize_delta(const uint8_t* in, uint32
             }
         }
         uint64_t ints_read;
-        uint64_t bytes = masked_vbyte_read_group_delta(in + consumed, out,
+        uint8_t bytes = masked_vbyte_read_group_delta(in + consumed, out,
                          sig, &ints_read, &mprev);
         consumed += bytes;
         availablebytes -= bytes;
@@ -1797,7 +1797,7 @@ static const __m128i *shuffle_mask = (__m128i *) shuffle_mask_bytes1;
         i += 2;                                                             \
       } while (0)
 
-static int masked_vbyte_search_group_delta(const uint8_t *in, uint64_t *p,
+static int masked_vbyte_search_group_delta(const uint8_t *in, uint8_t *p,
         uint64_t mask, uint64_t *ints_read, __m128i *prev,
         int i, uint32_t key, uint32_t *presult) {
     __m128i initial = _mm_lddqu_si128((const __m128i *) (in));
@@ -1828,7 +1828,7 @@ static int masked_vbyte_search_group_delta(const uint8_t *in, uint64_t *p,
     uint32_t low_12_bits = mask & 0xFFF;
     // combine index and bytes consumed into a single lookup
     index_bytes_consumed combined = combined_lookup[low_12_bits];
-    uint64_t consumed = combined.bytes_consumed;
+    uint8_t consumed = combined.bytes_consumed;
     uint8_t index = combined.index;
 
     __m128i shuffle_vector = vectors[index];
@@ -1902,7 +1902,7 @@ int masked_vbyte_search_delta(const uint8_t *in, uint64_t length, uint32_t prev,
     __m128i mprev = _mm_set1_epi32(prev);
     uint64_t count = 0; // how many integers we have read so far
     uint64_t sig = 0;
-    int availablebytes = 0;
+    uint64_t availablebytes = 0;
     if (96 < length) {
         size_t scanned = 0;
 
@@ -1956,10 +1956,11 @@ int masked_vbyte_search_delta(const uint8_t *in, uint64_t length, uint32_t prev,
 
             // need to reload when less than 16 scanned bytes remain in sig
             while (consumed < reload) {
-                uint64_t ints_read = 0, bytes = 0;
+                uint64_t ints_read = 0;
+                uint8_t bytes = 0;
                 int ret = masked_vbyte_search_group_delta(in + consumed, &bytes,
                           sig, &ints_read, &mprev,
-                          count, key, presult);
+                          (int) count, key, presult);
                 if (ret >= 0)
                     return (ret);
                 sig >>= bytes;
@@ -1979,9 +1980,10 @@ int masked_vbyte_search_delta(const uint8_t *in, uint64_t length, uint32_t prev,
     while (availablebytes + count < length) {
         if (availablebytes < 16) break;
 
-        uint64_t ints_read = 0, bytes = 0;
+        uint64_t ints_read = 0;
+        uint8_t bytes = 0;
         int ret = masked_vbyte_search_group_delta(in + consumed, &bytes,
-                  sig, &ints_read, &mprev, count, key, presult);
+                  sig, &ints_read, &mprev, (int) count, key, presult);
         if (ret >= 0)
             return (ret);
         consumed += bytes;
@@ -1995,12 +1997,12 @@ int masked_vbyte_search_delta(const uint8_t *in, uint64_t length, uint32_t prev,
         consumed += read_int_delta(in + consumed, &out, &prev);
         if (key <= prev) {
             *presult = prev;
-            return (count);
+            return (int) count;
         }
     }
 
     *presult = key + 1;
-    return length;
+    return (int) length;
 }
 
 static SIMDCOMP_ALIGNED(16) int8_t shuffle_mask_bytes2[16 * 16 ] = {
@@ -2031,7 +2033,7 @@ static uint32_t branchlessextract (__m128i out, int i)  {
               return (1);                                                \
             }
 
-static int masked_vbyte_select_group_delta(const uint8_t *in, uint64_t *p,
+static int masked_vbyte_select_group_delta(const uint8_t *in, uint8_t *p,
         uint64_t mask, uint64_t *ints_read, __m128i *prev,
         int slot, uint32_t *presult) {
     __m128i initial = _mm_lddqu_si128((const __m128i *) (in));
@@ -2061,7 +2063,7 @@ static int masked_vbyte_select_group_delta(const uint8_t *in, uint64_t *p,
     uint32_t low_12_bits = mask & 0xFFF;
     // combine index and bytes consumed into a single lookup
     index_bytes_consumed combined = combined_lookup[low_12_bits];
-    uint64_t consumed = combined.bytes_consumed;
+    uint8_t consumed = combined.bytes_consumed;
     uint8_t index = combined.index;
 
     __m128i shuffle_vector = vectors[index];
@@ -2136,7 +2138,7 @@ uint32_t masked_vbyte_select_delta(const uint8_t *in, uint64_t length,
     __m128i mprev = _mm_set1_epi32(prev);
     uint64_t count = 0; // how many integers we have read so far
     uint64_t sig = 0;
-    int availablebytes = 0;
+    uint64_t availablebytes = 0;
     if (96 < length) {
         size_t scanned = 0;
 
@@ -2191,10 +2193,11 @@ uint32_t masked_vbyte_select_delta(const uint8_t *in, uint64_t length,
             // need to reload when less than 16 scanned bytes remain in sig
             while (consumed < reload) {
                 uint32_t result;
-                uint64_t ints_read, bytes;
+                uint64_t ints_read;
+                uint8_t bytes;
                 if (masked_vbyte_select_group_delta(in + consumed, &bytes,
                                                     sig, &ints_read, &mprev,
-                                                    slot  - count, &result)) {
+                                                    (int) (slot - count), &result)) {
                     return (result);
                 }
                 sig >>= bytes;
@@ -2244,10 +2247,11 @@ uint32_t masked_vbyte_select_delta(const uint8_t *in, uint64_t length,
         }
 
         uint32_t result;
-        uint64_t ints_read, bytes;
+        uint64_t ints_read;
+        uint8_t bytes;
         if (masked_vbyte_select_group_delta(in + consumed, &bytes,
                                             sig, &ints_read, &mprev,
-                                            slot  - count, &result)) {
+                                            (int) (slot - count), &result)) {
             return (result);
         }
         consumed += bytes;

@@ -7653,7 +7653,7 @@ static uint32_t fastselect(selectmetadata * s, size_t index) {
         uint32_t packedsizeinwords = packedlength * s->b / 32;
         return s->in[packedsizeinwords +  index - packedlength];
     }
-    const int bitoffset = index * s->b; /* how many bits  */
+    const int bitoffset = static_cast<uint32_t>(index) * s->b; /* how many bits  */
     const int firstword = bitoffset / 32;
     const int secondword = (bitoffset + s->b - 1) / 32;
     const uint32_t firstpart = s->in[firstword]
@@ -12037,7 +12037,7 @@ uint32_t SIMDCompressionLib::FrameOfReference::select(const uint32_t *in, size_t
         uint32_t packedsizeinwords = packedlength * b / 32;
         return in[packedsizeinwords +  index - packedlength];
     }
-    const int bitoffset = index * b; /* how many bits  */
+    const int bitoffset = static_cast<uint32_t>(index) * b; /* how many bits  */
     const int firstword = bitoffset / 32;
     const int secondword = (bitoffset + b - 1) / 32;
     const uint32_t firstpart = in[firstword]
@@ -27031,7 +27031,7 @@ static uint32_t simdfastselect(const uint32_t * in, int b, uint32_t m, size_t in
     //	return in[index];
     //}
     const int lane = index % 4; /* we have 4 interleaved lanes */
-    const int bitsinlane = (index / 4) * b; /* how many bits in lane */
+    const int bitsinlane = static_cast<uint32_t>(index / 4) * b; /* how many bits in lane */
     const int firstwordinlane = bitsinlane / 32;
     const int secondwordinlane = (bitsinlane + b - 1) / 32;
     const uint32_t firstpart = in[4 * firstwordinlane + lane]
@@ -27207,11 +27207,11 @@ size_t SIMDCompressionLib::SIMDFrameOfReference::append(uint8_t *inbyte, const s
 	size_t oldhowmanyfull = nvalue / 128;
 	uint32_t * const newin = in +  4 * b * oldhowmanyfull;
 	size_t need_decoding = nvalue - oldhowmanyfull * 128;
-	simdunpackFOR_length(m, (__m128i *)newin, need_decoding, buffer, b);
+	simdunpackFOR_length(m, (__m128i *)newin, static_cast<int>(need_decoding), buffer, b);
 
 	buffer[need_decoding] = value;
 
-	uint32_t * out = (uint32_t *)simdpackFOR_length(m, buffer, need_decoding + 1 , (__m128i *) newin,b);
+	uint32_t * out = (uint32_t *)simdpackFOR_length(m, buffer, static_cast<int>(need_decoding + 1), (__m128i *) newin,b);
 
     return ( out - in + headersize )  * sizeof(uint32_t);
 }

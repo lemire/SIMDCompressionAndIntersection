@@ -3,9 +3,6 @@
 #ifndef INCLUDE_FRAMEOFREFERENCE_H_
 #define INCLUDE_FRAMEOFREFERENCE_H_
 
-
-
-
 #include "common.h"
 #include "codecs.h"
 #include "util.h"
@@ -28,10 +25,9 @@ public:
 
     void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
                      size_t &nvalue) {
-    	*out = length;
-        uint32_t * finalout =  compress_length(in,length, out  + 1);
+        *out = static_cast<uint32_t>(std::min<size_t>(length, std::numeric_limits<uint32_t>::max()));
+        uint32_t * finalout =  compress_length(in, *out, out  + 1);
         nvalue = finalout - out;
-
     }
 
     const uint32_t * uncompress_length(const uint32_t * in, uint32_t * out, uint32_t  nvalue);
@@ -41,7 +37,7 @@ public:
                                 uint32_t *out, size_t &nvalue) {
     	nvalue = *in;
     	in++;
-    	return uncompress_length(in,out,nvalue);
+    	return uncompress_length(in,out, static_cast<uint32_t>(nvalue));
     }
 
     // appends the value "value" at the end of the compressed stream. Assumes that we have
@@ -91,8 +87,8 @@ public:
 
     void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
                      size_t &nvalue) {
-    	*out = length;
-        uint32_t * finalout =  simd_compress_length(in,length, out  + 1);
+        *out = static_cast<uint32_t>(std::min<size_t>(length, std::numeric_limits<uint32_t>::max()));
+        uint32_t * finalout =  simd_compress_length(in, *out, out  + 1);
         nvalue = finalout - out;
 
     }
@@ -103,9 +99,9 @@ public:
 
     const uint32_t *decodeArray(const uint32_t *in, const size_t ,
                                 uint32_t *out, size_t &nvalue) {
-    	nvalue = *in;
-    	in++;
-    	return simd_uncompress_length(in,out,nvalue);
+        nvalue = *in;
+        in++;
+        return simd_uncompress_length(in, out, static_cast<uint32_t>(nvalue));
     }
 
     // appends the value "value" at the end of the compressed stream. Assumes that we have

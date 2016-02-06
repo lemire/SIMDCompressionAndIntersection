@@ -149,7 +149,7 @@ static inline uint32_t _decode_data(uint8_t **dataPtrPtr, uint8_t code) {
 uint8_t *svb_append_scalar_d1(uint8_t *keyPtr, uint8_t *dataPtr,
                             size_t sizebytes, size_t count, uint32_t delta)
 {
-    uint32_t keyLen = (count + 3) / 4; // 2-bits rounded to full byte
+    uint32_t keyLen = (uint32_t)(count + 3) / 4; // 2-bits rounded to full byte
 
     // make space for additional keys?
     if (count >= keyLen * 4) {
@@ -1220,7 +1220,7 @@ int svb_find_avx_d1_init(uint8_t *keyPtr,
 
     // key was not found!
     *presult = key + 1;
-    return (count);
+    return (int) count;
 }
 
 int svb_find_scalar_d1_init(uint8_t *keyPtr,
@@ -1244,7 +1244,7 @@ int svb_find_scalar_d1_init(uint8_t *keyPtr,
     }
 
     *presult = searchkey + 1;
-    return count;
+    return (int) count;
 }
 
 

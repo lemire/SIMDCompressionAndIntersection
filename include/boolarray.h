@@ -142,7 +142,7 @@ public:
      * prepare a new word and then append it.
      */
     ALWAYS_INLINE
-    inline void set(const size_t pos) {
+    void set(const size_t pos) {
         buffer[pos / 64] |= (static_cast<uint64_t>(1) << (pos
                              % 64));
     }
@@ -154,7 +154,7 @@ public:
      * prepare a new word and then append it.
      */
     ALWAYS_INLINE
-    inline void unset(const size_t pos) {
+    void unset(const size_t pos) {
         buffer[pos / 64] |= ~(static_cast<uint64_t>(1) << (pos
                               % 64));
     }
@@ -163,7 +163,7 @@ public:
      * true of false? (set or unset)
      */
     ALWAYS_INLINE
-    inline bool get(const size_t pos) const {
+    bool get(const size_t pos) const {
         return (buffer[pos / 64] & (static_cast<uint64_t>(1) << (pos
                                     % 64))) != 0;
     }
