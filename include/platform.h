@@ -12,7 +12,7 @@
 #define SIMDCOMP_ALIGNED(x) __declspec(align(x))
 #else
 #if defined(__GNUC__)
-#define ALWAYS_INLINE __attribute__((always_inline))
+#define ALWAYS_INLINE __attribute__((always_inline)) inline
 #define CONST_FUNCTION __attribute__((const))
 #define PURE_FUNCTION __attribute__((pure))
 #define SIMDCOMP_ALIGNED(x) __attribute__((aligned(x)))

@@ -219,12 +219,12 @@ size_t v1(const uint32_t *rare, size_t lenRare, const uint32_t *freq,
 
 	ADVANCE_RARE: do {
 		*matchOut = valRare;
-		valRare = rare[1]; // for next iteration
 		rare += 1;
 		if (COMPILER_RARELY(rare >= stopRare)) {
 			rare -= 1;
 			goto FINISH_SCALAR;
 		}
+		valRare = rare[0]; // for next iteration
 		F0 = _mm_cmpeq_epi32(F0, Rare);
 		F1 = _mm_cmpeq_epi32(F1, Rare);
 		Rare = _mm_set1_epi32(valRare);
@@ -246,11 +246,11 @@ size_t v1(const uint32_t *rare, size_t lenRare, const uint32_t *freq,
 	ADVANCE_FREQ: do {
 		const uint64_t kProbe = (0 + 1) * 2 * 4;
 		const uint32_t *probeFreq = freq + kProbe;
-		maxProbe = freq[(0 + 2) * 2 * 4 - 1];
 
 		if (COMPILER_RARELY(probeFreq >= stopFreq)) {
 			goto FINISH_SCALAR;
 		}
+		maxProbe = freq[(0 + 2) * 2 * 4 - 1];
 
 		freq = probeFreq;
 
