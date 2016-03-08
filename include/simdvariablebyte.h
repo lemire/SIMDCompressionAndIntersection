@@ -18,7 +18,6 @@
 namespace SIMDCompressionLib {
 
 extern "C" {
-void simdvbyteinit(void);
 size_t masked_vbyte_read_loop(const uint8_t* in, uint32_t* out, uint64_t length);
 size_t masked_vbyte_read_loop_delta(const uint8_t* in, uint32_t* out, uint64_t length, uint32_t  prev);
 size_t masked_vbyte_read_loop_fromcompressedsize(const uint8_t* in, uint32_t* out,
@@ -42,7 +41,6 @@ template<bool delta>
 class MaskedVByte: public IntegerCODEC {
 public:
     MaskedVByte() {
-    	simdvbyteinit();
     }
 
     void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
@@ -392,7 +390,6 @@ template<bool delta>
 class HeadlessMaskedVByte: public IntegerCODEC {
 public:
 	HeadlessMaskedVByte() {
-    	simdvbyteinit();
     }
 
     void encodeArray(uint32_t *in, const size_t length, uint32_t *out,
