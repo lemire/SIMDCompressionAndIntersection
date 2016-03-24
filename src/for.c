@@ -24,14 +24,14 @@ typedef unsigned int uint32_t;
 typedef unsigned char uint8_t;
 typedef signed char int8_t;
 #else
-#  include <stdint.h>
+#include <stdint.h>
 #endif
 
-#define METADATA 5  /* size of metadata overhead */
+#define METADATA 5 /* size of metadata overhead */
 
 #ifdef _MSC_VER
-#  define INLINE __inline
-#  include <intrin.h>
+#define INLINE __inline
+#include <intrin.h>
 
 uint32_t __inline CLZ(uint32_t value) {
   uint32_t leading_zero = 0;
@@ -39,33 +39,29 @@ uint32_t __inline CLZ(uint32_t value) {
   return 31 - leading_zero;
 }
 #else
-#  define INLINE inline
-#  define CLZ __builtin_clz
+#define INLINE inline
+#define CLZ __builtin_clz
 #endif
 
-typedef uint32_t(*for_unpackfunc_t) (uint32_t, const uint8_t *, uint32_t *);
-typedef uint32_t(*for_packfunc_t)   (uint32_t, const uint32_t *, uint8_t *);
-typedef uint32_t(*for_unpackxfunc_t) (uint32_t, const uint8_t *, uint32_t *,
-	uint32_t);
-typedef uint32_t(*for_packxfunc_t)   (uint32_t, const uint32_t *, uint8_t *,
-	uint32_t);
-typedef uint32_t(*for_linsearchfunc_t)(uint32_t, const uint8_t *, uint32_t,
-	int *);
-typedef uint32_t(*for_linsearchxfunc_t)(uint32_t, const uint8_t *, uint32_t,
-	uint32_t, int *);
+typedef uint32_t (*for_unpackfunc_t)(uint32_t, const uint8_t *, uint32_t *);
+typedef uint32_t (*for_packfunc_t)(uint32_t, const uint32_t *, uint8_t *);
+typedef uint32_t (*for_unpackxfunc_t)(uint32_t, const uint8_t *, uint32_t *,
+                                      uint32_t);
+typedef uint32_t (*for_packxfunc_t)(uint32_t, const uint32_t *, uint8_t *,
+                                    uint32_t);
+typedef uint32_t (*for_linsearchfunc_t)(uint32_t, const uint8_t *, uint32_t,
+                                        int *);
+typedef uint32_t (*for_linsearchxfunc_t)(uint32_t, const uint8_t *, uint32_t,
+                                         uint32_t, int *);
 
 /* include the generated file */
 #include "for-gen.c"
 
-static INLINE uint32_t
-required_bits(const uint32_t v)
-{
+static INLINE uint32_t required_bits(const uint32_t v) {
   return v == 0 ? 0 : 32 - CLZ(v);
 }
 
-uint32_t
-for_compressed_size_bits(uint32_t length, uint32_t bits)
-{
+uint32_t for_compressed_size_bits(uint32_t length, uint32_t bits) {
   uint32_t c = 0;
   uint32_t b;
 
@@ -93,9 +89,7 @@ for_compressed_size_bits(uint32_t length, uint32_t bits)
   return c + ((length * bits) + 7) / 8;
 }
 
-uint32_t
-for_compressed_size_unsorted(const uint32_t *in, uint32_t length)
-{
+uint32_t for_compressed_size_unsorted(const uint32_t *in, uint32_t length) {
   uint32_t i, b, m, M;
 
   if (length == 0)
@@ -118,9 +112,7 @@ for_compressed_size_unsorted(const uint32_t *in, uint32_t length)
   return METADATA + for_compressed_size_bits(length, b);
 }
 
-uint32_t
-for_compressed_size_sorted(const uint32_t *in, uint32_t length)
-{
+uint32_t for_compressed_size_sorted(const uint32_t *in, uint32_t length) {
   uint32_t b, m, M;
 
   if (length == 0)
@@ -136,10 +128,8 @@ for_compressed_size_sorted(const uint32_t *in, uint32_t length)
   return METADATA + for_compressed_size_bits(length, b);
 }
 
-uint32_t
-for_compress_bits(const uint32_t *in, uint8_t *out, uint32_t length,
-                uint32_t base, uint32_t bits)
-{
+uint32_t for_compress_bits(const uint32_t *in, uint8_t *out, uint32_t length,
+                           uint32_t base, uint32_t bits) {
   uint32_t i = 0;
   uint32_t written = 0;
 
@@ -157,9 +147,8 @@ for_compress_bits(const uint32_t *in, uint8_t *out, uint32_t length,
   return written + for_packx[bits](base, in, out + written, length - i);
 }
 
-uint32_t
-for_compress_unsorted(const uint32_t *in, uint8_t *out, uint32_t length)
-{
+uint32_t for_compress_unsorted(const uint32_t *in, uint8_t *out,
+                               uint32_t length) {
   uint32_t i, b, m, M;
 
   if (length == 0)
@@ -181,13 +170,12 @@ for_compress_unsorted(const uint32_t *in, uint8_t *out, uint32_t length)
 
   /* store m and the bits */
   *(uint32_t *)(out + 0) = m;
-  *(uint8_t *) (out + 4) = b;
+  *(uint8_t *)(out + 4) = b;
   return METADATA + for_compress_bits(in, out + METADATA, length, m, b);
 }
 
-uint32_t
-for_compress_sorted(const uint32_t *in, uint8_t *out, uint32_t length)
-{
+uint32_t for_compress_sorted(const uint32_t *in, uint8_t *out,
+                             uint32_t length) {
   uint32_t m, M, b;
 
   if (length == 0)
@@ -202,15 +190,13 @@ for_compress_sorted(const uint32_t *in, uint8_t *out, uint32_t length)
 
   /* store m and the bits */
   *(uint32_t *)(out + 0) = m;
-  *(uint8_t *) (out + 4) = b;
+  *(uint8_t *)(out + 4) = b;
 
   return METADATA + for_compress_bits(in, out + METADATA, length, m, b);
 }
 
-uint32_t
-for_uncompress_bits(const uint8_t *in, uint32_t *out, uint32_t length,
-                uint32_t base, uint32_t bits)
-{
+uint32_t for_uncompress_bits(const uint8_t *in, uint32_t *out, uint32_t length,
+                             uint32_t base, uint32_t bits) {
   uint32_t i = 0;
   const uint8_t *bin = in;
 
@@ -228,9 +214,7 @@ for_uncompress_bits(const uint8_t *in, uint32_t *out, uint32_t length,
   return (uint32_t)(in - bin) + for_unpackx[bits](base, in, out, length - i);
 }
 
-uint32_t
-for_uncompress(const uint8_t *in, uint32_t *out, uint32_t length)
-{
+uint32_t for_uncompress(const uint8_t *in, uint32_t *out, uint32_t length) {
   uint32_t m, b;
 
   if (length == 0)
@@ -243,10 +227,8 @@ for_uncompress(const uint8_t *in, uint32_t *out, uint32_t length)
   return METADATA + for_uncompress_bits(in + METADATA, out, length, m, b);
 }
 
-uint32_t
-for_append_bits(uint8_t *in, uint32_t length, uint32_t base,
-                uint32_t bits, uint32_t value)
-{
+uint32_t for_append_bits(uint8_t *in, uint32_t length, uint32_t base,
+                         uint32_t bits, uint32_t value) {
   uint32_t b, start;
   uint8_t *initin = in;
   uint32_t *in32 = (uint32_t *)in;
@@ -309,12 +291,11 @@ for_append_bits(uint8_t *in, uint32_t length, uint32_t base,
   return (uint32_t)(in - initin) + ((start + bits) + 7) / 8;
 }
 
-typedef uint32_t (* append_impl)(const uint32_t *in, uint8_t *out,
-                uint32_t length);
+typedef uint32_t (*append_impl)(const uint32_t *in, uint8_t *out,
+                                uint32_t length);
 
-static uint32_t
-for_append_impl(uint8_t *in, uint32_t length, uint32_t value, append_impl impl)
-{
+static uint32_t for_append_impl(uint8_t *in, uint32_t length, uint32_t value,
+                                append_impl impl) {
   uint32_t m, b, bnew, s;
 
   if (length == 0)
@@ -341,22 +322,16 @@ for_append_impl(uint8_t *in, uint32_t length, uint32_t value, append_impl impl)
   return METADATA + for_append_bits(in + METADATA, length, m, b, value);
 }
 
-uint32_t
-for_append_unsorted(uint8_t *in, uint32_t length, uint32_t value)
-{
+uint32_t for_append_unsorted(uint8_t *in, uint32_t length, uint32_t value) {
   return for_append_impl(in, length, value, for_compress_unsorted);
 }
 
-uint32_t
-for_append_sorted(uint8_t *in, uint32_t length, uint32_t value)
-{
+uint32_t for_append_sorted(uint8_t *in, uint32_t length, uint32_t value) {
   return for_append_impl(in, length, value, for_compress_sorted);
 }
 
-uint32_t
-for_select_bits(const uint8_t *in, uint32_t base, uint32_t bits,
-                uint32_t index)
-{
+uint32_t for_select_bits(const uint8_t *in, uint32_t base, uint32_t bits,
+                         uint32_t index) {
   uint32_t b, start;
   const uint32_t *in32;
 
@@ -405,14 +380,12 @@ for_select_bits(const uint8_t *in, uint32_t base, uint32_t bits,
     uint32_t mask1 = (1 << bits) - 1;
     uint32_t mask2 = (1 << (bits - (32 - start))) - 1;
     uint32_t v1 = (*(in32 + 0) >> start) & mask1;
-    uint32_t v2 =  *(in32 + 1) & mask2;
+    uint32_t v2 = *(in32 + 1) & mask2;
     return base + ((v2 << (32 - start)) | v1);
   }
 }
 
-uint32_t
-for_select(const uint8_t *in, uint32_t index)
-{
+uint32_t for_select(const uint8_t *in, uint32_t index) {
   /* load min and the bits */
   uint32_t m = *(uint32_t *)(in + 0);
   uint32_t b = *(in + 4);
@@ -420,9 +393,7 @@ for_select(const uint8_t *in, uint32_t index)
   return for_select_bits(in + METADATA, m, b, index);
 }
 
-uint32_t
-for_linear_search(const uint8_t *in, uint32_t length, uint32_t value)
-{
+uint32_t for_linear_search(const uint8_t *in, uint32_t length, uint32_t value) {
   /* load min and the bits */
   uint32_t m = *(uint32_t *)(in + 0);
   uint32_t b = *(in + 4);
@@ -430,10 +401,8 @@ for_linear_search(const uint8_t *in, uint32_t length, uint32_t value)
   return for_linear_search_bits(in + METADATA, length, m, b, value);
 }
 
-uint32_t
-for_linear_search_bits(const uint8_t *in, uint32_t length, uint32_t base,
-                uint32_t bits, uint32_t value)
-{
+uint32_t for_linear_search_bits(const uint8_t *in, uint32_t length,
+                                uint32_t base, uint32_t bits, uint32_t value) {
   uint32_t i = 0;
   int found = -1;
 
@@ -467,23 +436,20 @@ for_linear_search_bits(const uint8_t *in, uint32_t length, uint32_t base,
   return length;
 }
 
-uint32_t
-for_lower_bound_search(const uint8_t *in, uint32_t length, uint32_t value,
-                uint32_t *actual)
-{
+uint32_t for_lower_bound_search(const uint8_t *in, uint32_t length,
+                                uint32_t value, uint32_t *actual) {
   /* load min and the bits */
   uint32_t m = *(uint32_t *)(in + 0);
   uint32_t b = *(in + 4);
 
-  return for_lower_bound_search_bits(in + METADATA, length, m, b,
-                  value, actual);
+  return for_lower_bound_search_bits(in + METADATA, length, m, b, value,
+                                     actual);
 }
 
 /* adapted from wikipedia */
-uint32_t
-for_lower_bound_search_bits(const uint8_t *in, uint32_t length, uint32_t base,
-                uint32_t bits, uint32_t value, uint32_t *actual)
-{
+uint32_t for_lower_bound_search_bits(const uint8_t *in, uint32_t length,
+                                     uint32_t base, uint32_t bits,
+                                     uint32_t value, uint32_t *actual) {
   uint32_t imid;
   uint32_t imin = 0;
   uint32_t imax = length - 1;
@@ -495,8 +461,7 @@ for_lower_bound_search_bits(const uint8_t *in, uint32_t length, uint32_t base,
     v = for_select_bits(in, base, bits, imid);
     if (v >= value) {
       imax = imid;
-    }
-    else if (v < value) {
+    } else if (v < value) {
       imin = imid;
     }
   }
@@ -511,4 +476,3 @@ for_lower_bound_search_bits(const uint8_t *in, uint32_t length, uint32_t base,
   *actual = v;
   return imax;
 }
-

@@ -7,7 +7,6 @@
 #ifndef SIMDCompressionAndIntersection_COMMON_H_
 #define SIMDCompressionAndIntersection_COMMON_H_
 
-
 #include <errno.h>
 #include <fcntl.h>
 #include <immintrin.h>
@@ -49,16 +48,13 @@
 #include "platform.h"
 
 #ifdef USE_ALIGNED
-# define MM_LOAD_SI_128  _mm_load_si128
-# define MM_STORE_SI_128 _mm_store_si128
+#define MM_LOAD_SI_128 _mm_load_si128
+#define MM_STORE_SI_128 _mm_store_si128
 #else
-# define MM_LOAD_SI_128  _mm_loadu_si128
-# define MM_STORE_SI_128 _mm_storeu_si128
+#define MM_LOAD_SI_128 _mm_loadu_si128
+#define MM_STORE_SI_128 _mm_storeu_si128
 #endif
 
-namespace SIMDCompressionLib {
-
-
-} // namespace SIMDCompressionLib
+namespace SIMDCompressionLib {} // namespace SIMDCompressionLib
 
 #endif /* SIMDCompressionAndIntersection_COMMON_H_ */

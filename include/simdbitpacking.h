@@ -11,39 +11,38 @@
 
 namespace SIMDCompressionLib {
 
-
-void __SIMD_fastunpack1(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack2(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack3(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack4(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack5(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack6(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack7(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack8(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack9(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack10(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack11(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack12(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack13(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack14(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack15(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack16(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack17(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack18(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack19(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack20(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack21(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack22(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack23(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack24(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack25(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack26(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack27(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack28(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack29(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack30(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack31(const  __m128i *, uint32_t *);
-void __SIMD_fastunpack32(const  __m128i *, uint32_t *);
+void __SIMD_fastunpack1(const __m128i *, uint32_t *);
+void __SIMD_fastunpack2(const __m128i *, uint32_t *);
+void __SIMD_fastunpack3(const __m128i *, uint32_t *);
+void __SIMD_fastunpack4(const __m128i *, uint32_t *);
+void __SIMD_fastunpack5(const __m128i *, uint32_t *);
+void __SIMD_fastunpack6(const __m128i *, uint32_t *);
+void __SIMD_fastunpack7(const __m128i *, uint32_t *);
+void __SIMD_fastunpack8(const __m128i *, uint32_t *);
+void __SIMD_fastunpack9(const __m128i *, uint32_t *);
+void __SIMD_fastunpack10(const __m128i *, uint32_t *);
+void __SIMD_fastunpack11(const __m128i *, uint32_t *);
+void __SIMD_fastunpack12(const __m128i *, uint32_t *);
+void __SIMD_fastunpack13(const __m128i *, uint32_t *);
+void __SIMD_fastunpack14(const __m128i *, uint32_t *);
+void __SIMD_fastunpack15(const __m128i *, uint32_t *);
+void __SIMD_fastunpack16(const __m128i *, uint32_t *);
+void __SIMD_fastunpack17(const __m128i *, uint32_t *);
+void __SIMD_fastunpack18(const __m128i *, uint32_t *);
+void __SIMD_fastunpack19(const __m128i *, uint32_t *);
+void __SIMD_fastunpack20(const __m128i *, uint32_t *);
+void __SIMD_fastunpack21(const __m128i *, uint32_t *);
+void __SIMD_fastunpack22(const __m128i *, uint32_t *);
+void __SIMD_fastunpack23(const __m128i *, uint32_t *);
+void __SIMD_fastunpack24(const __m128i *, uint32_t *);
+void __SIMD_fastunpack25(const __m128i *, uint32_t *);
+void __SIMD_fastunpack26(const __m128i *, uint32_t *);
+void __SIMD_fastunpack27(const __m128i *, uint32_t *);
+void __SIMD_fastunpack28(const __m128i *, uint32_t *);
+void __SIMD_fastunpack29(const __m128i *, uint32_t *);
+void __SIMD_fastunpack30(const __m128i *, uint32_t *);
+void __SIMD_fastunpack31(const __m128i *, uint32_t *);
+void __SIMD_fastunpack32(const __m128i *, uint32_t *);
 
 void __SIMD_fastpackwithoutmask0(const uint32_t *, __m128i *);
 void __SIMD_fastpackwithoutmask1(const uint32_t *, __m128i *);
@@ -112,9 +111,6 @@ void __SIMD_fastpack29(const uint32_t *, __m128i *);
 void __SIMD_fastpack30(const uint32_t *, __m128i *);
 void __SIMD_fastpack31(const uint32_t *, __m128i *);
 void __SIMD_fastpack32(const uint32_t *, __m128i *);
-
-
-
 
 } // namespace SIMDCompressionLib
 

@@ -13,8 +13,9 @@ using namespace std;
  * cardinality of the intersection.
  */
 typedef size_t (*intersectionfunction)(const uint32_t *set1,
-                                       const size_t length1, const uint32_t *set2, const size_t length2, uint32_t *out);
-
+                                       const size_t length1,
+                                       const uint32_t *set2,
+                                       const size_t length2, uint32_t *out);
 
 /*
  * Given two arrays, this writes the intersection to out. Returns the
@@ -23,9 +24,9 @@ typedef size_t (*intersectionfunction)(const uint32_t *set1,
  * This is a mix of very fast vectorized intersection algorithms, several
  * designed by N. Kurz, with adaptations by D. Lemire.
  */
-size_t SIMDintersection(const uint32_t *set1,
-                        const size_t length1, const uint32_t *set2, const size_t length2, uint32_t *out);
-
+size_t SIMDintersection(const uint32_t *set1, const size_t length1,
+                        const uint32_t *set2, const size_t length2,
+                        uint32_t *out);
 
 /*
  * Given two arrays, this writes the intersection to out. Returns the
@@ -45,53 +46,51 @@ size_t nate_scalar(const uint32_t *set1, const size_t length1,
  * by D. Lemire.
  */
 size_t onesidedgallopingintersection(const uint32_t *smallset,
-                                     const size_t smalllength, const uint32_t *largeset,
-                                     const size_t largelength, uint32_t *out) ;
-
-
-
-
-
+                                     const size_t smalllength,
+                                     const uint32_t *largeset,
+                                     const size_t largelength, uint32_t *out);
 
 class IntersectionFactory {
 public:
-    static std::map<std::string, intersectionfunction> intersection_schemes;
+  static std::map<std::string, intersectionfunction> intersection_schemes;
 
-    static vector<string> allNames() {
-        vector <string> ans;
-        for (auto i = intersection_schemes.begin(); i != intersection_schemes.end(); ++i) {
-            ans.push_back(i->first);
-        }
-        return ans;
+  static vector<string> allNames() {
+    vector<string> ans;
+    for (auto i = intersection_schemes.begin(); i != intersection_schemes.end();
+         ++i) {
+      ans.push_back(i->first);
     }
+    return ans;
+  }
 
-    static string getName(intersectionfunction  v) {
-        for (auto i = intersection_schemes.begin(); i != intersection_schemes.end() ; ++i) {
-            if (i->second == v)
-                return i->first;
-        }
-        return "UNKNOWN";
+  static string getName(intersectionfunction v) {
+    for (auto i = intersection_schemes.begin(); i != intersection_schemes.end();
+         ++i) {
+      if (i->second == v)
+        return i->first;
     }
+    return "UNKNOWN";
+  }
 
-    static bool valid(string name) {
-        return (intersection_schemes.find(name) != intersection_schemes.end()) ;
+  static bool valid(string name) {
+    return (intersection_schemes.find(name) != intersection_schemes.end());
+  }
+
+  static intersectionfunction getFromName(string name) {
+    if (intersection_schemes.find(name) == intersection_schemes.end()) {
+      cerr << "name " << name << " does not refer to an intersection procedure."
+           << endl;
+      cerr << "possible choices:" << endl;
+      for (auto i = intersection_schemes.begin();
+           i != intersection_schemes.end(); ++i) {
+        cerr << static_cast<string>(i->first)
+             << endl; // useless cast, but just to be clear
+      }
+      return NULL;
     }
-
-    static intersectionfunction  getFromName(string name) {
-        if (intersection_schemes.find(name) == intersection_schemes.end()) {
-            cerr << "name " << name << " does not refer to an intersection procedure." << endl;
-            cerr << "possible choices:" << endl;
-            for (auto i = intersection_schemes.begin(); i != intersection_schemes.end(); ++i) {
-                cerr << static_cast<string>(i->first) << endl; // useless cast, but just to be clear
-            }
-            return NULL;
-        }
-        return intersection_schemes[name];
-    }
-
+    return intersection_schemes[name];
+  }
 };
-
-
 
 } // namespace SIMDCompressionLib
 

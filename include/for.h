@@ -41,24 +41,23 @@ extern "C" {
  *
  * Invariant: bits <= 32
  */
-extern uint32_t
-for_compressed_size_bits(uint32_t length, uint32_t bits);
+extern uint32_t for_compressed_size_bits(uint32_t length, uint32_t bits);
 
 /**
  * Returns the size required to compress an unsorted sequence of |length| ints.
- * 
+ *
  * This routine scans |in| for the min/max values and then calls
  * for_compressed_size_bits().
  *
  * The returned size will include the overhead required for
  * for_compress_sorted() and for_compressed_unsorted().
  */
-extern uint32_t
-for_compressed_size_unsorted(const uint32_t *in, uint32_t length);
+extern uint32_t for_compressed_size_unsorted(const uint32_t *in,
+                                             uint32_t length);
 
 /**
  * Returns the size required to compress a sorted sequence of |length| ints.
- * 
+ *
  * This routine extracts min/max values at the beginning and end of
  * the sequence, then calls for_compressed_size_bits(). It is therefore
  * slightly faster than for_compressed_size_unsorted().
@@ -66,8 +65,7 @@ for_compressed_size_unsorted(const uint32_t *in, uint32_t length);
  * The returned size will include the overhead required for
  * for_compress_sorted() and for_compressed_unsorted().
  */
-extern uint32_t
-for_compressed_size_sorted(const uint32_t *in, uint32_t length);
+extern uint32_t for_compressed_size_sorted(const uint32_t *in, uint32_t length);
 
 /**
  * Compresses a sequence of |length| ints at |in| and stores the result
@@ -86,9 +84,9 @@ for_compressed_size_sorted(const uint32_t *in, uint32_t length);
  *
  * Invariant: bits <= 32
  */
-extern uint32_t
-for_compress_bits(const uint32_t *in, uint8_t *out, uint32_t length,
-                uint32_t base, uint32_t bits);
+extern uint32_t for_compress_bits(const uint32_t *in, uint8_t *out,
+                                  uint32_t length, uint32_t base,
+                                  uint32_t bits);
 
 /**
  * Compresses an unsorted sequence of |length| ints at |in| and stores the
@@ -99,8 +97,8 @@ for_compress_bits(const uint32_t *in, uint8_t *out, uint32_t length,
  *
  * The minimun value and the bits are stored as metadata in |out|.
  */
-extern uint32_t
-for_compress_unsorted(const uint32_t *in, uint8_t *out, uint32_t length);
+extern uint32_t for_compress_unsorted(const uint32_t *in, uint8_t *out,
+                                      uint32_t length);
 
 /**
  * Compresses a sorted sequence of |length| ints at |in| and stores the
@@ -111,8 +109,8 @@ for_compress_unsorted(const uint32_t *in, uint8_t *out, uint32_t length);
  *
  * The minimun value and the bits are stored as metadata in |out|.
  */
-extern uint32_t
-for_compress_sorted(const uint32_t *in, uint8_t *out, uint32_t length);
+extern uint32_t for_compress_sorted(const uint32_t *in, uint8_t *out,
+                                    uint32_t length);
 
 /**
  * Uncompresses a sequence of |length| ints at |in| and stores the
@@ -130,9 +128,9 @@ for_compress_sorted(const uint32_t *in, uint8_t *out, uint32_t length);
  *
  * Invariant: bits <= 32
  */
-extern uint32_t
-for_uncompress_bits(const uint8_t *in, uint32_t *out, uint32_t length,
-                uint32_t base, uint32_t bits);
+extern uint32_t for_uncompress_bits(const uint8_t *in, uint32_t *out,
+                                    uint32_t length, uint32_t base,
+                                    uint32_t bits);
 
 /**
  * Uncompresses a sequence of |length| ints at |in| and stores the
@@ -144,8 +142,8 @@ for_uncompress_bits(const uint8_t *in, uint32_t *out, uint32_t length,
  *
  * Returns the number of compressed bytes processed.
  */
-extern uint32_t
-for_uncompress(const uint8_t *in, uint32_t *out, uint32_t length);
+extern uint32_t for_uncompress(const uint8_t *in, uint32_t *out,
+                               uint32_t length);
 
 /**
  * Appends a |value| to a compressed sequence of unsorted integers.
@@ -161,8 +159,8 @@ for_uncompress(const uint8_t *in, uint32_t *out, uint32_t length);
  *
  * Returns the size (in bytes) of the compressed data, or 0 if malloc() fails.
  */
-extern uint32_t
-for_append_unsorted(uint8_t *in, uint32_t length, uint32_t value);
+extern uint32_t for_append_unsorted(uint8_t *in, uint32_t length,
+                                    uint32_t value);
 
 /**
  * Appends a |value| to a compressed sequence of sorted integers.
@@ -178,8 +176,7 @@ for_append_unsorted(uint8_t *in, uint32_t length, uint32_t value);
  *
  * Returns the size (in bytes) of the compressed data, or 0 if malloc() fails.
  */
-extern uint32_t
-for_append_sorted(uint8_t *in, uint32_t length, uint32_t value);
+extern uint32_t for_append_sorted(uint8_t *in, uint32_t length, uint32_t value);
 
 /**
  * Appends a |value| to a compressed integer sequence.
@@ -196,9 +193,8 @@ for_append_sorted(uint8_t *in, uint32_t length, uint32_t value);
  *      in |bits| bits. Details can be found in the implementation of
  *      for_append() in for.c.
  */
-extern uint32_t
-for_append_bits(uint8_t *in, uint32_t length, uint32_t base,
-                uint32_t bits, uint32_t value);
+extern uint32_t for_append_bits(uint8_t *in, uint32_t length, uint32_t base,
+                                uint32_t bits, uint32_t value);
 
 /**
  * Returns the value at the given |index| from a compressed sequence.
@@ -210,9 +206,8 @@ for_append_bits(uint8_t *in, uint32_t length, uint32_t base,
  *
  * Invariant: bits <= 32
  */
-extern uint32_t
-for_select_bits(const uint8_t *in, uint32_t base, uint32_t bits,
-                uint32_t index);
+extern uint32_t for_select_bits(const uint8_t *in, uint32_t base, uint32_t bits,
+                                uint32_t index);
 
 /**
  * Returns the value at the given |index| from a compressed sequence.
@@ -223,8 +218,7 @@ for_select_bits(const uint8_t *in, uint32_t base, uint32_t bits,
  * expects metadata at the beginning of |in|. Use in combination with
  * for_compress_sorted() and for_compress_unsorted().
  */
-extern uint32_t
-for_select(const uint8_t *in, uint32_t index);
+extern uint32_t for_select(const uint8_t *in, uint32_t index);
 
 /**
  * Performs a linear search for |value|.
@@ -236,8 +230,8 @@ for_select(const uint8_t *in, uint32_t index);
  * expects metadata at the beginning of |in|. Use in combination with
  * for_compress_sorted() and for_compress_unsorted().
  */
-extern uint32_t
-for_linear_search(const uint8_t *in, uint32_t length, uint32_t value);
+extern uint32_t for_linear_search(const uint8_t *in, uint32_t length,
+                                  uint32_t value);
 
 /**
  * Performs a linear search for |value|.
@@ -250,13 +244,13 @@ for_linear_search(const uint8_t *in, uint32_t length, uint32_t value);
  *
  * Invariant: bits <= 32
  */
-extern uint32_t
-for_linear_search_bits(const uint8_t *in, uint32_t length, uint32_t base,
-                uint32_t bits, uint32_t value);
+extern uint32_t for_linear_search_bits(const uint8_t *in, uint32_t length,
+                                       uint32_t base, uint32_t bits,
+                                       uint32_t value);
 
 /**
  * Performs lower bound binary search search for |value|.
- * 
+ *
  * A lower bound search returns the first element in the sequence which does
  * not compare less than |value|.
  * The actual result is stored in |*actual|.
@@ -265,13 +259,12 @@ for_linear_search_bits(const uint8_t *in, uint32_t length, uint32_t base,
  * expects metadata at the beginning of |in|. Use in combination with
  * for_compress_sorted() and for_compress_unsorted().
  */
-extern uint32_t
-for_lower_bound_search(const uint8_t *in, uint32_t length, uint32_t value,
-                uint32_t *actual);
+extern uint32_t for_lower_bound_search(const uint8_t *in, uint32_t length,
+                                       uint32_t value, uint32_t *actual);
 
 /**
  * Performs lower bound binary search search for |value|.
- * 
+ *
  * A lower bound search returns the first element in the sequence which does
  * not compare less than |value|.
  * The actual result is stored in |*actual|.
@@ -281,10 +274,9 @@ for_lower_bound_search(const uint8_t *in, uint32_t length, uint32_t value,
  *
  * Invariant: bits <= 32
  */
-extern uint32_t
-for_lower_bound_search_bits(const uint8_t *in, uint32_t length, uint32_t base,
-                uint32_t bits, uint32_t value, uint32_t *actual);
-
+extern uint32_t for_lower_bound_search_bits(const uint8_t *in, uint32_t length,
+                                            uint32_t base, uint32_t bits,
+                                            uint32_t value, uint32_t *actual);
 
 #ifdef __cplusplus
 } /* extern "C" */
