@@ -64,11 +64,10 @@ implements some of the same compression schemes except that
 it is not optimized for the compression of sorted lists of integers.
 
 Other recommended libraries
------------------------------
+---------------------------------
 
-TurboPFor is a C library that offers lots of interesting optimizations. Well worth checking!
-
-https://github.com/powturbo/TurboPFor
+* TurboPFor is a C library that offers lots of interesting optimizations. Well worth checking! (GPL license) https://github.com/powturbo/TurboPFor
+* Oroch is a C++ library that offers a usable API (MIT license) https://github.com/ademakov/Oroch
 
 
 Licensing
