@@ -70,6 +70,7 @@ it is not optimized for the compression of sorted lists of integers.
 Other recommended libraries
 ---------------------------------
 
+* libvbyte: A fast implementation for varbyte 32bit/64bit integer compression https://github.com/cruppstahl/libvbyte
 * TurboPFor is a C library that offers lots of interesting optimizations. Well worth checking! (GPL license) https://github.com/powturbo/TurboPFor
 * Oroch is a C++ library that offers a usable API (MIT license) https://github.com/ademakov/Oroch
 * CSharpFastPFOR: A C#  integer compression library  https://github.com/Genbox/CSharpFastPFOR
