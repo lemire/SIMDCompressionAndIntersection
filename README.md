@@ -74,6 +74,7 @@ Other recommended libraries
 * Oroch is a C++ library that offers a usable API (MIT license) https://github.com/ademakov/Oroch
 * CSharpFastPFOR: A C#  integer compression library  https://github.com/Genbox/CSharpFastPFOR
 * JavaFastPFOR: A java integer compression library https://github.com/lemire/JavaFastPFOR
+* Encoding: Integer Compression Libraries for Go https://github.com/zhenjl/encoding
 
 Licensing
 ------------------------
