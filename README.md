@@ -68,7 +68,6 @@ implements some of the same compression schemes except that
 it is not optimized for the compression of sorted lists of integers.
 
 Other recommended libraries
-<<<<<<< 5649b9f39cd88c7b05b39fa29478cca16e14e8c8
 ---------------------------------
 
 * libvbyte: A fast implementation for varbyte 32bit/64bit integer compression https://github.com/cruppstahl/libvbyte
