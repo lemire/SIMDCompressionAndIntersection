@@ -68,6 +68,7 @@ implements some of the same compression schemes except that
 it is not optimized for the compression of sorted lists of integers.
 
 Other recommended libraries
+<<<<<<< 5649b9f39cd88c7b05b39fa29478cca16e14e8c8
 ---------------------------------
 
 * libvbyte: A fast implementation for varbyte 32bit/64bit integer compression https://github.com/cruppstahl/libvbyte
@@ -76,6 +77,7 @@ Other recommended libraries
 * CSharpFastPFOR: A C#  integer compression library  https://github.com/Genbox/CSharpFastPFOR
 * JavaFastPFOR: A java integer compression library https://github.com/lemire/JavaFastPFOR
 * Encoding: Integer Compression Libraries for Go https://github.com/zhenjl/encoding
+* FrameOfReference is a C++ library dedicated to frame-of-reference (FOR) compression: https://github.com/lemire/FrameOfReference
 
 Licensing
 ------------------------
