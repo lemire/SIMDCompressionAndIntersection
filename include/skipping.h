@@ -1,13 +1,21 @@
 /*
- * This is a simple implementation of the Skipping data structure and algorithms
- * similar to
+ * This is a simple implementation of a skipping data structure and algorithms similar to
  * what is described in
  *
- * Sanders and Transier, Intersection in Integer Inverted Indices, 2007.
+ * Sanders and Transier, Intersection in Integer Inverted Indices, ALENEX 2007,  2007.
  *
- * As suggested in their conclusion, we leave the higher-level structure
- * uncompressed. We also
+ * As suggested in their conclusion, we leave the higher-level structure uncompressed. We also
  * use differential coding.
+ * 
+ * To paraphrase Sanders and Transier...
+ *
+ * In addition to a delta-encoded compressed list, a top-level data structure stores 
+ * every B-th element of N in t together with its position in the main list (B is a tuning 
+ * parameter). We can now run any  search algorithm on t and then scan only the pieces of 
+ * the main list that might contain an element to be located.
+ *
+ * In our implementation, we assume that B is a power of two and use 1 << BlockSizeLog as
+ * the block size.
  *
  * Sanders and Transier's proposal is similar in spirit to the skipping
  * structure proposed in
