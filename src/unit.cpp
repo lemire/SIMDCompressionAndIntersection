@@ -59,7 +59,7 @@ void testIssue18(vector<shared_ptr<IntegerCODEC>> codecs) {
 }
 
 void testSmall(vector<shared_ptr<IntegerCODEC>> codecs) {
-  std::cout << "[testing small]" << codec->name();
+  std::cout << "[testing small]" << std::endl;
   vector<uint32_t> data;
   data.push_back(1U);
   data.push_back(3U);
