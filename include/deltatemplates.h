@@ -37,8 +37,10 @@ struct RegularDeltaSIMD {
 
   ALWAYS_INLINE
   static __m128i Delta(__m128i curr, __m128i prev) {
-    return _mm_sub_epi32(
-        curr, _mm_or_si128(_mm_slli_si128(curr, 4), _mm_srli_si128(prev, 12)));
+    return _mm_sub_epi32(curr, _mm_alignr_epi8(curr, prev, 12));
+    // for older processors (pre-SSSE3): 
+    //return _mm_sub_epi32(
+    //    curr, _mm_or_si128(_mm_slli_si128(curr, 4), _mm_srli_si128(prev, 12)));
   }
 
   static bool usesDifferentialEncoding() { return true; }
