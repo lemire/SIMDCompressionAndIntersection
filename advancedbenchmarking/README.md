@@ -7,7 +7,7 @@ useful for "advanced benchmarking".
 
 
 * simplesynth is a utility that generates a file containing randomly generated arrays.
-* compress is a utility that takes a file containing uncompressed (regular) arrays and generates compressed arrays. The expect input format is (length L of array as an unsigned 32-bit integer)(L consecutive 32-bit unsigned integers in increasing order) (repeat as many times as desired) -- integers must be stored using the default endianess of the machine (typically little endian)
+* compress is a utility that takes a file containing uncompressed (regular) arrays and generates compressed arrays. The expected input format is (length L of array as an unsigned 32-bit integer)(L consecutive 32-bit unsigned integers in increasing order) (repeat as many times as desired) -- integers must be stored using the default endianess of the machine (typically little endian)
 * uncompress is a utility that takes a file containing compressed arrays and generates uncompressed arrays.
 * budgetedtest is a program to benchmark decompression speed together with fast intersections
 * entropy can be used to compute the entropy of the deltas given a set of (uncompressed) posting lists
