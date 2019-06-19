@@ -46,7 +46,7 @@ size_t SIMDintersection_avx2(const uint32_t *set1, const size_t length1,
  * This is a well-written, but otherwise unsophisticated function.
  * Written by N. Kurz.
  */
-size_t nate_scalar(const uint32_t *set1, const size_t length1,
+size_t scalar(const uint32_t *set1, const size_t length1,
                    const uint32_t *set2, const size_t length2, uint32_t *out);
 
 /*
