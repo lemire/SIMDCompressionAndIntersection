@@ -398,8 +398,7 @@ static size_t _original_intersect_vector16(const uint16_t *A, const uint16_t *B,
   if ((i_a < st_a) and (i_b < st_b)) {
     v_a = _mm_loadu_si128((const __m128i *)&A[i_a]);
     v_b = _mm_loadu_si128((const __m128i *)&B[i_b]);
-    if ((i_a < st_a) and (i_b < st_b))
-      while (true) {
+    while (true) {
         const __m128i res_v = _mm_cmpestrm(
             v_b, 16, v_a, 16,
             _SIDD_UWORD_OPS | _SIDD_CMP_EQUAL_ANY | _SIDD_BIT_MASK);
@@ -421,7 +420,7 @@ static size_t _original_intersect_vector16(const uint16_t *A, const uint16_t *B,
             break;
           v_b = _mm_loadu_si128((const __m128i *)&B[i_b]);
         }
-      }
+    }
   }
   // intersect the tail using scalar intersection
   while (i_a < s_a && i_b < s_b) {
