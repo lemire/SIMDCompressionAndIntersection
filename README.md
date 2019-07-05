@@ -1,6 +1,8 @@
 SIMDCompressionAndIntersection
 ======================
 [![Build Status](https://travis-ci.org/lemire/SIMDCompressionAndIntersection.png)](https://travis-ci.org/lemire/SIMDCompressionAndIntersection)
+[![Code Quality: Cpp](https://img.shields.io/lgtm/grade/cpp/g/lemire/SIMDCompressionAndIntersection.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lemire/SIMDCompressionAndIntersection/context:cpp)
+
 
 As the name suggests, this is a C/C++ library for fast
 compression and intersection of lists of sorted integers using
