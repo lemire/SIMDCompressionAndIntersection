@@ -111,7 +111,7 @@ A processor support AVX (Intel or AMD).
 Tested on Linux, MacOS and Windows. It should be portable to other platforms.
 
 *- The default makefile might assume AVX support, but AVX is not required. For GCC
-compilers you might need the -msse2 flag, but you will not need the -mavx flag.
+compilers, you might need the -msse2 flag, but you will not need the -mavx flag.
 
 For advanced benchmarking, please see
 
