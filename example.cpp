@@ -14,10 +14,19 @@
 
 using namespace SIMDCompressionLib;
 
+
 int main() {
   // We pick a CODEC
-  IntegerCODEC &codec = *CODECFactory::getFromName("s4-bp128-dm");
-  // could use others, e.g., "varint", "s-fastpfor-1"
+  IntegerCODEC &codec = *CODECFactory::getFromName("s4-fastpfor-d1");
+  // could use others, e.g., frameofreference, ibp32, maskedvbyte, s4-bp128-d1, s4-bp128-d2, s4-bp128-d4, s4-bp128-dm, simdframeofreference, streamvbyte
+  //
+  // Note that some codecs compute the differential coding in-place, thus modifying part of the input, replacing it with a differentially coded version:
+  //  bp32, fastpfor, s4-bp128-d1-ni, s4-bp128-d2-ni, s4-bp128-d4-ni, s4-bp128-dm-ni, s4-fastpfor-d1, s4-fastpfor-d2, s4-fastpfor-d4, s4-fastpfor-dm
+  // Other codecs do the differential coding "in passing", such as 
+  // for, frameofreference, ibp32, maskedvbyte, s4-bp128-d1, s4-bp128-d2, s4-bp128-d4, s4-bp128-dm, simdframeofreference, streamvbyte, varint, varintg8iu, varintgb,  vbyte
+  //
+
+
   ////////////
   //
   // create a container with some integers in it
@@ -30,6 +39,11 @@ int main() {
   vector<uint32_t> mydata(N);
   for (uint32_t i = 0; i < N; ++i)
     mydata[i] = 3 * i;
+
+
+
+  // we make a copy
+  std::vector<uint32_t> original_data(mydata);
   ///////////
   //
   // You need some "output" container. You are responsible
@@ -67,7 +81,7 @@ int main() {
   //
   // That's it for compression!
   //
-  if (mydataback != mydata)
+  if (mydataback != original_data)
     throw runtime_error("bug!");
 
   //

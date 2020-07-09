@@ -1754,13 +1754,13 @@ static const __m128i *shuffle_mask = (__m128i *)shuffle_mask_bytes1;
 #define CHECK_AND_INCREMENT(i, out, key, presult)                              \
   do {                                                                         \
     __m128i tmpout = _mm_sub_epi32(out, conversion);                           \
-    uint32_t mask =                                                            \
+    uint32_t lmask =                                                            \
         _mm_movemask_ps(_mm_castsi128_ps(_mm_cmplt_epi32(tmpout, key4)));      \
-    if (mask != 15) {                                                          \
-      __m128i p = _mm_shuffle_epi8(out, shuffle_mask[mask ^ 15]);              \
+    if (lmask != 15) {                                                          \
+      __m128i pp = _mm_shuffle_epi8(out, shuffle_mask[lmask ^ 15]);              \
       int offset;                                                              \
-      offset = __builtin_ctz(mask ^ 15);                                       \
-      *presult = _mm_cvtsi128_si32(p);                                         \
+      offset = __builtin_ctz(lmask ^ 15);                                       \
+      *presult = _mm_cvtsi128_si32(pp);                                         \
       return (i + offset);                                                     \
     }                                                                          \
     i += 4;                                                                    \
@@ -1771,13 +1771,13 @@ static const __m128i *shuffle_mask = (__m128i *)shuffle_mask_bytes1;
 #define CHECK_AND_INCREMENT_2(i, out, key, presult)                            \
   do {                                                                         \
     __m128i tmpout = _mm_sub_epi32(out, conversion);                           \
-    uint32_t mask =                                                            \
+    uint32_t lmask =                                                            \
         3 & _mm_movemask_ps(_mm_castsi128_ps(_mm_cmplt_epi32(tmpout, key4)));  \
-    if (mask != 3) {                                                           \
-      __m128i p = _mm_shuffle_epi8(out, shuffle_mask[mask ^ 3]);               \
+    if (lmask != 3) {                                                           \
+      __m128i pp = _mm_shuffle_epi8(out, shuffle_mask[lmask ^ 3]);               \
       int offset;                                                              \
-      offset = __builtin_ctz(mask ^ 3);                                        \
-      *presult = _mm_cvtsi128_si32(p);                                         \
+      offset = __builtin_ctz(lmask ^ 3);                                        \
+      *presult = _mm_cvtsi128_si32(pp);                                         \
       return (i + offset);                                                     \
     }                                                                          \
     i += 2;                                                                    \

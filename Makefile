@@ -9,19 +9,19 @@ ifeq ($(INTEL), 1)
     CC ?= /opt/intel/bin/icpc
 ifeq ($(DEBUG),1)
     CXXFLAGS = -fpic -std=c++11 -O3 -Wall -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
-    CCFLAGS = -fpic -std=c99 -O3 -Wall -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
+    CCFLAGS = -fpic -std=c99 -O3 -Wall  -ansi -xAVX -DDEBUG=1 -D_GLIBCXX_DEBUG   -ggdb
 else
-    CXXFLAGS = -fpic -std=c++11 -O2 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
-    CCFLAGS = -fpic -std=c99 -O2 -Wall -ansi -xAVX -DNDEBUG=1  -ggdb
+    CXXFLAGS = -fpic -std=c++11 -O2 -Wall  -ansi -xAVX -DNDEBUG=1  -ggdb
+    CCFLAGS = -fpic -std=c99 -O2 -Wall   -ansi -xAVX -DNDEBUG=1  -ggdb
 endif # debug
 else #intel
     CXX ?= g++-4.7
 ifeq ($(DEBUG),1)
-    CXXFLAGS = -fpic -mavx -std=c++11  -Weffc++ -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra
-    CCFLAGS = -fpic -mavx -std=c99  -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall -Wextra
+    CXXFLAGS = -fpic -mavx -std=c++11  -Weffc++ -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall  -Wextra -Wextra -Wsign-compare  -Wwrite-strings -Wpointer-arith -Winit-self  -Wno-sign-conversion
+    CCFLAGS = -fpic -mavx -std=c99  -pedantic -ggdb -DDEBUG=1 -D_GLIBCXX_DEBUG -Wall  -Wextra -Wsign-compare -Wwrite-strings -Wpointer-arith -Winit-self  -Wno-sign-conversion
 else
-    CXXFLAGS = -fpic -mavx -std=c++11  -Weffc++ -pedantic -O3 -Wall -Wextra
-    CCFLAGS = -fpic -mavx -std=c99 -pedantic -O3 -Wall -Wextra
+    CXXFLAGS = -fpic -mavx -std=c++11  -Weffc++ -pedantic -O3 -Wall  -Wextra -Wsign-compare  -Wwrite-strings -Wpointer-arith -Winit-self  -Wno-sign-conversion
+    CCFLAGS = -fpic -mavx -std=c99 -pedantic -O3 -Wall -Wextra -Wsign-compare -Wwrite-strings -Wpointer-arith -Winit-self -Wno-sign-conversion
 endif #debug
 endif #intel
 

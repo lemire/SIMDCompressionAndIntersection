@@ -617,7 +617,7 @@ size_t intersect_partitionedV1(const uint16_t *A, const size_t s_a,
       size_t partition_size = _intersectV1_vector16(
           &A[i_a + 2], &B[i_b + 2], static_cast<size_t>(A[i_a + 1]) + 1,
           static_cast<size_t>(B[i_b + 1]) + 1, &C[counter + 1]);
-      C[counter++] = partition_size; // write partition size
+      C[counter++] = (uint16_t) partition_size; // write partition size
       counter += partition_size;
       i_a += static_cast<size_t>(A[i_a + 1]) + 2 + 1;
       i_b += static_cast<size_t>(B[i_b + 1]) + 2 + 1;
@@ -650,7 +650,7 @@ size_t intersect_partitionedscalar(const uint16_t *A, const size_t s_a,
       size_t partition_size = _intersectscalar_vector16(
           &A[i_a + 2], &B[i_b + 2], static_cast<size_t>(A[i_a + 1]) + 1,
           static_cast<size_t>(B[i_b + 1]) + 1, &C[counter + 1]);
-      C[counter++] = partition_size; // write partition size
+      C[counter++] = (uint16_t) partition_size; // write partition size
       counter += partition_size;
       i_a += static_cast<size_t>(A[i_a + 1]) + 2 + 1;
       i_b += static_cast<size_t>(B[i_b + 1]) + 2 + 1;
@@ -685,7 +685,7 @@ size_t intersect_partitioned(const uint16_t *A, const size_t s_a,
       size_t partition_size = _intersect_vector16(
           &A[i_a + 2], &B[i_b + 2], static_cast<size_t>(A[i_a + 1]) + 1,
           static_cast<size_t>(B[i_b + 1]) + 1, &C[counter + 1]);
-      C[counter++] = partition_size; // write partition size
+      C[counter++] = (uint16_t) partition_size; // write partition size
       counter += partition_size;
       i_a += static_cast<size_t>(A[i_a + 1]) + 2 + 1;
       i_b += static_cast<size_t>(B[i_b + 1]) + 2 + 1;
@@ -717,7 +717,7 @@ size_t original_intersect_partitioned(const uint16_t *A, const size_t s_a,
       size_t partition_size = _original_intersect_vector16(
           &A[i_a + 2], &B[i_b + 2], static_cast<size_t>(A[i_a + 1]) + 1,
           static_cast<size_t>(B[i_b + 1]) + 1, &C[counter + 1]);
-      C[counter++] = partition_size; // write partition size
+      C[counter++] = (uint16_t) partition_size; // write partition size
       counter += partition_size;
       i_a += static_cast<size_t>(A[i_a + 1]) + 2 + 1;
       i_b += static_cast<size_t>(B[i_b + 1]) + 2 + 1;
@@ -754,7 +754,7 @@ int main(int argc, char **argv) {
       Big = atoi(optarg);
       break;
     case 'R':
-      intersectionratio = atof(optarg);
+      intersectionratio = (float)atof(optarg);
       break;
     case 'M':
       MaxBit = atoi(optarg);
@@ -810,16 +810,16 @@ int main(int argc, char **argv) {
           "16-bitscalar ";
   cout << "relative-intersection-size " << endl;
 
-  for (float ir = 1.001; ir <= 10000; ir = ir * sqrt(1.9)) {
+  for (double ir = 1.001; ir <= 10000; ir = ir * sqrt(1.9)) {
     vector<pair<vector<uint32_t>, vector<uint32_t>>> data(howmany);
     uint32_t smallsize =
         static_cast<uint32_t>(round(static_cast<float>(1 << Big) / ir));
     cout << "#generating data...";
     cout.flush();
     for (size_t k = 0; k < howmany; ++k) {
-      data[k] = uniform ? getNaivePair(udg, smallsize, 1U << MaxBit, ir,
+      data[k] = uniform ? getNaivePair(udg, smallsize, 1U << MaxBit, (float)ir,
                                        intersectionratio)
-                        : getNaivePair(cdg, smallsize, 1U << MaxBit, ir,
+                        : getNaivePair(cdg, smallsize, 1U << MaxBit, (float)ir,
                                        intersectionratio);
     }
     cout << "ok." << endl;
@@ -858,7 +858,7 @@ int main(int argc, char **argv) {
           aratio = interfnc(data[k].first.data(), (data[k].first).size(),
                             data[k].second.data(), (data[k].second).size(),
                             buffer.data());
-          bogus += aratio;
+          bogus += size_t(aratio);
         }
       }
       cout << setw(10) << setprecision(5)
@@ -876,7 +876,7 @@ int main(int argc, char **argv) {
             datapart[k].first.data(), (datapart[k].first).size(),
             datapart[k].second.data(), (datapart[k].second).size(),
             (uint16_t *)buffer.data());
-        bogus += aratio;
+        bogus += size_t(aratio);
       }
     }
     cout << setw(10) << setprecision(5)
@@ -890,7 +890,7 @@ int main(int argc, char **argv) {
             datapart[k].first.data(), (datapart[k].first).size(),
             datapart[k].second.data(), (datapart[k].second).size(),
             (uint16_t *)buffer.data());
-        bogus += aratio;
+        bogus += size_t(aratio);
       }
     }
     cout << setw(10) << setprecision(5)
@@ -904,7 +904,7 @@ int main(int argc, char **argv) {
             datapart[k].first.data(), (datapart[k].first).size(),
             datapart[k].second.data(), (datapart[k].second).size(),
             (uint16_t *)buffer.data());
-        bogus += aratio;
+        bogus += size_t(aratio);
       }
     }
     cout << setw(10) << setprecision(5)
@@ -918,7 +918,7 @@ int main(int argc, char **argv) {
             datapart[k].first.data(), (datapart[k].first).size(),
             datapart[k].second.data(), (datapart[k].second).size(),
             (uint16_t *)buffer.data());
-        bogus += aratio;
+        bogus += size_t(aratio);
       }
     }
     cout << setw(10) << setprecision(5)

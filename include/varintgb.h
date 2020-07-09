@@ -270,7 +270,7 @@ public:
       } else {
         memcpy(inbyte, block1->data, block1->length);
         inbyte += block1->length;
-        inbyte[0] = newsel;
+        inbyte[0] = (uint8_t)newsel;
         inbyte++;
         memcpy(inbyte, &nextval, newsel + 1);
         inbyte += newsel + 1;
@@ -904,7 +904,7 @@ private:
     newnextval &= mask[newnextsel];
     // uint32_t newnextval =  *(reinterpret_cast<const uint32_t*>(b->data +
     // offsettolastval)) & mask[newnextsel];
-    b->data[0] = (b->data[0] << 2) | *newsel;
+    b->data[0] = uint8_t((b->data[0] << 2) | *newsel);
     std::memmove(b->data + 2 + *newsel, b->data + 1,
                  b->length - 1 - 1 - newnextsel);
     b->length = offsettolastval + 1 + *newsel;
@@ -915,7 +915,7 @@ private:
 
   void finalshiftin(Block *b, uint32_t nextval, uint32_t newsel,
                     size_t howmany) {
-    b->data[0] = (b->data[0] << 2) | newsel;
+    b->data[0] = uint8_t((b->data[0] << 2) | newsel);
     std::memmove(b->data + 2 + newsel, b->data + 1, b->length - 1);
     b->length = 1;
     for (size_t k = 0; k < howmany; ++k)

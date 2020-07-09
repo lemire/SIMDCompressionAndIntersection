@@ -216,10 +216,10 @@ public:
     init(_items, _zipfianconstant);
   }
 
-  double zeta(int n, double theta) {
+  double zeta(int nn, double ttheta) {
     double sum = 0;
-    for (long i = 0; i < n; i++) {
-      sum += 1 / (pow(i + 1, theta));
+    for (long i = 0; i < nn; i++) {
+      sum += 1 / (pow(i + 1, ttheta));
     }
     return sum;
   }

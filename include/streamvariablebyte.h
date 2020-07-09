@@ -90,7 +90,7 @@ public:
                    static_cast<uint32_t>(std::min<size_t>(
                        count, std::numeric_limits<uint32_t>::max())),
                    1, 1));
-    *out = 4 + bytesWritten;
+    *out = uint8_t(4 + bytesWritten);
     nvalue = 4 + bytesWritten;
   }
 

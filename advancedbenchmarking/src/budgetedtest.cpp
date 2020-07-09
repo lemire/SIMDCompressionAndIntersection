@@ -190,10 +190,10 @@ public:
       if (recbuffer != uncompressed) {
         cout << "size = " << uncompressed.size() << endl;
         int display = 10;
-        for (size_t i = 0; i < uncompressed.size(); ++i) {
-          if (uncompressed[i] != recbuffer[i]) {
-            cout << " i = " << i << " expected " << uncompressed[i]
-                 << " but got " << recbuffer[i] << endl;
+        for (size_t ii = 0; ii < uncompressed.size(); ++ii) {
+          if (uncompressed[ii] != recbuffer[ii]) {
+            cout << " i = " << ii << " expected " << uncompressed[ii]
+                 << " but got " << recbuffer[ii] << endl;
             display--;
             if (display == 0)
               break;
@@ -581,7 +581,7 @@ public:
         vector<uint32_t> &onePost = uncompPosts.getOnePost(id);
         z.reset();
         compPostings.emplace(id, shared_ptr<Skipping>(new Skipping(
-                                     SkipLog, onePost.data(), onePost.size())));
+                                     SkipLog, onePost.data(), (uint32_t) onePost.size())));
         packTime += static_cast<double>(z.split());
         size_t qty = onePost.size();
         if (MaxPostingSize < qty) {
@@ -622,7 +622,7 @@ public:
         for (size_t k = 2; (intersize > 0) && (k < sizeids.size()); ++k) {
           unpackVolume += compPostings[sizeids[k].second]->Length;
           intersize = compPostings[sizeids[k].second]->intersect(
-              intersection_result.data(), intersize,
+              intersection_result.data(), (uint32_t) intersize,
               intersection_result.data());
         }
       }
@@ -705,7 +705,7 @@ public:
 
               z.reset(); // actually this should be very quick
               CompressedSizeDuringPacking += hybridPart[part]->load(
-                  id, emptyPost.data(), emptyPost.size());
+                  id, emptyPost.data(), (uint32_t) emptyPost.size());
               packTime += static_cast<double>(z.split());
 
               packVolume += 0;
@@ -755,7 +755,7 @@ public:
             }
 
             CompressedSizeDuringPacking +=
-                hybridPart[part]->load(id, dirtyCopy.data(), dirtyCopy.size());
+                hybridPart[part]->load(id, dirtyCopy.data(), (uint32_t) dirtyCopy.size());
             packTime += static_cast<double>(z.split());
 
             packVolume += thissize;
@@ -861,7 +861,7 @@ public:
         vector<uint32_t> &onePost = uncompPosts.getOnePost(id);
         z.reset();
         CompressedSizeDuringPacking +=
-            hybrid.load(id, onePost.data(), onePost.size());
+            hybrid.load(id, onePost.data(), (uint32_t) onePost.size());
         packTime += static_cast<double>(z.split());
         size_t qty = onePost.size();
         packVolume += qty;
@@ -920,7 +920,7 @@ public:
         vector<uint32_t> &onePost = uncompPosts.getOnePost(id);
         z.reset();
         CompressedSizeDuringPacking +=
-            hybrid.load(id, onePost.data(), onePost.size());
+            hybrid.load(id, onePost.data(), (uint32_t) onePost.size());
         packTime += static_cast<double>(z.split());
         size_t qty = onePost.size();
         packVolume += qty;
@@ -977,7 +977,7 @@ public:
         vector<uint32_t> &onePost = uncompPosts.getOnePost(id);
         z.reset();
         CompressedSizeDuringPacking +=
-            hybrid.load(id, onePost.data(), onePost.size());
+            hybrid.load(id, onePost.data(), (uint32_t) onePost.size());
         packTime += static_cast<double>(z.split());
         size_t qty = onePost.size();
         packVolume += qty;

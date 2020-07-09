@@ -2,7 +2,7 @@
  * This is an implementation of the hyb+m2 method proposed in:
  *
  * J. S. Culpepper and A. Moffat. Efficient set intersection for
- * inverted indexing. ACM Trans. Inf. Syst., 29(1):1:1Ð1:25, Dec. 2010.
+ * inverted indexing. ACM Trans. Inf. Syst., 29(1):1:1ï¿½1:25, Dec. 2010.
  *
  *      Implemented by Daniel Lemire
  */
@@ -139,11 +139,11 @@ public:
         unpackVolume += bitmaps[i].first;
         shared_ptr<BoolArray> &ba = bitmaps[i].second;
         pos = 0;
-        for (uint32_t i = 0; i < sizeout; ++i) {
-          if (!ba->get(out[i]))
+        for (uint32_t ii = 0; ii < sizeout; ++ii) {
+          if (!ba->get(out[ii]))
             continue;
           else
-            out[pos++] = out[i];
+            out[pos++] = out[ii];
         }
         sizeout = pos;
       }
@@ -373,11 +373,11 @@ public:
         unpackVolume += bitmaps[i].first;
         shared_ptr<BoolArray> &ba = bitmaps[i].second;
         pos = 0;
-        for (uint32_t i = 0; i < sizeout; ++i) {
-          if (!ba->get(out[i]))
+        for (uint32_t ii = 0; ii < sizeout; ++ii) {
+          if (!ba->get(out[ii]))
             continue;
           else
-            out[pos++] = out[i];
+            out[pos++] = out[ii];
         }
         sizeout = pos;
       }
@@ -557,7 +557,7 @@ public:
         sizeout = shortlists[0].second->intersect(*shortlists[1].second, out);
         for (uint32_t i = 2; (sizeout > 0) && (i < shortlists.size()); ++i) {
           unpackVolume += shortlists[i].first;
-          sizeout = shortlists[i].second->intersect(out, sizeout, out);
+          sizeout = shortlists[i].second->intersect(out, (uint32_t)sizeout, out);
         }
       }
       size_t pos = 0;
@@ -565,11 +565,11 @@ public:
         unpackVolume += bitmaps[i].first;
         shared_ptr<BoolArray> &ba = bitmaps[i].second;
         pos = 0;
-        for (uint32_t i = 0; i < sizeout; ++i) {
-          if (!ba->get(out[i]))
+        for (uint32_t ii = 0; ii < sizeout; ++ii) {
+          if (!ba->get(out[ii]))
             continue;
           else
-            out[pos++] = out[i];
+            out[pos++] = out[ii];
         }
         sizeout = pos;
       }

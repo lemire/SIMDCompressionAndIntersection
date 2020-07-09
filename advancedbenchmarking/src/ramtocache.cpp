@@ -67,7 +67,7 @@ void blockedcompress(shared_ptr<IntegerCODEC> c, vector<uint32_t> &buffer,
       l = blocksize;
     size_t lo = obuffer.size() - outpos;
     c->encodeArray(buffer.data() + inpos, l, obuffer.data() + outpos, lo);
-    obuffer[outcounter++] = lo; // saving compressed length
+    obuffer[outcounter++] = (uint32_t)lo; // saving compressed length
     outpos += lo;
     inpos += l;
   }
@@ -155,9 +155,9 @@ void processArray(map<pair<uint32_t, shared_ptr<IntegerCODEC>>, stats> &mystats,
           throw runtime_error("failed to recover right length");
         for (size_t k = 0; k < l; ++k)
           if (l1buf[k] != buffer[k + inpos]) {
-            for (size_t K = 0; K < l; ++K)
-              cout << K << ": expected is " << buffer[K + inpos]
-                   << ", actual is " << l1buf[K] << endl;
+            for (size_t KK = 0; KK < l; ++KK)
+              cout << KK << ": expected is " << buffer[KK + inpos]
+                   << ", actual is " << l1buf[KK] << endl;
             throw runtime_error("bug decoded values do not match");
           }
         inpos += l;

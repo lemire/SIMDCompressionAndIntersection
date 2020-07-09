@@ -184,8 +184,8 @@ template <typename T, size_t N = 256> int benchmarkSearch() {
     S1 = time_snap();
     for (i = 0; i < N * 10; i++) {
       uint32_t pseudorandomkey = buffer[i % N];
-      uint32_t result = 0;
-      size_t pos = codec.findLowerBound(out, nvalue, pseudorandomkey, &result);
+      result = 0;
+      size_t pos = codec.findLowerBound(out, (uint32_t)nvalue, pseudorandomkey, &result);
       if ((result < pseudorandomkey) || (buffer[pos] != result)) {
         printf("bug A: pseudorandomkey = %u result = %u  buffer[%zu] = %u .\n",
                pseudorandomkey, result, pos, buffer[pos]);
@@ -260,7 +260,7 @@ template <typename T> int benchmarkInsert() {
     size_t currentsize1 = 0;
     for (int i = 0; i < max; i++) {
       currentsize1 =
-          codec.insert(compressedbuffer1.data(), currentsize1, buffer[i]);
+          codec.insert(compressedbuffer1.data(), (uint32_t)currentsize1, buffer[i]);
     }
     S2 = time_snap();
 

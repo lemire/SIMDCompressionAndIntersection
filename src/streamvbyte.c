@@ -107,8 +107,8 @@ uint8_t *svb_encode_scalar_d1_init(const uint32_t *in,
     uint32_t val = in[c] - prev;
     prev = in[c];
     uint8_t code = _encode_data(val, &dataPtr);
-    key |= code << shift;
-    shift += 2;
+    key = (uint8_t)(key | (code << shift));
+    shift = (uint8_t)(shift + 2);
   }
 
   *keyPtr = key;  // write last key (no increment needed)
@@ -135,8 +135,8 @@ uint8_t *svb_encode_scalar(const uint32_t *in, uint8_t *__restrict__ keyPtr,
     }
     uint32_t val = in[c];
     uint8_t code = _encode_data(val, &dataPtr);
-    key |= code << shift;
-    shift += 2;
+    key = (uint8_t)(key | (code << shift));
+    shift = (uint8_t)(shift + 2);
   }
 
   *keyPtr = key;  // write last key (no increment needed)
@@ -181,10 +181,10 @@ uint8_t *svb_append_scalar_d1(uint8_t *keyPtr, uint8_t *dataPtr,
 
   keyPtr += count / 4;
   dataPtr += sizebytes - keyLen;
-  int shift = (count % 4) * 2;
+  int shift = (int)((count % 4) * 2);
 
   uint8_t code = _encode_data(delta, &dataPtr);
-  *keyPtr |= code << shift;
+  *keyPtr = (uint8_t)(*keyPtr | (code << shift));
   return dataPtr;
 }
 
@@ -216,7 +216,7 @@ uint8_t *svb_insert_scalar_d1_init(uint8_t *keyPtr, uint8_t *dataPtr,
       dataPtr = dataPtrPrev;
 
       // shift keys 2 bits "to the right"
-      uint32_t mask_hi = key & (~0 << shift);
+      uint32_t mask_hi = key & ((~(uint32_t)(0)) << shift);
       uint32_t mask_lo = key & ((1 << shift) - 1);
       key = (mask_hi << 2) | mask_lo;
       uint32_t carry_bits, prev_carry_bits = (key & (3 << 8)) >> 8;
@@ -238,7 +238,7 @@ uint8_t *svb_insert_scalar_d1_init(uint8_t *keyPtr, uint8_t *dataPtr,
 
       // first insert the new key
       uint8_t code = _encode_data(new_key - prev, &dataPtr);
-      *keyPtr = key | (code << shift);
+      *keyPtr = (uint8_t) (key | (code << shift));
 
       // then update the current key
       shift += 2;
@@ -267,7 +267,7 @@ uint8_t *svb_insert_scalar_d1_init(uint8_t *keyPtr, uint8_t *dataPtr,
   uint8_t code = _encode_data(new_key - prev, &dataPtr);
   key &= ~(3 << shift);
   key |= code << shift;
-  *keyPtr = key; // write last key (no increment needed)
+  *keyPtr = (uint8_t) key; // write last key (no increment needed)
 
   *position = count;
   return dataPtrBegin + dataSize + code + 1;
