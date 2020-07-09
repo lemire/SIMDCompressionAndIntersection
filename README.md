@@ -41,18 +41,24 @@ Check out example.cpp
 
 You can run it like so:
 
+```
 make example
 ./example
+```
+
 
 Usage
 ------------------------
 
+```
 make
 ./unit
+```
 
 To run tests, you can do 
-
+```
 ./testcodecs
+```
 
 (follow the instructions)
 
