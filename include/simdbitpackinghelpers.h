@@ -1031,9 +1031,6 @@ template <class DeltaHelper> struct SIMDBitPackingHelpers {
     if (Qty % SIMDBlockSize) {
       throw std::logic_error("Incorrect # of entries.");
     }
-    if (Qty % SIMDBlockSize) {
-      throw std::logic_error("Incorrect # of entries.");
-    }
     __m128i initoffset = _mm_set1_epi32(0);
 
     for (size_t k = 0; k < Qty / SIMDBlockSize; ++k) {
@@ -1050,9 +1047,6 @@ template <class DeltaHelper> struct SIMDBitPackingHelpers {
 
   static void packwithoutmask(uint32_t *in, const size_t Qty, uint32_t *out,
                               const uint32_t bit) {
-    if (Qty % SIMDBlockSize) {
-      throw std::logic_error("Incorrect # of entries.");
-    }
     if (Qty % SIMDBlockSize) {
       throw std::logic_error("Incorrect # of entries.");
     }
