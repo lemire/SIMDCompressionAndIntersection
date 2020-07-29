@@ -15,7 +15,7 @@ void __SIMD_fastpack0(const uint32_t *__restrict__, __m128i *__restrict__) {}
 /**
  * Rest of the code is borrowed from the fastpfor project (file of the same
  * name)
- * with the remove of a few functions at the end and removal of the  prefix.
+ * with the removal of a few functions at the end and removal of the  prefix.
  * Also
  * functions are no longer static.
  */
