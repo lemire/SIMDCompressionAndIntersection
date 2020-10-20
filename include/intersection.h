@@ -3,7 +3,7 @@
 #ifndef SIMDCompressionAndIntersection_INTERSECTION_H_
 #define SIMDCompressionAndIntersection_INTERSECTION_H_
 
-#include <common.h>
+#include "common.h"
 
 namespace SIMDCompressionLib {
 
