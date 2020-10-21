@@ -16,7 +16,7 @@ using namespace std;
 static inline int numberOfTrailingZeros(uint64_t x) {
   if (x == 0)
     return 64;
-  return __builtin_ctzl(x);
+  return __builtin_ctzll(x);
 }
 
 class BoolArray {
@@ -90,7 +90,7 @@ public:
     for (uint32_t k = 0; k < buffer.size(); ++k) {
       uint64_t myword = buffer[k];
       while (myword != 0) {
-        int ntz = __builtin_ctzl(myword);
+        int ntz = __builtin_ctzll(myword);
         ans[pos++] = k * 64 + ntz;
         myword ^= (1ll << ntz);
       }

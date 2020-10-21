@@ -218,7 +218,7 @@ public:
 
   double zeta(int nn, double ttheta) {
     double sum = 0;
-    for (long i = 0; i < nn; i++) {
+    for (int i = 0; i < nn; i++) {
       sum += 1 / (pow(i + 1, ttheta));
     }
     return sum;
