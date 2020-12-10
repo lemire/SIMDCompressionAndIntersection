@@ -32,9 +32,9 @@ public:
   bool test(const double p);
 };
 
-ZRandom::ZRandom(unsigned iSeed) : nValues(0) { seed(iSeed); }
+inline ZRandom::ZRandom(unsigned iSeed) : nValues(0) { seed(iSeed); }
 
-void ZRandom::seed(unsigned iSeed) {
+inline void ZRandom::seed(unsigned iSeed) {
   nValues = 0;
   // Seed the array used in random number generation.
   MT[0] = iSeed;
@@ -52,7 +52,7 @@ inline double ZRandom::getDouble() {
   return double(getValue()) * (1.0 / 4294967296.0);
 }
 
-unsigned int ZRandom::getValue(const uint32_t MaxValue) {
+inline unsigned int ZRandom::getValue(const uint32_t MaxValue) {
   unsigned int used = MaxValue;
   used |= used >> 1;
   used |= used >> 2;
@@ -68,7 +68,7 @@ unsigned int ZRandom::getValue(const uint32_t MaxValue) {
   return i;
 }
 
-unsigned int ZRandom::getValue() {
+inline unsigned int ZRandom::getValue() {
   if (0 == nValues) {
     MT[N] = MT[0];
     for (int i = 0; i < N; ++i) {

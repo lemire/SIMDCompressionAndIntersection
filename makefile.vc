@@ -27,13 +27,13 @@ ARFLAGS = /nologo /LTCG
 LDFLAGS = /nologo /LTCG /DYNAMICBASE /incremental:no /debug /opt:ref,icf
 !ENDIF
 
-LIB_OBJS = bitpacking.obj integratedbitpacking.obj simdbitpacking.obj usimdbitpacking.obj simdintegratedbitpacking.obj intersection.obj varintdecode.obj streamvbyte.obj simdpackedsearch.obj simdpackedselect.obj frameofreference.obj for.obj
+LIB_OBJS = codecfactory.obj bitpacking.obj integratedbitpacking.obj simdbitpacking.obj usimdbitpacking.obj simdintegratedbitpacking.obj intersection.obj varintdecode.obj streamvbyte.obj simdpackedsearch.obj simdpackedselect.obj frameofreference.obj for.obj
 
 
 all: lib unit
 
 $(LIB_OBJS):
-	$(CC) $(INC) $(CFLAGS) /c src/bitpacking.cpp src/integratedbitpacking.cpp src/simdbitpacking.cpp src/usimdbitpacking.cpp src/simdintegratedbitpacking.cpp src/intersection.cpp src/varintdecode.c src/streamvbyte.c src/simdpackedsearch.c src/simdpackedselect.c src/frameofreference.cpp src/for.c  
+	$(CC) $(INC) $(CFLAGS) /c src/codecfactory.cpp src/bitpacking.cpp src/integratedbitpacking.cpp src/simdbitpacking.cpp src/usimdbitpacking.cpp src/simdintegratedbitpacking.cpp src/intersection.cpp src/varintdecode.c src/streamvbyte.c src/simdpackedsearch.c src/simdpackedselect.c src/frameofreference.cpp src/for.c  
 
 lib: $(LIB_OBJS)
 	$(AR) $(ARFLAGS) /OUT:simdcomp_a.lib $(LIB_OBJS)

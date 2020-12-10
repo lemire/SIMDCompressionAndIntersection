@@ -18,14 +18,14 @@ namespace SIMDCompressionLib {
 
 using namespace std;
 
-vector<uint32_t> generateArray(uint32_t N, const uint32_t mask = 0xFFFFFFFFU) {
+inline vector<uint32_t> generateArray(uint32_t N, const uint32_t mask = 0xFFFFFFFFU) {
   vector<uint32_t> ans(N);
   for (size_t k = 0; k < N; ++k)
     ans[k] = rand() & mask;
   return ans;
 }
 
-vector<uint32_t> generateArray32(uint32_t N,
+inline vector<uint32_t> generateArray32(uint32_t N,
                                  const uint32_t mask = 0xFFFFFFFFU) {
   vector<uint32_t> ans(N);
   for (size_t k = 0; k < N; ++k)
@@ -231,7 +231,7 @@ public:
   }
 };
 
-vector<uint32_t> generateZipfianArray32(uint32_t N, double power,
+inline vector<uint32_t> generateZipfianArray32(uint32_t N, double power,
                                         const uint32_t mask = 0xFFFFFFFFU) {
   vector<uint32_t> ans(N);
   ZipfianGenerator zipf;
@@ -242,7 +242,7 @@ vector<uint32_t> generateZipfianArray32(uint32_t N, double power,
   return ans;
 }
 
-size_t unite(const uint32_t *set1, const size_t length1, const uint32_t *set2,
+inline size_t unite(const uint32_t *set1, const size_t length1, const uint32_t *set2,
              const size_t length2, uint32_t *out) {
   size_t pos = 0;
   size_t k1 = 0, k2 = 0;
@@ -292,13 +292,13 @@ size_t unite(const uint32_t *set1, const size_t length1, const uint32_t *set2,
   return pos;
 }
 
-vector<uint32_t> unite(const vector<uint32_t> &x, const vector<uint32_t> &y) {
+inline vector<uint32_t> unite(const vector<uint32_t> &x, const vector<uint32_t> &y) {
   vector<uint32_t> ans(x.size() + y.size());
   ans.resize(unite(x.data(), x.size(), y.data(), y.size(), ans.data()));
   return ans;
 }
 
-size_t classicalintersection(const uint32_t *set1, const size_t length1,
+inline size_t classicalintersection(const uint32_t *set1, const size_t length1,
                              const uint32_t *set2, const size_t length2,
                              uint32_t *out) {
   if ((0 == length1) or (0 == length2))
@@ -328,7 +328,7 @@ size_t classicalintersection(const uint32_t *set1, const size_t length1,
   return answer;
 }
 
-vector<uint32_t> intersect(const vector<uint32_t> &x,
+inline vector<uint32_t> intersect(const vector<uint32_t> &x,
                            const vector<uint32_t> &y) {
   vector<uint32_t> ans(x.size() + y.size());
   ans.resize(classicalintersection(x.data(), x.size(), y.data(), y.size(),
