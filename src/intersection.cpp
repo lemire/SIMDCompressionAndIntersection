@@ -112,6 +112,7 @@ size_t mutualPartitioningIntersect(const uint32_t* small_set, size_t small_lengt
     if (it == large_set + large_length) {
         return out_num;
     }
+    result += out_num;
     if (*it == mid_val) {
         *result++ = mid_val;
         ++it;
