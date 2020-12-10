@@ -92,6 +92,36 @@ size_t onesidedgallopingintersection(const uint32_t *smallset,
   return out - initout;
 }
 
+// from: http://didawiki.di.unipi.it/doku.php/magistraleinformaticanetworking/ae/ae2019/start#books_notes_etc
+// "The magic of Algorithms! "
+// Chap. 6, Algorithm 6.1 Intersection based on Mutual Partitioning
+//
+size_t mutualPartitioningIntersect(const uint32_t* small_set, size_t small_length,
+                                   const uint32_t* large_set, size_t large_length,
+                                   uint32_t *  result) {
+    if ((small_length <= 0) || (large_length <= 0)) {
+        return 0;
+    }
+    if (small_length > large_length) {
+        return mutualPartitioningIntersect(large_set, large_length, small_set, small_length, result);
+    }
+    int mid_index = small_length / 2;
+    const auto mid_val = small_set[mid_index];
+    auto it = std::lower_bound(large_set, large_set + large_length, mid_val);
+    size_t out_num = mutualPartitioningIntersect(small_set, mid_index, large_set, it - large_set, result);
+    if (it == large_set + large_length) {
+        return out_num;
+    }
+    if (*it == mid_val) {
+        *result++ = mid_val;
+        ++it;
+        ++out_num;
+    }
+    ++mid_index;
+    return out_num + mutualPartitioningIntersect(small_set + mid_index, small_length - mid_index,
+                                                 it, large_set + large_length - it, result);
+}
+
 /**
  * Fast scalar scheme designed by N. Kurz.
  */
@@ -1269,6 +1299,7 @@ initializeintersectionfactory() {
   std::map<std::string, intersectionfunction> schemes;
   schemes["simd"] = SIMDintersection;
   schemes["galloping"] = onesidedgallopingintersection;
+  schemes["mut_part"] = mutualPartitioningIntersect;
   schemes["scalar"] = scalar;
   schemes["v1"] = v1;
   schemes["v3"] = v3;
