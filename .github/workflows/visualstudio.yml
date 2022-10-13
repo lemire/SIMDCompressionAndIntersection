@@ -14,9 +14,8 @@ jobs:
       uses: ilammy/msvc-dev-cmd@v1.11.0
     
     - name: Invoking makefile
-      working-directory: ./auto-test
       run: nmake 
       
     - name: Run Test Program
-      run: dir
+      run: dir /s /b /o:gn
 
