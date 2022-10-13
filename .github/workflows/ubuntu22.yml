@@ -1,15 +1,13 @@
-name: Ubuntu 22.04 CI (GCC 11)
-
+name: "Ubuntu 22.04 CI (GCC 11)"
 on: [push, pull_request]
 
-jobs:
-  ubuntu-build:
-    if: >-
-      ! contains(toJSON(github.event.commits.*.message), '[skip ci]') &&
-      ! contains(toJSON(github.event.commits.*.message), '[skip github]')
+ 
+jobs: 
+  ubuntu-build: 
+    if: "! contains(toJSON(github.event.commits.*.message), '[skip ci]') && ! contains(toJSON(github.event.commits.*.message), '[skip github]')"
     runs-on: ubuntu-22.04
-    steps:
+    steps: 
       - uses: actions/checkout@v3
-     - name: Use make
-        run: |
-          make && ./unit 
+      - name: "Use make"
+        run: make && ./unit
+
