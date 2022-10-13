@@ -38,7 +38,7 @@ class Skipping {
 public:
   Skipping(uint32_t BS, const uint32_t *data, uint32_t length)
       : BlockSizeLog(BS), mainbuffer(), highbuffer(), Length(0) {
-    if ((BlockSizeLog == 0) && (BlockSizeLog >= 32))
+    if ((BlockSizeLog == 0) || (BlockSizeLog >= 32))
       throw runtime_error("please use a reasonable BlockSizeLog");
     load(data, length); // cheap constructor
   }
