@@ -1,0 +1,23 @@
+name: VisualStudio
+
+on: [push, pull_request]
+
+jobs:
+  GeneralTest:
+    runs-on: windows-latest
+
+    steps:
+    
+    - uses: actions/checkout@v2
+
+    - name: Enable Developer Command Prompt
+      uses: ilammy/msvc-dev-cmd@v1.11.0
+    
+    - name: Invoking makefile
+      run: nmake -f .\makefile.vc
+      
+    - name: Run Test Program
+      run: .\unit.exe
+
+    - name: Run Example Program
+      run: .\example.exe
