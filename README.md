@@ -39,15 +39,10 @@ Simple demo
 
 Check out example.cpp
 
-You can run it like so:
-
-```
-make example
-./example
-```
+You can run it like so (e.g., under Linux or macOS):
 
 
-Usage
+Usage (Linux, macOS and similar systems)
 ------------------------
 
 ```
@@ -55,12 +50,42 @@ make
 ./unit
 ```
 
+A static library file is built as `libSIMDCompressionAndIntersection.a` which you can use in your
+own projects along with our header files located in the `include` subdirectory.
+
+You may also build and run our example:
+
+
+```
+make example
+./example
+```
+
+
 To run tests, you can do 
 ```
 ./testcodecs
 ```
 
 (follow the instructions)
+
+
+
+Usage (Windows users)
+------------------------
+
+Windows users wishing to build using Visual Studio should go into a Developer Powershell, which is
+accessible through the menus in the Visual Studio interface, and run the following from the 
+directory of the project:
+
+```
+nmake -f .\makefile.vc
+ .\example.exe
+ .\unit.exe
+ ```
+
+Under Windows, the static library is built as the file `simdcomp_a.lib` which you can use in your
+own projects, along with our header files located in the `include` subdirectory.
 
 
 For a simple C library
