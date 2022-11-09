@@ -94,8 +94,10 @@ int main() {
       IntersectionFactory::getFromName("simd"); // using SIMD intersection
   //
   // we are going to intersect mydata and mydata2 and write back
-  // the result to mydata2
+  // the result to mydata2 (this is safe only if mydata2.size() <= mydata.size()),
+  // please refer to the code.
   //
+  std::cout <<  mydata2.size() << " " << mydata.size()<< std::endl;
   size_t intersize = inter(mydata2.data(), mydata2.size(), mydata.data(),
                            mydata.size(), mydata2.data());
   mydata2.resize(intersize);
