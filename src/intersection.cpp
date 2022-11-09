@@ -214,7 +214,8 @@ FINISH:
  */
 size_t v1(const uint32_t *rare, size_t lenRare, const uint32_t *freq,
           size_t lenFreq, uint32_t *matchOut) {
-  assert(lenRare <= lenFreq);
+  if(matchOut == freq) { throw invalid_argument("matchOut should not be freq, when in doubt, use a distinct output buffer."); }
+  if(lenRare > lenFreq)  { throw invalid_argument("mismatch freq/rare (programming error?)."); }
   const uint32_t *matchOrig = matchOut;
   if (lenFreq == 0 || lenRare == 0)
     return 0;
@@ -313,7 +314,7 @@ FINISH_SCALAR:
  * as well as lenRare and lenFreq could lead to significant performance
  * differences.
  *
- * The matchOut pointer can safely be equal to the rare pointer.
+ * The out pointer can safely be equal to the rare pointer.
  *
  * This function DOES NOT use inline assembly instructions. Just intrinsics.
  */
@@ -321,7 +322,8 @@ size_t v3(const uint32_t *rare, const size_t lenRare, const uint32_t *freq,
           const size_t lenFreq, uint32_t *out) {
   if (lenFreq == 0 || lenRare == 0)
     return 0;
-  assert(lenRare <= lenFreq);
+  if(out == freq) { throw invalid_argument("matchOut should not be freq, when in doubt, use a distinct output buffer."); }
+  if(lenRare > lenFreq)  { throw invalid_argument("mismatch freq/rare (programming error?)."); }
   const uint32_t *const initout(out);
   typedef __m128i vec;
   const uint32_t veclen = sizeof(vec) / sizeof(uint32_t);
@@ -497,7 +499,7 @@ FINISH_SCALAR:
  * as well as lenRare and lenFreq could lead to significant performance
  * differences.
  *
- * The matchOut pointer can safely be equal to the rare pointer.
+ * The out pointer can safely be equal to the rare pointer.
  *
  * This function DOES NOT use assembly. It only relies on intrinsics.
  */
@@ -506,7 +508,8 @@ size_t SIMDgalloping(const uint32_t *rare, const size_t lenRare,
                      uint32_t *out) {
   if (lenFreq == 0 || lenRare == 0)
     return 0;
-  assert(lenRare <= lenFreq);
+  if(out == freq) { throw invalid_argument("matchOut should not be freq, when in doubt, use a distinct output buffer."); }
+  if(lenRare > lenFreq)  { throw invalid_argument("mismatch freq/rare (programming error?)."); }
   const uint32_t *const initout(out);
   typedef __m128i vec;
   const uint32_t veclen = sizeof(vec) / sizeof(uint32_t);
@@ -706,6 +709,9 @@ FINISH_SCALAR:
 size_t SIMDintersection(const uint32_t *set1, const size_t length1,
                         const uint32_t *set2, const size_t length2,
                         uint32_t *out) {
+  if (((length1 > length2) && (out == set1)) ||  ((length2 > length1) && (out == set2))) {
+    throw invalid_argument("out should not be equal to the largest array.");
+  }
   if ((length1 == 0) or (length2 == 0))
     return 0;
 
@@ -722,7 +728,12 @@ size_t SIMDintersection(const uint32_t *set1, const size_t length1,
     else
       return v3(set2, length2, set1, length1, out);
   }
-
+  if (length1 == length2) {
+      if(out == set1)
+        return v1(set1, length1, set2, length2, out);
+      else 
+        return v1(set2, length2, set1, length1, out);
+  }
   if (length1 <= length2)
     return v1(set1, length1, set2, length2, out);
   else
