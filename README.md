@@ -2,7 +2,6 @@ SIMDCompressionAndIntersection
 ======================
 [![Ubuntu 22.04 CI (GCC 11)](https://github.com/lemire/SIMDCompressionAndIntersection/actions/workflows/ubuntu22.yml/badge.svg)](https://github.com/lemire/SIMDCompressionAndIntersection/actions/workflows/ubuntu22.yml)
 [![VisualStudio](https://github.com/lemire/SIMDCompressionAndIntersection/actions/workflows/visualstudio.yml/badge.svg)](https://github.com/lemire/SIMDCompressionAndIntersection/actions/workflows/visualstudio.yml)
-[![Code Quality: Cpp](https://img.shields.io/lgtm/grade/cpp/g/lemire/SIMDCompressionAndIntersection.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/lemire/SIMDCompressionAndIntersection/context:cpp)
 
 
 As the name suggests, this is a C/C++ library for fast
